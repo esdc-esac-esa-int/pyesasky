@@ -1,0 +1,49 @@
+@CHARSET "UTF-8";
+ 
+html, body {
+    height: 100%;
+    background-color: #000 !important;
+}
+
+h2 {
+    font-family: NotesEsaBold, "Trebuchet MS", Tahoma, Arial;
+    font-size: 18px;
+    line-height: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #3277a6;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default
+}
+
+#loading {
+    text-align: center;
+    font-size: small !important;
+}
+
+#reloadMessage {
+    text-align: center;
+    font-size: medium !important;
+    margin-top: 10px;
+}
+
+#esa-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#esa-logo-image{
+	display: block;
+	margin: auto;
+}
+
+.esasky__spinner{width:32px;height:30px;display: inline-block;vertical-align:middle;}.esasky__spinner div{animation:esasky__spinner 1.2s cubic-bezier(.5,0,.5,1) infinite;transform-origin:15px 15px}.esasky__spinner div:after{content:" ";display:block;position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;margin:-3px 0 0 -3px}.esasky__spinner div:nth-child(1){animation-delay:.28s}.esasky__spinner div:nth-child(1):after{top:19px;left:27px}.esasky__spinner div:nth-child(2){animation-delay:.21s}.esasky__spinner div:nth-child(2):after{top:25px;left:22px}.esasky__spinner div:nth-child(3){animation-delay:.14s}.esasky__spinner div:nth-child(3):after{top:27px;left:16px}.esasky__spinner div:nth-child(4){animation-delay:70ms}.esasky__spinner div:nth-child(4):after{top:25px;left:9px}.esasky__spinner div:nth-child(5):after{top:19px;left:4px}@keyframes esasky__spinner{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}

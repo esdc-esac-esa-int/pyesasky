@@ -1,0 +1,58 @@
+{
+	"name": "pyesasky",
+	"version": "0.1.0",
+	"description": "ESASky Python wrapper",
+	"keywords": [
+		"jupyter",
+		"jupyterlab",
+		"jupyterlab-extension",
+		"widgets"
+	],
+	"homepage": "TBD",
+	"bugs": {
+		"url": "TBD"
+	},
+	"license": "TBD",
+	"author": "Fabrizio Giordano from ESDC (ESA/ESAC)",
+	"main": "lib/index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fab77/pyesasky"
+	},
+	"scripts": {
+		"build": "npm run build:nbextension",
+		"build:labextension": "cd pyesasky && rimraf labextension && mkdir labextension && cd labextension && npm pack ../..",
+		"build:nbextension": "webpack",
+		"build:all": "npm run build:labextension && npm run build:nbextension",
+		"clean": "npm run clean:nbextension",
+		"clean:labextension": "rimraf pyesasky/labextension",
+		"clean:nbextension": "rimraf pyesasky/nbextension/static/index.js",
+		"watch": "npm-run-all -p watch:*",
+		"watch:nbextension": "webpack --watch"
+	},
+	"dependencies": {
+		"@jupyter-widgets/base": "^1.0.1",
+		"@jupyterlab/coreutils": "^2.2.1"
+	},
+	"devDependencies": {
+		"@phosphor/application": "^1.5.0",
+		"@phosphor/widgets": "^1.5.0",
+		"@types/expect.js": "^0.3.29",
+		"@types/mocha": "^2.2.41",
+		"@types/node": "^8.0.17",
+		"expect.js": "^0.3.1",
+		"fs-extra": "^4.0.2",
+		"json-loader": "^0.5.7",
+		"mkdirp": "^0.5.1",
+		"mocha": "^5.2.0",
+		"npm-run-all": "^4.1.1",
+		"rimraf": "^2.6.2",
+		"source-map-loader": "^0.2.1",
+		"typescript": "~2.4.2",
+		"underscore": "^1.9.1",
+		"webpack": "^3.4.1"
+	},
+	"jupyterlab": {
+		"extension": "lib/plugin"
+	}
+}

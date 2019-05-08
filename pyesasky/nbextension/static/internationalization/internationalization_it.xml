@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Internationalization>
+<Internationalization langCode="en">
+
+	<!-- SsoCountRequestCallback -->
+	<text key="SsoCountRequestCallback_objectNotAvailableInEsaSky">		
+		Ci scusiamo, l&#39;oggetto che state cercando non &#232; disponibile in ESASky in questo momento. 
+Attualmente stiamo processando oggetti del Sistema Solare. Si prega di riprovare tra qualche giorno.
+	</text>
+	<text key="SsoCountRequestCallback_targetCurrentlyUnavailable">
+		Bersaglio non disponibile
+	</text>
+
+	<!-- JsonRequestCallback -->
+	<text key="JsonRequestCallback_retrievingMOC">
+		Recuperando MOC
+	</text>
+
+	<!-- SSOOrbitMetadataCallback -->
+	<text key="SSOOrbitMetadataCallback_retrievingOrbitPoints">
+		Recuperando i punti orbitali di $SSONAME$ 
+	</text>
+
+	<!-- countRequestCallback -->
+	<text key="CountRequestCallback_countingAvailableData">
+		Contando i dati disponibili
+	</text>
+
+	<!-- getMissionDataCountRequestCallback -->
+	<text key="GetMissionDataCountRequestCallback_searchingInArchive">
+		Cercando archivio $NAME$
+	</text>
+
+	<!-- publicationsSourcesCallback -->
+	<text key="PublicationsSourcesCallback_retrievingPubSources">
+		Recuperando fonti con pubblicazioni
+	</text>
+
+	<!-- publicationsBySourceCallback -->
+	<text key="PublicationsBySourceCallback_retrievingPubsOf">
+		Recuperando pubblicazioni di $NAME$
+	</text>
+
+	<!-- metadataCallback -->
+	<text key="MetadataCallback_retrievingMissionMetadata">
+		Recuperando i metadati di $NAME$
+	</text>
+	<text key="MetadataCallback_retrievingSSOMetadata">
+		Recuperando i metadati dell&#39;oggetto del Sistema Solare $NAME$
+	</text>
+
+	<!-- searchPanel -->
+	<text key="searchPanel_inputByTargetName ">
+		Esempi di ricerca per nome dell&#39;oggetto:
+	</text>
+	<text key="searchPanel_solarSystemObjects">
+		Oggetti del Sistema Solare:
+	</text>
+	<text key="searchPanel_inputByName">
+		Per nome:
+	</text>
+	<text key="searchPanel_inputByObjectNumber">
+		Per numero di oggetto:
+	</text>
+	<text key="searchPanel_inputByCoordinates">
+		Esempi di ricerca per coordinate:
+	</text>
+	<text key="searchPanel_wrongCoordsInput">
+		Errore di interpretazione delle coordinate. Si prega di controllare i formati permessi.
+	</text>
+	<text key="searchPanel_targetNotFound">
+		Bersaglio non trovato.
+	</text>
+	<text key="searchPanel_ssoTargetNotFound">
+		Oggetto del Sistema Solare non trovato.
+	</text>
+	<text key="searchPanel_seeMoreExamples">
+		Vedere pi&#249; esempi
+	</text>
+	<text key="searchPanel_search">
+		Ricerca
+	</text>
+
+	<!-- searchPresenter_resolvingTarget -->
+	<text key="searchPresenter_resolvingTarget">
+		Cercando $NAME$...
+	</text>
+
+	<!-- uploadTargetList -->
+	<text key="uploadTargetList_targetList">
+		Lista di oggetti:
+	</text>
+	<text key="uploadTargetList_targetListDescriptionText">
+		&lt;div&gt;
+		Questa funzionalit&#224; accetta il formato .txt. 
+Per aggiungere testo o commenti alla vostra lista di oggetti, usate lo schema seguente:
+		&amp;#60;NOME_O_COORD&amp;#62;@desc@&amp;#60;DESC&amp;#62;
+		&lt;br&gt;&lt;br&gt;Per esempio:&lt;br&gt;
+		M31@desc@La Galassia di Andromeda, M31, &#232; una galassia a spirale...&lt;br&gt;
+		Per vedere qualche esempio di lista di oggetti con delle descrizioni, cliccate &lt;a
+		href=&quot;https://www.cosmos.esa.int/web/esdc/esasky-target-lists&quot;
+		target=&quot;_blank&quot;&gt;here&lt;/a&gt;&lt;/div&gt;		
+	</text>
+	<text key="uploadTargetList_uploadTargetList">
+		Caricare lista di oggetti
+	</text>
+	<text key="uploadTargetList_uploadTargetListFailed">
+		caricamento fallito a causa di
+	</text>
+	<text key="uploadTargetList_title">
+		Lista di oggetti
+	</text>
+
+	<!-- uploadTargetListPanel -->
+	<text key="uploadTargetListPanel_MultiTargetCatalog">
+		Catalogo multi-oggetti
+	</text>
+
+	<!-- treeMap -->
+	<text key="treeMap_tooltipText_sources">
+		$COUNT$ fonti della $MISION$ trovate nel campo visivo 
+	</text>
+	<text key="treeMap_tooltipText_sources_catalog">
+		$COUNT$ fonti della $MISION$ trovate nel campo visivo 
+	</text>
+	<text key="treeMap_tooltipText_images">
+		$COUNT$ immagini della $MISION$ trovate nel campo visivo 
+	</text>
+	<text key="treeMap_tooltipText_spectra">
+		$COUNT$ spettri della $MISION$ trovate nel campo visivo 
+	</text>
+	<text key="treeMap_ASTRO_IMAGING">
+		Immagini
+	</text>
+	<text key="treeMap_ASTRO_CATALOGUE">
+		Cataloghi
+	</text>
+	<text key="treeMap_ASTRO_SPECTRA">
+		Spettri
+	</text>
+	<text key="treeMap_SSO">
+		Osservazioni di oggetti del Sistema Solare
+	</text>
+	<text key="treeMap_loading_ASTRO_IMAGING">
+		Caricando osservazioni
+	</text>
+	<text key="treeMap_loading_ASTRO_CATALOGUE">
+		Caricando cataloghi
+	</text>
+	<text key="treeMap_loading_ASTRO_SPECTRA">
+		Caricando spettri
+	</text>
+	<text key="treeMap_loading_SSO">
+		Caricando oggetti del Sistema Solare
+	</text>
+	<text key="treeMap_noData_ASTRO_IMAGING">
+		Non si &#232; trovata alcuna immagine
+	</text>
+	<text key="treeMap_noData_ASTRO_CATALOGUE">
+		Non si sono trovati dati di catalogo
+	</text>
+	<text key="treeMap_noData_ASTRO_SPECTRA">
+		Non si &#232; trovato alcun spettro
+	</text>
+	<text key="treeMap_noData_SSO">
+		Non si sono trovate osservazioni di oggetti del Sistema Solare
+	</text>
+	<text key="treeMap_nameOfSelectedLabel">
+		OSS: $SSONAME$ ($SSOTYPE$)
+	</text>
+
+	<!-- Sky -->
+	<text key="sky_wavelength">
+		Lunghezza d&#39;onda
+	</text>
+	<text key="sky_selectWavelength">
+		Scegliere la lunghezza d&#39;onda
+	</text>
+	<text key="sky_skies">
+		Cieli
+	</text>
+	<text key="sky_selectSky">
+		Scegliere un cielo
+	</text>
+	<text key="sky_selectSky_help">
+		Usate questo dialogo per scegliere il cielo che volete mostrare in ESASky
+	</text>
+	<text key="sky_selectASky">
+		Scegliere un cielo
+	</text>
+	<text key="sky_skyDetails">
+		Dettagli del cielo
+	</text>
+	<text key="sky_removeSky">
+		Ritirare il cielo
+	</text>
+	<text key="sky_loadingSkies">
+		Caricando cieli
+	</text>
+
+	<!-- HiPS Details Popup -->
+	<text key="hiPSDetailsPopup_mapName">
+		Nome della mappa:
+	</text>
+	<text key="hiPSDetailsPopup_mission">
+		Missione:
+	</text>
+	<text key="hiPSDetailsPopup_instrument">
+		Strumento:
+	</text>
+	<text key="hiPSDetailsPopup_wavFreq">
+		Lunghezza d&#39;onda/Frequenza:
+	</text>
+	<text key="hiPSDetailsPopup_mapCreatedBy">
+		Mappa creata da
+	</text>
+	<text key="hiPSDetailsPopup_forMoreInformation">
+		Per ulteriori informazioni, cliccate&amp;nbsp;
+	</text>
+	<text key="hiPSDetailsPopup_here">
+		qui
+	</text>
+	<text key="hiPSDetailsPopup_close">
+		Chiudere
+	</text>
+
+	<!-- Change Palette Button -->
+	<text key="changePaletteBtn_changePaletteTooltip">
+		Palette di colori
+	</text>
+
+	<!-- abstractTablePanel -->
+	<text key="abstractTablePanel_downloadRow">
+		Scaricare la fila
+	</text>
+	<text key="abstractTablePanel_preview">
+		Anteprima
+	</text>
+	<text key="abstractTablePanel_sourceInPublication">
+		Fonti nella pubblicazione
+	</text>
+	<text key="abstractTablePanel_name">
+		Nome
+	</text>
+	<text key="abstractTablePanel_observation">
+		Osservazione
+	</text>
+	<text key="abstractTablePanel_noDataMatching">
+		&lt;br/&gt;&lt;br/&gt;&lt;center&gt;Non ci sono dati corrispondenti con il filtro appliccato&lt;/center&gt; </text>
+
+	<!-- commonObservationTablePanel -->
+	<text key="commonObservationTablePanel_sendRowToVOA">
+		Invia la fila a un&#39;applicazione di Osservatorio Virtuale
+	</text>
+	<text key="commonObservationTablePanel_centreOnObservation">
+		Centra sull&#39;osservazione
+	</text>
+
+	<!-- sourcesTablePanel -->
+	<text key="SourcesTablePanel_centreOnSource">
+		Centra sulla fonte
+	</text>
+
+	<!-- planObservationPanel -->
+	<text key="planObservationPanel_projectFutureObservations">
+		Progetta osservazioni future con $MISSION$
+	</text>
+	<text key="planObservationPanel_helpMessageText">
+		Usate questo dialogo per progettare osservazioni future.
+	</text>
+	<text key="planObservationPanel_helpMessageTitle">
+		Progetta osservazioni future
+	</text>
+
+	<!-- futureFootprintRow -->
+	<text key="futureFootprintRow_addJWSTInstrument">
+		Aggiungere uno strumento del JWST
+	</text>
+	<text key="futureFootprintRow_rotation">
+		Rotazione
+	</text>
+	<text key="futureFootprintRow_allInstruments">
+		Tutti gli strumenti
+	</text>
+	<text key="futureFootprintRow_removeFootprint">
+		Togliere questa impronta
+	</text>
+	<text key="futureFootprintRow_increase">
+		Aumentare
+	</text>
+	<text key="futureFootprintRow_angleBy">
+		l&#39;angolo in 
+	</text>
+	<text key="futureFootprintRow_decrease">
+		Diminuire
+	</text>
+	<text key="futureFootprintRow_copyCoordinatesAndData">
+		Copiare coordinate e dati
+	</text>
+	<text key="futureFootprintRow_centre">
+		Centrare
+	</text>
+	<text key="futureFootprintRow_coordinateSystem">
+		Sistema di coordinate:
+	</text>
+	<text key="futureFootprintRow_dataCopiedToClipboard">
+		Dati copiati negli appunti
+	</text>
+
+	<!-- screenShotDialogBox -->
+	<text key="screenShotDialogBox_screenshot">
+		Screenshot di ESASky
+	</text>
+
+	<!-- ctrlToolBar -->
+	<text key="ctrlToolBar_URLClipboard">
+		URL copiata negli appunti
+	</text>
+
+	<!-- ctrlToolBarPresenter -->
+	<text key="ctrlToolBarPresenter_bibcode">
+		Bibcode: $HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_authors">
+		Autori: $HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_journal">
+		Rivista: $JOURNAL$, $DATE$
+	</text>
+	<text key="ctrlToolBarPresenter_pubSources">
+		Fonti nella pubblicazione:
+	</text>
+	<text key="ctrlToolBarPresenter_adsSearch">
+		Ricerca in ADS: $HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_authorSources">
+		Fonti collegate con questo autore:
+	</text>
+
+	<!-- playerPanel -->
+	<text key="playerPanel_next">
+		Seguente
+	</text>
+	<text key="playerPanel_pause">
+		Pausa
+	</text>
+	<text key="playerPanel_play">
+		Avvio
+	</text>
+	<text key="playerPanel_previous">
+		Precedente
+	</text>
+	<text key="playerPanel_surveyTourStarted">
+		Cominciato il giro dei rilevamenti
+	</text>
+
+	<!-- sampConstants -->
+	<text key="sampConstants_help">
+		Informazione sull&#39;interoperabilit&#224; (SAMP)
+	</text>
+	<text key="sampConstants_sendingViaSamp">
+		Inviando @@ via SAMP
+	</text>
+
+	<!-- webConstants -->
+	<text key="webConstants_manageSkies">
+		Gestire cieli
+	</text>
+	<text key="webConstants_uploadTargetList">
+		Caricare lista di oggetti
+	</text>
+	<text key="webConstants_learnMore">
+		Imparate di pi&#249; su ESASky!
+	</text>
+	<text key="webConstants_exploreImageObservations">
+		Esaminare immagini in questa regione
+	</text>
+	<text key="webConstants_exploreCatalogue">
+		Esaminare dati di cataloghi in questa regione
+	</text>
+	<text key="webConstants_exploreSpectral">
+		Esaminare dati di spettri in questa regione
+	</text>
+	<text key="webConstants_exploreData">
+		Esaminare dati per
+	</text>
+	<text key="webConstants_trackSSO">
+		Rintracciare oggetti del Sistema Solare attraverso la casella di ricerca
+	</text>
+	<text key="webConstants_projectFutureObservations">
+		Progettare osservazioni future
+	</text>
+	<text key="webConstants_explorePublications">
+		Esaminare dati di pubblicazioni in questa regione
+	</text>
+	<text key="webConstants_exploreRandomTarget">
+		Esaminare un oggetto casuale
+	</text>
+
+	<!-- displayUtils -->
+	<text key="displayUtils_connectivityProblems">
+		Problema di connettività
+	</text>
+	<text key="displayUtils_VOnotFound">
+		Non &#232; stato possibile trovare nessuna applicazione compatibile con l&#39;Osservatorio Virtuale aperta nel vostro computer
+	</text>
+	<text key="displayUtils_startOneOf">
+		Si prega di iniziare una di queste
+	</text>
+	<text key="displayUtils_toCommunicateWithDS9">
+		Per comunicare con DS9, bisogna anche avviare un
+	</text>
+	<text key="displayUtils_seeHelp">
+		si prega di guardare le pagine di aiuto per ulteriori dettagli
+	</text>
+	<text key="displayUtils_tryAgain">
+		Si prega di riprovare una volta avviata una di queste applicazioni
+	</text>
+
+	<!-- resultsPresenter -->
+	<text key="resultsPresenter_noDataFound">
+		Dati non trovati
+	</text>
+	<text key="commonObservationTablePanel_showingGlobalSkyCoverage">
+		Mostrando la copertura totale della missione nel cielo  
+		Ingrandite e aggiornate per ottenere le impronte delle osservazioni individuali
+	</text>
+	<text key="resultsPresenter_computingDataCrossMatch">
+		Calcolando e confrontando dati per $SSOTEXT$
+	</text>
+
+	<!-- closeableTabLayoutPanel -->
+	<text key="closeableTabLayoutPanel_closeTab">
+		Chiudere scheda
+	</text>
+	<text key="closeableTabLayoutPanel_saveResultsTableOrDownload">
+		Salvare la tabella di risultati o scaricare i prodotti selezionati
+	</text>
+	<text key="closeableTabLayoutPanel_sendTableToVOA">
+		Inviare tabella a un&#39;applicazione di Osservatorio Virtuale
+	</text>
+	<text key="closeableTabLayoutPanel_recentre">
+		Tornare a centrare
+	</text>
+	<text key="closeableTabLayoutPanel_refreshData">
+		Ricaricare dati
+	</text>
+	<text key="abstractTablePanel_loadingData">
+		Caricando dati...
+	</text>
+
+	<!-- targetWidget -->
+	<text key="targetWidget_showTargetInTheSky">
+		Mostrare bersaglio nel cielo
+	</text>
+	<text key="targetWidget_targetNotFoundInSimbad">
+		Oggetto non trovato in Simbad
+	</text>
+
+	<!-- welcomeDialog -->
+	<text key="WelcomeDialog_title">
+		Benvenuto/a a ESASky!
+	</text>
+	<text key="WelcomeDialog_description">
+		ESASky &#232; un&#39;applicazione che vi permette di visualizzare e scaricare dati astronomici pubblici di missioni spaziali.
+	</text>
+	<text key="WelcomeDialog_tutorialLink">
+		Tutorial in video
+	</text>
+	<text key="WelcomeDialog_echoLink">
+		Foro
+	</text>
+	<text key="WelcomeDialog_contactInfo">
+		Contatto
+	</text>
+	<text key="WelcomeDialog_contactInfoEmailCopied">
+		Indirizzo email copiato negli appunti
+	</text>
+	<text key="WelcomeDialog_checkbox">
+		Non tornare a mostrare (usa cookies)
+	</text>
+	<text key="WelcomeDialog_cookieInformation">
+		Politica di cookies di ESASky
+	</text>
+	<text key="WelcomeDialog_closeButton">
+		Chiudere
+	</text>
+
+	<!-- allSkyPanel -->
+	<text key="AllSkyPanel_fovButton">
+		Aggiungere manualmente campo visivo in decimali
+	</text>
+
+	<!-- allSkyPresenter -->
+	<text key="AllSkyPresenter_futureSelectedDetectorCatalog">
+		Catalogo futuro di rivelatore selezionato
+	</text>
+
+	<!-- allSkyFocusPanel -->
+	<text key="AllSkyFocusPanel_tellUs">
+		&amp;nbsp;Raccontaci
+	</text>
+	<text key="AllSkyFocusPanel_help">
+		&amp;nbsp;Aiuto
+	</text>
+	<text key="AllSkyFocusPanel_searchIn">
+		Cercare in
+	</text>
+
+	<!-- fovDialogBox -->
+	<text key="FovDialogBox_inputFoVTextBox">
+		Aggiungere campo visivo in decimali
+	</text>
+	<text key="FovDialogBox_wrongFov">
+		Soltanto numeri e punti!
+	</text>
+
+	<!-- zoomControlPanel -->
+	<text key="ZoomControlPanel_zoomIn">
+		Ingrandire
+	</text>
+	<text key="ZoomControlPanel_zoomOut">
+		Ridurre
+	</text>
+	
+	<!-- EsaSkyNumberControl -->
+	<text key="EsaSkyNumberControl_increaseWithLabel">
+		Aumentare $TITLE$ con $STEP$
+	</text>
+	<text key="EsaSkyNumberControl_decreaseWithLabel">
+		Diminuire $TITLE$ con $STEP$
+	</text>
+
+	<!-- saveAllView -->
+	<text key="saveAllView_save_In_VOTABLE_Format">
+		VOTable
+	</text>
+	<text key="saveAllView_save_In_VOTABLE_Format_Title">
+		Salvare come tabella VO in formato XML
+	</text>
+	<text key="saveAllView_save_In_CSV_Format">
+		CSV
+	</text>
+	<text key="saveAllView_save_In_CSV_Format_Title">
+		Salvare come CSV, Comma Separated Values
+	</text>
+	<text key="saveAllView_Download_Btn_Text">
+		Scaricare prodotti
+	</text>
+	<text key="saveAllView_Download_Btn_Title">
+		Scaricare prodotti selezionati
+	</text>
+	<text key="saveAllView_Rows_Selected_Label">
+		$COUNT$ file selezionate nella scheda attuale
+	</text>
+
+	<!-- pointInformation -->
+	<text key="PointInformation_to">
+		$FROM$ a $TO$
+	</text>
+
+	<!-- multiTargetTooltip -->
+	<text key="MultiTargetTooltip_nearestSimbadId">
+		ID principale più prossimo in Simbad
+	</text>
+
+	<!-- planningDetectorCenterTooltip -->
+	<text key="PlanningDetectorCenterTooltip_instrument">
+		Strumento:
+	</text>
+	<text key="PlanningDetectorCenterTooltip_detector">
+		Rivelatore:
+	</text>
+	<text key="PlanningDetectorCenterTooltip_referenceRA">
+		Ascensione retta (RA) di referenza:
+	</text>
+	<text key="PlanningDetectorCenterTooltip_referenceDEC">
+		Declinazione (DEC) di referenza:
+	</text>
+
+	<!-- catalogString -->
+	<text key="name">
+		Nome
+	</text>
+	<text key="flux">
+		Flusso
+	</text>
+	<text key="type">
+		Tipo
+	</text>
+	<text key="significance">
+		Significativit&#224;
+	</text>
+	<text key="exposure">
+		Esposizione
+	</text>
+	<text key="flux20_40keV">
+		Flusso a 20-40 keV
+	</text>
+	<text key="fluxUVW1">
+		Flusso con il filtro UVW1
+	</text>
+	<text key="btMagnitude">
+		Magnitudine BT
+	</text>
+	<text key="SN">
+		Rapporto segnale-rumore
+	</text>
+	<text key="gMagnitude">
+		Magnitudine G
+	</text>
+	<text key="hpMagnitude">
+		Magnitudine Hp
+	</text>
+	<text key="fluxDensity">
+		Densit&#224; di flusso
+	</text>
+	<text key="error">
+		errore
+	</text>
+	<text key="sourceLimitDescription">
+		Mostrando le prime $sourceLimit$ fonti ordinate per $orderBy$
+	</text>
+	<text key="sourceLimitNumImages">
+		Mostrando le $sourceLimit$ fonti pi&#249; osservate (Numero di immagini)
+	</text>
+	<text key="INTEGRAL_flux20_40">
+		Flusso&lt;sub&gt;20-40 keV&lt;/sub&gt;&lt;br/&gt;(mCrab)
+	</text>
+	<text key="INTEGRAL_flux40_100">
+		Flusso&lt;sub&gt;40-100 keV&lt;/sub&gt;&lt;br/&gt;(mCrab)
+	</text>
+	<text key="INTEGRAL_Type">
+		Tipo
+	</text>
+	<text key="INTEGRAL_Significance">
+		Significativit&#224;
+	</text>
+	<text key="INTEGRAL_Exposure">
+		Esposizione (ksec)
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux">
+		Flusso&lt;br/&gt;(erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux_err">
+		Errore nel flusso&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="observation_id">
+		ID dell'osservazione
+	</text>
+	<text key="XMM_OM_poserr">
+		&amp;Delta;Pos
+	</text>
+	<text key="XMM_OM_date_obs">
+		Data di osservazione
+	</text>
+	<text key="XMM_OM_uvw1_ab_flux">
+		Flusso UVW1&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_OM_uvw2_ab_flux">
+		Flusso UVW2&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_OM_uvm2_ab_flux">
+		Flusso UVM2&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_OM_u_ab_flux">
+		Flusso U&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_OM_v_ab_flux">
+		Flusso V&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_OM_b_ab_flux">
+		Flusso B&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b0">
+		Flusso (0.2-12kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b0_err">
+		Errore del flusso (0.2-12kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b4">
+		Flusso (2-12kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b4_err">
+		Errore del flusso (2-12kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b5">
+		Flusso (0.2-2kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="XMM_Slew_flux_b5_err">
+		Errore del flusso (0.2-2kev)&lt;br/&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="pm_ra">
+		Moto proprio in ascensione retta&lt;br/&gt;&lt;i&gt;(mas/anno)&lt;/i&gt;
+	</text>
+	<text key="pm_de">
+		Moto Proprio in declinazione&lt;br/&gt;&lt;i&gt;(mas/anno)&lt;/i&gt; 
+	</text>
+	<text key="Tycho_2_bt_mag">
+		Magnitudine BT&lt;br/&gt;&lt;i&gt;(mag)&lt;/i&gt; 
+	</text>
+	<text key="Tycho_2_vt_mag">
+		Magnitudine VT&lt;br/&gt;&lt;i&gt;(mag)&lt;/i&gt; 
+	</text>
+	<text key="parallax">
+		Parallasse&lt;br/&gt;&lt;i&gt;(mas)&lt;/i&gt; 
+	</text>
+	<text key="Gaia_DR1_TGAS_parallax_error">
+		Errore della parallasse&lt;br/&gt;&lt;i&gt;(mas)&lt;/i&gt; 
+	</text>
+	<text key="Gaia_DR1_TGAS_pmra_error">
+		Errore del moto proprio in ascensione retta&lt;br/&gt;&lt;i&gt;(mas/anno)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_pmdec_error">
+		Errore del moto proprio in declinazione&lt;br/&gt;&lt;i&gt;(mas/anno)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_phot_g_mean_mag">
+		Magnitudine G media&lt;br/&gt;&lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="mag">
+		Magnitudine&lt;br/&gt;&lt;i&gt;(mag)&lt;/i&gt; 
+	</text>
+	<text key="HSC_v2_1_match_id">
+		ID corrispondenza
+	</text>
+	<text key="targetName">
+		Nome dell&#39;oggetto
+	</text>
+	<text key="HSC_v2_1_num_images">
+		Numero di immagini
+	</text>
+	<text key="HSC_v2_1_fluxes">
+		Filtri
+	</text>
+	<text key="HSC_v2_1_fluxesvalues">
+		Magnitudine &lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="HSC_v2_1_sigmavalues">
+		Errore della magnitudine &lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_flux">
+		Flusso &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_rms">
+		&amp;Delta;Flusso &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_elong_flag">
+		Indicatore di elongazione
+	</text>
+	<text key="Herschel_HPPSC_edge_flag">
+		Indicatore di bordo
+	</text>
+	<text key="Herschel_HPPSC_blend_flag">
+		Indicatore di combinazione
+	</text>
+	<text key="Herschel_HPPSC_ssomap_flag">
+		Indicatore di mappa di OSS
+	</text>
+	<text key="Herschel_HPPSC_fluxdao">
+		Densit&#224; di flusso misurato con DAOPHOT &lt;i&gt;(mJy)&lt;/i&gt; 
+	</text>
+	<text key="Herschel_HPPSC_fluxdao_err">
+		&amp;Errore della densit&#224; di flusso DAOPHOT &lt;i&gt;(mJy)&lt;/i&gt; 
+	</text>
+	<text key="Herschel_HPPSC_fluxtm2">
+		Densit&#224; di flusso misurata con TM2 &lt;i&gt;(mJy)&lt;/i&gt; 
+	</text>
+	<text key="Herschel_HPPSC_fluxtm2_err">
+		&amp;Errore della densit&#224; di flusso misurata con TM2 &lt;i&gt;(mJy)&lt;/i&gt; 
+	</text>
+	<text key="Herschel_HPPSC_pntsrc_flag">
+		Indicatore di fonte puntuale
+	</text>
+	<text key="Herschel_HPPSC_lowfwhm_flag">
+		Indicatore di larghezza a mezza altezza (FWHM) piccola
+	</text>
+	<text key="Herschel_HPPSC_largegal_flag">
+		Indicatore di galassia grande
+	</text>
+	<text key="Herschel_HPPSC_mapedge_flag">
+		Indicatore di bordo di mappa
+	</text>
+	<text key="Herschel_HPPSC_ssocont_flag">
+		Indicatore di OSS contaminatore
+	</text>
+	<text key="Submm">
+		Submillimetrico
+	</text>
+	<text key="Herschel_HPPSC_extsrc_flag">
+		Indicatore di fonte allargata
+	</text>
+	<text key="PGCC2_snr">
+		Rapporto segnale-rumore
+	</text>
+	<text key="PGCC2_gau_major_axis">
+		FHWM maggiore &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC2_gau_major_gau_major_axis_sig">
+		Errore del FWHM maggiore &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC2_gau_minor_axis">
+		FWHM menore &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC2_gau_minor_axis_sig">
+		valore
+	</text>
+	<text key="PCCS2E_frequency">
+		Frequenza &lt;i&gt;(GHz)&lt;/i&gt; </text>
+	<text key="PCCS2E_detflux">
+		Densit&#224; di flusso &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="PCCS2E_detflux_err">
+		Errore della densit&#224; di flusso &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="PCCS2E_highest_reliability_cat">
+		Affidabilit&#224; del catalogo
+	</text>
+	<text key="Gaia_DR1_ra_error">
+		Errore in ascensione retta (mas)
+	</text>
+	<text key="Gaia_DR1_dec_error">
+		Errore in declinazione (mas)
+	</text>
+	<text key="PSZ_redshift">
+		Spostamento verso il rosso
+	</text>
+	<text key="PSZ_msz">
+		Massa Sunyaev-Zeldovich &lt;i&gt;(10&lt;sup&gt;14&lt;/sup&gt;
+		M&lt;sub&gt;solare&lt;/sub&gt;)&lt;/i&gt; </text>
+	<text key="PSZ_validation">
+		Validazione
+	</text>
+	<text key="productURL">
+		URL del prodotto
+	</text>
+	<text key="instrument">
+		Strumento
+	</text>
+	<text key="startTime">
+		Tempo di inizio
+	</text>
+	<text key="duration">
+		Durazione &lt;i&gt;(s)&lt;/i&gt;
+	</text>
+	<text key="durationKs">
+		Durazione &lt;i&gt;(ks)&lt;/i&gt; 
+	</text>
+	<text key="Chandra_ProposalID">
+		ID della proposta
+	</text>
+	<text key="Chandra_StartTime">
+		Tempo di inizio &lt;i&gt;(MJD)&lt;/i&gt; 
+	</text>
+	<text key="filter">
+		Filtro
+	</text>
+	<text key="Collection">
+		Colezione
+	</text>
+	<text key="Herschel_ObservationOid">
+		Oid dell&#39;osservazione
+	</text>
+	<text key="Herschel_Filter">
+		Filtro &lt;i&gt;(micron)&lt;/i&gt; 
+	</text>
+	<text key="XMM_NEWTON_Wavelength">
+		Lunghezza d&#39;onda
+	</text>
+	<text key="IUE_Aperture">
+		Apertura
+	</text>
+	<text key="IUE_Dispersion">
+		Dispersione
+	</text>
+	<text key="FileName">
+		Nome del file
+	</text>
+	<text key="opticalElement">
+		Elemento ottico
+	</text>
+	<text key="centralWavelength">
+		Lunghezza d&#39;onda centrale &lt;i&gt;(nm)&lt;/i&gt; </text>
+	<text key="ISO_ObservationIDAux">
+		ID dell&#39;osservazione aussiliare
+	</text>
+	<text key="ObservingMode">
+		Modo di osservazione
+	</text>
+	<text key="Herschel_WavelengthRange">
+		Intervallo di lunghezza d&#39;onda
+	</text>
+	<text key="PublicationTooltip_BIBCOUNT">
+		Num. pub.:
+	</text>
+	<text key="RA_J2000">
+		RA &lt;i&gt;(J2000)&lt;/i&gt; 
+	</text>
+	<text key="DEC_J2000">
+		Dec &lt;i&gt;(J2000)&lt;/i&gt; 
+	</text>
+	<text key="RA_J2015">
+		RA &lt;i&gt;(J2015.0)&lt;/i&gt; 
+	</text>
+	<text key="DEC_J2015">
+		Dec &lt;i&gt;(J2015.0)&lt;/i&gt; 
+	</text>
+	<text key="SoftX-ray">
+		Raggi X morbidi
+	</text>
+	<text key="HardX-ray">
+		Raggi X duri
+	</text>
+	<text key="UV">
+		UV
+	</text>
+	<text key="Ultraviolet">
+		Ultravioletto
+	</text>
+	<text key="Optical">
+		Ottico
+	</text>
+	<text key="NearIR">
+		Infrarosso vicino
+	</text>
+	<text key="MidToFarIR">
+		Infrarosso medio a lontano
+	</text>
+	<text key="FarIR">
+		Infrarosso lontano
+	</text>
+	<text key="NearInfrared">
+		Infrarosso vicino
+	</text>
+	<text key="MidToFarInfrared">
+		Infrarosso medio a lontano
+	</text>
+	<text key="FarInfrared">
+		Infrarosso lontano
+	</text>
+	<text key="Submm">
+		Submm
+	</text>
+	<text key="Submillimeter">
+		Submillimetrico
+	</text>
+	<text key="Radio">
+		Radio
+	</text>
+	<text key="pubDate">
+		data di pubblicazione
+	</text>
+	<text key="BIBCODE">
+		BIBCODE
+	</text>
+	<text key="Title">
+		Titolo
+	</text>
+	<text key="Authors">
+		Autori
+	</text>
+	<text key="Journal">
+		Rivista
+	</text>
+	<text key="Date">
+		Data
+	</text>
+	<text key="CHANDRA_flux_b">
+		Flusso ACIS (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_lower_flux_b">
+		Limite inferiore Flusso ACIS (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_upper_flux_b">
+		Limite superiore Flusso ACIS (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_flux_w">
+		Flusso (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_lower_flux_w">
+		Limite inferiore Flusso HCR (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_upper_flux_w">
+		Limite superiore Flusso HCR (erg cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+	</text>
+	<text key="CHANDRA_snr">
+		Rapporto segnale-rumore
+	</text>
+	<text key="Gaia_phot_g_mean_flux">
+		Flusso &lt;i&gt;(e-/s)&lt;/i&gt; 
+	</text>
+	<text key="Gaia_phot_g_mean_flux_error">
+		Errore del Flusso &lt;i&gt;(e-/s)&lt;/i&gt; 
+	</text>
+	<text key="Gaia_phot_g_mean_mag">
+		Magnitudine G &lt;i&gt;(mag)&lt;/i&gt; 
+	</text>
+	<text key="Flag">
+		Indicatore
+	</text>
+	<text key="SNR">
+		Rapporto segnale-rumore
+	</text>
+	<text key="Herschel_fwhmxfit">
+		FWHM x Fit
+	</text>
+	<text key="Herschel_fwhmyfit">
+		FWHM y Fit
+	</text>
+	<text key="Herschel_snr">
+		S/N_S
+	</text>
+	<text key="Herschel_stn">
+		S/N_R
+	</text>
+	<text key="Herschel_Warmat">
+		Warmat
+	</text>
+	<text key="HST_Collection">
+		Colezione
+	</text>
+	<text key="Observation ObjectId">
+		ObjectId dell'osservazione
+	</text>
+	<text key="BIBCODE_preview">
+		BIBCODE_anteprima
+	</text>
+	<text key="treeMapContainer_help_ASTRO_IMAGING">
+		Esamina le osservazioni disponibili nel campo visivo per le diverse missioni
+	</text>
+	<text key="treeMapContainer_help_ASTRO_SPECTRA">
+		Esamina gli spettri disponibili nel campo visivo per le diverse missioni
+	</text>
+	<text key="treeMapContainer_help_ASTRO_CATALOGUE">
+		Esamina i cataloghi disponibili nel campo visivo per le diverse missioni
+	</text>
+	<text key="treeMapContainer_help_ASTRO_SSO">
+		Esamina le osservazioni di questo oggetto del Sistema Solare disponibili nel campo visivo per le diverse missioni
+	</text>
+	<text key="dataPanelPager_of">
+		of
+	</text>
+	<text key="dataPanelPager_nextPagerTooltip">
+		Next page
+	</text>
+	<text key="dataPanelPager_previousPagerTooltip">
+		Previous page
+	</text>
+</Internationalization>
