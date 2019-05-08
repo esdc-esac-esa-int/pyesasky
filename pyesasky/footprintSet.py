@@ -4,15 +4,13 @@ __all__ = ['FootprintSet']
 
 class FootprintSet:
     
-    _footprintSetName = ''
-    _cooframe = 'J2000'
-    _color = '#aa2345'
-    _lineWidth = 10
-    _footprints = []
-    
-    
-    
     def __init__(self, footprintSetName, cooframe, color, lineWidth):
+        self._footprintSetName = ''
+        self._cooframe = 'J2000'
+        self._color = '#aa2345'
+        self._lineWidth = 10
+        self._footprints = []
+        
         self._footprintSetName = footprintSetName        
         
         if (cooframe == 'J2000' or cooframe == 'Galactic'):
@@ -58,11 +56,7 @@ class FootprintSet:
 
         self._footprints.append(currFootprint)
 
-
-
     def toDict(self):
-        
-       
 
         content = dict(
             overlaySet=dict(

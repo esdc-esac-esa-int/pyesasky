@@ -5,15 +5,23 @@ __all__ = ['Catalogue']
 
 class Catalogue:
     
+    '''
     _catalogueName = ''
     _cooframe = CooFrame.FRAME_J2000
     _color = '#aa2345'
     _lineWidth = 10
     _sources = []
-    
+    '''
     
     
     def __init__(self, catalogueName, cooframe, color, lineWidth):
+        
+        self._catalogueName = ''
+        self._cooframe = CooFrame.FRAME_J2000
+        self._color = '#aa2345'
+        self._lineWidth = 10
+        self._sources = []
+        
         self._catalogueName = catalogueName
         
         if (cooframe == CooFrame.FRAME_J2000 or cooframe == CooFrame.FRAME_GALACTIC): 

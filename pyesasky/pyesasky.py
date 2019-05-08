@@ -245,7 +245,7 @@ class ESASkyWidget(widgets.DOMWidget):
         if not lineWidth:
             lineWidth = 5
             
-        userCatalogue = Catalogue(catalogueName, cooFrame, color, lineWidth)
+        astropyCatalogue = Catalogue(catalogueName, cooFrame, color, lineWidth)
         
         j = 0
         currId = j
@@ -280,10 +280,10 @@ class ESASkyWidget(widgets.DOMWidget):
                 
             currId = j
             
-            userCatalogue.addSource(currName, currRaDeg, currDecDeg, currId, currDetails)
+            astropyCatalogue.addSource(currName, currRaDeg, currDecDeg, currId, currDetails)
             j += 1
             
-        self.overlayCatalogueWithDetails(userCatalogue)
+        self.overlayCatalogueWithDetails(astropyCatalogue)
 
 
 
