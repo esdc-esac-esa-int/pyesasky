@@ -17,7 +17,7 @@
 	"main": "lib/index.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/fab77/pyesasky"
+		"url": "https://github.com/esdc-esac-esa-int/pyesasky.git "
 	},
 	"scripts": {
 		"build": "npm run build:nbextension",
