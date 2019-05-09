@@ -5,14 +5,6 @@ __all__ = ['HiPS']
 
 
 class HiPS:
-    
-    _name = ''
-    _id = ''
-    _url = ''
-    _cooFrame = 'J2000'
-    _maxNorder = '3'
-    _imgFormat = 'png'
-
 
     def __init__(self, name, url, cooframe, maxNorder, imgFormat):
         self._name = name

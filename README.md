@@ -11,13 +11,9 @@ ESASky Jupyter widget - some Jupyter Notebook sample files in jupyter_samples fo
 
 For a development installation (requires npm),
 
-$ git clone https://github.com/fab77/pyesasky.git
+$ git clone https://github.com/esdc-esac-esa-int/pyesasky
 
 $ cd pyesasky
-
-$ npm install
-
-$ python setup.py install
 
 $ pip install .
 
@@ -28,59 +24,50 @@ $ jupyter nbextension enable --py --sys-prefix pyesasky
 
 or simply run 
 
-
-$ sh reinstall.sh
-
+$ sh install.sh
 
 
 
 # Run pyesasky
 
 
-Once installed open Jupyter notebook
+Running pyESASky samples:
+
+$ cd samples
 
 $ jupyter notebook
 
+For the basic functionnalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
+
+In general, it is possible to instantiate pyESASky by running the folowing code in your Jupyter Notebook.
 
 from pyesasky.pyesasky import ESASkyWidget
-
 esasky = ESASkyWidget()
-
 esasky
 
+To be able to use catalogue features, the following additional classes must be imported:
 
+from pyesasky.pyesasky import Catalogue
+from pyesasky.pyesasky import CatalogueDescriptor
+from pyesasky.pyesasky import MetadataDescriptor
+from pyesasky.pyesasky import MetadataType
 
-## go to a target by name
-esasky.goToTargetName('M51')
+To be able to use footprints features, the following additional classes must be imported:
 
-## go to RA and Dec
-esasky.setGoToRADec('10 0 2', '+10 1 23')
-esasky.setGoToRADec('45', '+81.7')
-
-## set the FoV in decimal degrees
-esasky.setFoV(1)
-
-## use the Planck color palette for the current HiPS
-esasky.setHiPSColorPalette('PLANCK')
-
-## use the Native color palette for the current HiPS
-esasky.setHiPSColorPalette('NATIVE')
+from pyesasky.pyesasky import FootprintSet
+from pyesasky.pyesasky import FootprintSetDescriptor
+from pyesasky.pyesasky import MetadataDescriptor
+from pyesasky.pyesasky import MetadataType
 
 
 
 
 # Uninstall
 
-$ cd pyesasky
-
 $ pip uninstall pyesasky
-
-$ python setup.py clean
-
-$ npm run clean
 
 $ jupyter nbextension uninstall pyesasky
 
-In case the uninstall will complain about a missing 'rimraf' command, try that first and then rerun the uninstall procedure:
+In case the uninstall is complaining about a missing 'rimraf' command, try that first and then rerun the uninstall procedure:
 
 $ npm install webpack-dev-server rimraf webpack -g
