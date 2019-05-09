@@ -1,5 +1,7 @@
 import ipywidgets as widgets
 from traitlets import Unicode, default, Float
+import requests
+import configparser
 
 from .catalogue import Catalogue
 from .footprintSet import FootprintSet
@@ -32,7 +34,6 @@ class ESASkyWidget(widgets.DOMWidget):
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
-
 
     def setGoToRADec(self, ra, dec):
         content = dict(
@@ -87,7 +88,20 @@ class ESASkyWidget(widgets.DOMWidget):
                         )
         self.send(content)
 
-    def setHiPS(self, hipsName, hipsURL, cooFrame, maxNorder, imgFormat):
+    def _readProperties(self, url):
+        config = configparser.RawConfigParser()
+        response = requests.get(url+"properties")
+        text = "[Dummy section]\n"+response.text
+        config.read_string(text)
+        return config
+        
+    def setHiPS(self, hipsName, hipsURL):
+        config = self._readProperties(hipsURL)
+        maxNorder = config.get('Dummy section','hips_order')
+        imgFormat = config.get('Dummy section','hips_tile_format')
+        cooFrame = config.get('Dummy section','hips_frame')
+        if cooFrame == 'equatorial':
+            cooFrame = 'J2000'
         userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat)
         print('hipsURL '+hipsURL)
         print('imgFormat '+imgFormat)
@@ -96,7 +110,7 @@ class ESASkyWidget(widgets.DOMWidget):
                        content=userHiPS.toDict()
                        )
         self.send(content)
-    
+
     def overlayFootprints(self, footprintSet):
         content = dict(
                         event='overlayFootprints',
