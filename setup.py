@@ -125,7 +125,9 @@ setup_args = dict(
         'qtpy',
         'flask',
         'flask-cors',
-        'six'
+        'six',
+        'request',
+        'configparser'
     ],    
     extras_require = {
         'test': [
