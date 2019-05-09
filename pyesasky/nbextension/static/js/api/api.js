@@ -56,6 +56,11 @@ function ESASkyAPIConstructor() {
 	this.overlayCatalogueWithData = function(userCatalogueJSON){
 		this.overlayCatalogueWithDataAPI(userCatalogueJSON);
 	};
+	
+	
+	this.getAvailableHiPS = function(wavelength){
+		return this.getAvailableHiPSAPI(wavelength);
+	};
 
 	
 	

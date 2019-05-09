@@ -73,6 +73,12 @@ class ESASkyWidget(widgets.DOMWidget):
                         )
         self.send(content)
     
+    def getAvailableHiPS(self, wavelength):
+        content = dict(
+                        event='getAvailableHiPS',
+                        )
+        print(self.send(content))
+        
     def clearFootprintsOverlay(self, overlayName):
         content = dict(
                         event='clearFootprintsOverlay',
@@ -300,6 +306,7 @@ class ESASkyWidget(widgets.DOMWidget):
         else:
             return valueObj
         
+    
     def overlayCatalogueFromCSV(self, pathToFile, csvDelimiter, catalogueDescriptor, cooFrame):
         
         catalogue = Catalogue(catalogueDescriptor.getDatasetName(), cooFrame, catalogueDescriptor.getHistoColor(), catalogueDescriptor.getLineWidth())
