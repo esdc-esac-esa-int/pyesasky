@@ -1,0 +1,25 @@
+{
+    "authors": "Teppei Sato <https://github.com/teppeis>",
+    "definitionFilename": "index.d.ts",
+    "libraryDependencies": [],
+    "moduleDependencies": [],
+    "libraryMajorVersion": "0",
+    "libraryMinorVersion": "3",
+    "libraryName": "expect.js 0.3.1",
+    "typingsPackageName": "expect.js",
+    "projectName": "https://github.com/Automattic/expect.js",
+    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+    "sourceBranch": "types-2.0",
+    "kind": "Mixed",
+    "globals": [
+        "expect"
+    ],
+    "declaredModules": [
+        "expect.js"
+    ],
+    "files": [
+        "index.d.ts"
+    ],
+    "hasPackageJson": false,
+    "contentHash": "799dedc3100157bc9931c468863b75ef2d83b01efefcf2f5f61c787360bf3657"
+}
