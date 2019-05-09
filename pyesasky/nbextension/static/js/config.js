@@ -1,8 +1,8 @@
 var serverProperties = {
  contextPath: "/esasky",
- tapContext: "http://sky.esa.int/esasky-tap",
+ tapContext: "/esasky-tap",
  highchartsExportURL: "//highcharts.export.host/highcharts.export.context",
  localeFilesLocation: "",
  targetListFilesLocation: "",
- showMissingTranslationBox: "${show.missing.translation.box}"
+ showMissingTranslationBox: "false"
 };
