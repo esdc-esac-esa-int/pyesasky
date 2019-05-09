@@ -8,15 +8,8 @@ Installation
 
 For a development installation (requires npm),
 
-    $ git clone https://github.com//pyesasky.git
+    $ git clone https://github.com/esdc-esac-esa-int/pyesasky.git
     
     $ cd pyesasky
     
-    $ python setup.py install
-    
-    $ pip install .
-    
-    $ jupyter nbextension install --py --sys-prefix pyesasky
-    
-    $ jupyter nbextension enable --py --sys-prefix pyesasky
-    
+    $ sh install.sh
