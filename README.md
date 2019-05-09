@@ -1,10 +1,6 @@
 # pyesasky
 
-ESASky Jupyter widget - some Jupyter Notebook sample files in jupyter_samples folder
-
-- pyESASky-basic.ipynb
-- pyESASky-astroquery.ipynb (integration and overlay of Gaia DR2 data)
-
+Welcome to the ESASky Jupyter notebook widget page. 
 
 
 # Installation
@@ -15,29 +11,19 @@ $ git clone https://github.com/esdc-esac-esa-int/pyesasky
 
 $ cd pyesasky
 
-$ pip install .
-
-$ jupyter nbextension install --py --sys-prefix pyesasky
-
-$ jupyter nbextension enable --py --sys-prefix pyesasky
-
-
-or simply run 
-
 $ sh install.sh
 
 
-
-# Run pyesasky
-
-
-Running pyESASky samples:
+# Running pyESASky samples:
 
 $ cd samples
 
 $ jupyter notebook
 
 For the basic functionnalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
+
+
+# Run pyesasky
 
 In general, it is possible to instantiate pyESASky by running the folowing code in your Jupyter Notebook.
 
@@ -60,13 +46,9 @@ from pyesasky.pyesasky import MetadataDescriptor
 from pyesasky.pyesasky import MetadataType
 
 
-
-
 # Uninstall
 
-$ pip uninstall pyesasky
-
-$ jupyter nbextension uninstall pyesasky
+$ sh uninstall.sh
 
 In case the uninstall is complaining about a missing 'rimraf' command, try that first and then rerun the uninstall procedure:
 
