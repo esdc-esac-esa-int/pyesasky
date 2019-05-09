@@ -5,15 +5,6 @@ __all__ = ['Catalogue']
 
 class Catalogue:
     
-    '''
-    _catalogueName = ''
-    _cooframe = CooFrame.FRAME_J2000
-    _color = '#aa2345'
-    _lineWidth = 10
-    _sources = []
-    '''
-    
-    
     def __init__(self, catalogueName, cooframe, color, lineWidth):
         
         self._catalogueName = ''
