@@ -2,6 +2,9 @@
 
 Welcome to the ESASky Jupyter notebook widget page. 
 
+# Requirements
+
+Jupyter and node
 
 # Installation
 
