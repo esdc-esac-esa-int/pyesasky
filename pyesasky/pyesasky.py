@@ -108,6 +108,8 @@ class ESASkyWidget(widgets.DOMWidget):
         cooFrame = config.get('Dummy section','hips_frame')
         if cooFrame == 'equatorial':
             cooFrame = 'J2000'
+        else:
+            cooFrame = 'Galactic'
         userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat)
         print('hipsURL '+hipsURL)
         print('imgFormat '+imgFormat)

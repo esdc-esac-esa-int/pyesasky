@@ -14,7 +14,7 @@ class HiPS:
         self._maxNorder = maxNorder
         self._imgFormat = imgFormat
         
-        if (cooframe == CooFrame.FRAME_J2000 or cooframe == CooFrame.FRAME_GALACTIC): 
+        if (cooframe.lower() == CooFrame.FRAME_J2000.lower() or cooframe.lower() == CooFrame.FRAME_GALACTIC.lower()): 
             self._cooframe = cooframe
         else:
             print('coordinates frame ' + cooframe + ' not recognized. Possible options are ' + CooFrame.FRAME_J2000 + ' and ' + CooFrame.FRAME_GALACTIC + '. Applied ' + CooFrame.FRAME_J2000 + ' by default.')
