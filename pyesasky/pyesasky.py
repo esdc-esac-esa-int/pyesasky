@@ -104,15 +104,15 @@ class ESASkyWidget(widgets.DOMWidget):
     def setHiPS(self, hipsName, hipsURL):
         config = self._readProperties(hipsURL)
         maxNorder = config.get('Dummy section','hips_order')
-        imgFormat = config.get('Dummy section','hips_tile_format')
+        imgFormat = config.get('Dummy section','hips_tile_format').split()
         cooFrame = config.get('Dummy section','hips_frame')
         if cooFrame == 'equatorial':
             cooFrame = 'J2000'
         else:
             cooFrame = 'Galactic'
-        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat)
+        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
         print('hipsURL '+hipsURL)
-        print('imgFormat '+imgFormat)
+        print('imgFormat '+imgFormat[0])
         content = dict(
                        event='changeHiPS',
                        content=userHiPS.toDict()
