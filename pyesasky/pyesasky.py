@@ -23,8 +23,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('0.1.0').tag(sync=True)
-    _model_module_version = Unicode('0.1.0').tag(sync=True)
+    _view_module_version = Unicode('1.0.0').tag(sync=True)
+    _model_module_version = Unicode('1.0.0').tag(sync=True)
     
     _targetname = Unicode('Mkr432').tag(sync=True)
     _fovDeg = Float(60).tag(sync=True)
