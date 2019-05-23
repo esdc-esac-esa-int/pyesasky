@@ -95,8 +95,9 @@ class ESASkyWidget(widgets.DOMWidget):
         self.send(content)
 
     def _readProperties(self, url):
-        config = configparser.RawConfigParser()
+        config = configparser.RawConfigParser(strict=False)
         response = requests.get(url+"properties")
+        response.raise_for_status()
         text = "[Dummy section]\n"+response.text
         config.read_string(text)
         return config
