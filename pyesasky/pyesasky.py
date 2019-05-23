@@ -2,6 +2,7 @@ import ipywidgets as widgets
 from traitlets import Unicode, default, Float
 import requests
 import configparser
+from urllib3.exceptions import HTTPError
 
 from .catalogue import Catalogue
 from .footprintSet import FootprintSet
@@ -96,12 +97,23 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def _readProperties(self, url):
         config = configparser.RawConfigParser(strict=False)
-        response = requests.get(url+"properties")
-        response.raise_for_status()
-        text = "[Dummy section]\n"+response.text
-        config.read_string(text)
-        return config
-        
+        if not url.startswith('http'):
+            text = "[Dummy section]\n"
+            try:
+                with open(url+"properties", 'r') as f:
+                    text += f.read() + "\n"
+                config.read_string(text)
+                return config
+            except FileNotFoundError as fnf_error:
+                print(url + " not found or missing properties file.\n Did you mean http://" + url)
+                raise(fnf_error)
+        else:   
+            response = requests.get(url+"properties")
+            response.raise_for_status()
+            text = "[Dummy section]\n"+response.text
+            config.read_string(text)
+            return config
+            
     def setHiPS(self, hipsName, hipsURL):
         config = self._readProperties(hipsURL)
         maxNorder = config.get('Dummy section','hips_order')
