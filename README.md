@@ -48,6 +48,14 @@ from pyesasky.pyesasky import FootprintSetDescriptor
 from pyesasky.pyesasky import MetadataDescriptor
 from pyesasky.pyesasky import MetadataType
 
+# Pyesaky in Jupyter lab
+
+In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
+
+$ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+NOTE that this requires node.js to be installed. 
+
 
 # Uninstall
 
