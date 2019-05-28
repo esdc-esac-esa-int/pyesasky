@@ -4,7 +4,10 @@ Welcome to the ESASky Jupyter notebook widget page.
 
 # Requirements
 
-Jupyter and node
+Jupyter and node. Jupyter comes together with anaconda. 
+To install node run the following command:
+
+$ pip install npm
 
 # Installation
 
