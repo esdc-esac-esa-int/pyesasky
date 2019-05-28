@@ -53,6 +53,18 @@ class ESASkyWidget(widgets.DOMWidget):
     def setHiPSColorPalette(self, colorPalette):
         self._colorPalette = colorPalette
         
+    def closeJwstPanel(self):
+        content = dict(
+                        event='closeJwstPanel'
+        )
+        self.send(content)
+    
+    def openJwstPanel(self):
+        content = dict(
+                        event='openJwstPanel'
+        )
+        self.send(content)
+
     def addJwst(self, instrument, detector, showAllInstruments):
         content = dict(
                         event='addJwst',
