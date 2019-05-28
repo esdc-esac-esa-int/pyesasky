@@ -2274,6 +2274,9 @@
 		Mostrando las primeras $sourceLimit$ fuentes,
 		ordenadas por $orderBy$
 	</text>
+		<text key="publicationSourceLimitDescription">
+		Mostrando las primeras $sourceLimit$ fuentes por número de publicaciones
+	</text>
 	<text key="sourceLimitNumImages">
 		Mostrando las $sourceLimit$ fuentes con m&#225;s
 		observaciones
@@ -3069,9 +3072,6 @@
 	</text>
 	<text key="STAR">
 		Estrella
-	</text>
-	<text key="PublicationSourceLimit">
-		Mostrando las primeras $SOURCELIMIT$ fuentes por número de publicaciones
 	</text>
 </Internationalization>
 

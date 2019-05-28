@@ -41,11 +41,13 @@ package_data_spec = {
 data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky', nb_path, '*.js*'),
     ('share/jupyter/nbextensions/pyesasky', nb_path, '*.html'),
+    ('share/jupyter/nbextensions/pyesasky', pjoin(HERE, 'lib'),  'extension.js'),
     
     ('share/jupyter/nbextensions/pyesasky/js', pjoin(nb_path, 'js'), '*.js*'),
     
-    ('share/jupyter/nbextensions/pyesasky/js/jquery', pjoin(nb_path, 'js', 'jquery'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/highcharts', pjoin(nb_path, 'js', 'highcharts'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/jquery', pjoin(nb_path, 'js', 'jquery', '1.9.1'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/highcharts', pjoin(nb_path, 'js', 'highcharts', '5.0.12'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/highcharts', pjoin(nb_path, 'js', 'highcharts', '5.0.12','modules'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/resizeEvents', pjoin(nb_path, 'js', 'resizeEvents'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/colorpicker', pjoin(nb_path, 'js', 'colorpicker'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/sliderSelector', pjoin(nb_path, 'js', 'sliderSelector'), '*.js*'),

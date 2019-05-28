@@ -498,10 +498,16 @@ function createColorPicker(colorPickerId, colorPickerContainerId, defaultColor, 
       onChangeFn(color, id);
     }
   });
-  
+  if ( $("#" + colorPickerContainerId).children().length > 0 ) {
+  	$("#" + colorPickerContainerId).children().first().remove();
+  }
   $("#" + colorPickerContainerId).append(colorPicker);
 }
 
 function removeColorPicker(colorPickerId) {
   $("#" + colorPickerId).remove();
+}
+
+function hideColorPicker(colorPickerId) {
+  $("#" + colorPickerId).hide();
 }

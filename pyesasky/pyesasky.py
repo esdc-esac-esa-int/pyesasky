@@ -53,8 +53,29 @@ class ESASkyWidget(widgets.DOMWidget):
     def setHiPSColorPalette(self, colorPalette):
         self._colorPalette = colorPalette
         
-    def overlayCatalogue(self, catalogue):
+    def addJwst(self, instrument, detector, showAllInstruments):
+        content = dict(
+                        event='addJwst',
+                        instrument=instrument,
+                        detector=detector,
+                        showAllInstruments=showAllInstruments
+                        )
+        self.send(content)
+
+    def addJwstWithCoordinates(self, instrument, detector, showAllInstruments, ra, dec, rotation):
         
+        content = dict(
+                       event='addJwstWithCoordinates',
+                       instrument=instrument,
+                       detector=detector,
+                       showAllInstruments=showAllInstruments,
+                       ra=ra,
+                       dec=dec,
+                       rotation=rotation
+                       )
+        self.send(content)
+
+    def overlayCatalogue(self, catalogue):
         content = dict(
                        event='overlayCatalogue',
                        content=catalogue.toDict()

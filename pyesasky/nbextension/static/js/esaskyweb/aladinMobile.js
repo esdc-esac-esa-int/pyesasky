@@ -7117,14 +7117,14 @@ cds.Source = (function() {
     cds.Source.prototype.setCatalog = function(catalog) {
         this.catalog = catalog;
 
-        this.selectionEvent = new CustomEvent("sourceSelected", {
+        this.selectionEvent = new CustomEvent("shapeSelected", {
             detail: {
                 shapeId: this.shapeId,
                 overlayName: this.catalog.name,
                 shapeobj: this
             }
         });
-        this.deselectionEvent = new CustomEvent("sourceDeselected", {
+        this.deselectionEvent = new CustomEvent("shapeDeselected", {
             detail: {
                 shapeId: this.shapeId,
                 overlayName: this.catalog.name,
@@ -7132,13 +7132,13 @@ cds.Source = (function() {
             }
         });
 
-        this.hoverStartEvent = new CustomEvent("sourceHoverStart", {
+        this.hoverStartEvent = new CustomEvent("shapeHoverStart", {
             detail: {
                 shapeId: this.shapeId,
                 overlayName: this.catalog.name
             }
         });
-        this.hoverStopEvent = new CustomEvent("sourceHoverStop", {
+        this.hoverStopEvent = new CustomEvent("shapeHoverStop", {
             detail: {
                 shapeId: this.shapeId,
                 overlayName: this.catalog.name
@@ -7229,24 +7229,28 @@ cds.Source = (function() {
 
     // function called when a source is clicked. Called by the View object
     cds.Source.prototype.actionClicked = function() {
-        this.select();
-        if (this.catalog && this.catalog.onClick) {
-            var view = this.catalog.view;
-            if (this.catalog.onClick == 'showTable') {
-                view.aladin.measurementTable.showMeasurement(this);
-            } else if (this.catalog.onClick == 'showPopup') {
-                view.popup.setTitle('<br><br>');
-                var m = '<div class="aladin-marker-measurement">';
-                m += '<table>';
-                for (var key in this.data) {
-                    m += '<tr><td>' + key + '</td><td>' + this.data[key] + '</td></tr>';
-                }
-                m += '</table>';
-                m += '</div>';
-                view.popup.setText(m);
-                view.popup.setSource(this);
-                view.popup.show();
-            }
+        if (this.isSelected) {
+        	this.deselect();
+        } else {
+        	this.select();
+        	if (this.catalog && this.catalog.onClick) {
+        		var view = this.catalog.view;
+        		if (this.catalog.onClick == 'showTable') {
+        			view.aladin.measurementTable.showMeasurement(this);
+        		} else if (this.catalog.onClick == 'showPopup') {
+        			view.popup.setTitle('<br><br>');
+        			var m = '<div class="aladin-marker-measurement">';
+        			m += '<table>';
+        			for (var key in this.data) {
+        				m += '<tr><td>' + key + '</td><td>' + this.data[key] + '</td></tr>';
+        			}
+        			m += '</table>';
+        			m += '</div>';
+        			view.popup.setText(m);
+        			view.popup.setSource(this);
+        			view.popup.show();
+        		}
+        	}
         }
     };
 
@@ -8192,6 +8196,13 @@ cds.Catalog = (function() {
 
         this.sourceSize = sourceSize;
         this.reCreateShape();
+    };
+    
+    cds.Catalog.prototype.getSourceSize = function() {
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the size
+            return;
+        }
+        return this.sourceSize;
     };
 
     cds.Catalog.prototype.setShape = function(shape) {
@@ -12274,7 +12285,7 @@ Aladin = (function() {
                         data.push(HpxImageSurvey.SURVEYS[k]);
                     }
                 }
-                HpxImageSurvey.SURVEYS = data;
+//                HpxImageSurvey.SURVEYS = data;
                 self.view.setUnknownSurveyIfNeeded();
             },
             error: function() {}
@@ -13291,6 +13302,19 @@ Aladin = (function() {
     Aladin.prototype.getParentDiv = function() {
         return $(this.aladinDiv);
     };
+    
+    Aladin.prototype.removeAllSurveys = function() {
+    	HpxImageSurvey.SURVEYS = HpxImageSurvey.SURVEYS.filter(function(survey) {
+    		return false;
+    	}
+    	);
+    }
+    
+    Aladin.prototype.removeSurvey = function(surveyId) {
+    HpxImageSurvey.SURVEYS = HpxImageSurvey.SURVEYS.filter(function(survey) {
+    	return survey.id != surveyId;
+    	});
+    }
 
     return Aladin;
 })();
@@ -13309,6 +13333,12 @@ A.aladin = function(divSelector, options) {
 // TODO : lecture de properties
 A.imageLayer = function(id, name, rootUrl, options) {
     return new HpxImageSurvey(id, name, rootUrl, null, null, options);
+};
+
+A.removeImageLayer = function(surveyId) {
+//	HpxImageSurvey.SURVEYS = HpxImageSurvey.SURVEYS.filter(function(survey) {
+//		return survey.id != surveyId;
+//	});
 };
 
 // @API

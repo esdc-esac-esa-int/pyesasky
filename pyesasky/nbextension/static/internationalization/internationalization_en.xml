@@ -1652,6 +1652,9 @@
 		Showing the first $sourceLimit$ sources ordered by
 		$orderBy$
 	</text>
+	<text key="publicationSourceLimitDescription">
+		Showing top $sourceLimit$ sources based on number of publications
+	</text>
 	<text key="sourceLimitNumImages">
 		Showing the $sourceLimit$ most observed sources (Number
 		of Images)
@@ -2522,8 +2525,6 @@
 	<text key="STAR">
 		Star
 	</text>
-	<text key="PublicationSourceLimit">
-		Showing top $SOURCELIMIT$ sources based on number of publications
-	</text>
+	
 	
 </Internationalization>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="//aladin.u-strasbg.fr/java/" href="aladin.jnlp" >
+
+  <information>
+    <title>Aladin V7</title>
+    <vendor>CDS - Observatoire Astronomique de Strasbourg</vendor>
+    <homepage href="//aladin.u-strasbg.fr"/>
+    <icon href="//aladin.u-strasbg.fr/java/Aladin-logo-OS.gif"/>
+    <icon kind="splash" href="//aladin.u-strasbg.fr/java/AladinBanner.jpg"/>
+    <description>
+       Aladin is an interactive software sky atlas allowing
+       the user to visualize digitized images of any part of the sky,
+       to superimpose entries from astronomical catalogs or personal
+       user data files, and to interactively access related data
+       and information from the SIMBAD, NED, VizieR, or other archives
+       for all known objects in the field
+    </description>
+    <description kind="one-line">Aladin V7 (CDS)</description>
+    <description kind="short">Aladin V7 (CDS)</description>
+    <description kind="tooltip">Aladin V7</description>
+    <offline-allowed/>
+    <shortcut online="false">
+       <desktop/>
+       <menu>Aladin</menu>
+    </shortcut>
+    <association mime-type="application-x/fits" extensions="fits"/>
+    <association mime-type="application-x/ajs" extensions="ajs"/>
+    <association mime-type="application-x/aj" extensions="aj"/>
+  </information>
+<!--
+   <applet-desc
+         main-class="cds.aladin.Aladin"
+         name="Aladin"
+         width="731"
+         height="712">
+      <param name="script" value="get m101"/>
+  </applet-desc>
+-->
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+     <j2se version="1.5+"
+        initial-heap-size="128m"
+	max-heap-size="1024m"
+	java-vm-args="-ms1024m"/>
+     <jar main="true" href="Aladin.jar"/>
+  </resources>
+   <application-desc main-class="cds.aladin.Aladin">
+     <argument>-from=CDS-WebStart</argument>
+  </application-desc>
+
+</jnlp>
