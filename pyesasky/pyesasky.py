@@ -74,6 +74,12 @@ class ESASkyWidget(widgets.DOMWidget):
                         )
         self.send(content)
 
+    def clearJwstAll(self):
+        content = dict(
+                        event='clearJwstAll'
+        )
+        self.send(content)
+
     def addJwstWithCoordinates(self, instrument, detector, showAllInstruments, ra, dec, rotation):
         
         content = dict(
