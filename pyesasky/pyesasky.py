@@ -46,12 +46,27 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def goToTargetName(self, targetname):
         self._targetname = targetname 
+        content = dict(
+                        event='goToTargetName',
+                        targetname=targetname
+        )
+        self.send(content)
         
     def setFoV(self, fovDeg):
         self._fovDeg = fovDeg
+        content = dict(
+                        event='setFoV',
+                        fovDeg=fovDeg
+        )
+        self.send(content)
         
     def setHiPSColorPalette(self, colorPalette):
         self._colorPalette = colorPalette
+        content = dict(
+                        event='setHiPSColorPalette',
+                        colorPalette=colorPalette
+        )
+        self.send(content)
         
     def closeJwstPanel(self):
         content = dict(
@@ -152,24 +167,33 @@ class ESASkyWidget(widgets.DOMWidget):
             text = "[Dummy section]\n"+response.text
             config.read_string(text)
             return config
-            
-    def setHiPS(self, hipsName, hipsURL):
-        config = self._readProperties(hipsURL)
-        maxNorder = config.get('Dummy section','hips_order')
-        imgFormat = config.get('Dummy section','hips_tile_format').split()
-        cooFrame = config.get('Dummy section','hips_frame')
-        if cooFrame == 'equatorial':
-            cooFrame = 'J2000'
+
+
+
+    def setHiPS(self, hipsName, hipsURL='default'):
+        if hipsURL != 'default':
+            config = self._readProperties(hipsURL)
+            maxNorder = config.get('Dummy section','hips_order')
+            imgFormat = config.get('Dummy section','hips_tile_format').split()
+            cooFrame = config.get('Dummy section','hips_frame')
+            if cooFrame == 'equatorial':
+                cooFrame = 'J2000'
+            else:
+                cooFrame = 'Galactic'
+            userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
+            print('hipsURL '+hipsURL)
+            print('imgFormat '+imgFormat[0])
+            content = dict(
+                        event='changeHiPSWithParams',
+                        content=userHiPS.toDict()
+                        )
+            self.send(content)
         else:
-            cooFrame = 'Galactic'
-        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
-        print('hipsURL '+hipsURL)
-        print('imgFormat '+imgFormat[0])
-        content = dict(
-                       event='changeHiPS',
-                       content=userHiPS.toDict()
-                       )
-        self.send(content)
+            content = dict(
+                        event='changeHiPS',
+                        content=hipsName
+                        )
+            self.send(content)
 
     def overlayFootprints(self, footprintSet):
         content = dict(

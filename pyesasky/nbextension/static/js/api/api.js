@@ -22,6 +22,10 @@ function ESASkyAPIConstructor() {
 	this.setFoV = function(fovDegrees) {
 		this.setFoVAPI(fovDegrees);
 	};
+	
+	this.setHiPS = function(surveyId){
+		this.setHiPSAPI(surveyId);
+	};
 
 	this.setHiPSWithParams = function(surveyId, surveyName, surveyRootUrl,
 			surveyFrame, maximumNorder, imgFormat) {
@@ -57,11 +61,29 @@ function ESASkyAPIConstructor() {
 		this.overlayCatalogueWithDataAPI(userCatalogueJSON);
 	};
 	
-	
 	this.getAvailableHiPS = function(wavelength){
 		return this.getAvailableHiPSAPI(wavelength);
 	};
 
+	this.addJwstWithCoordinates = function(instrument, detector, allInstruments, ra, dec, rotation){
+		return this.addJwstWithCoordinatesAPI(instrument, detector, allInstruments, ra, dec, rotation);
+	};
+
+	this.addJwst = function(instrument, detector, allInstruments){
+		return this.addJwstAPI(instrument, detector, allInstruments);
+	};
+
+	this.closeJwstPanel = function(){
+		return this.closeJwstPanelAPI();
+	};
+
+	this.openJwstPanel = function(){
+		return this.openJwstPanelAPI();
+	};
+	
+	this.clearJwst = function(){
+		return this.clearJwstAPI();
+	};
 	
 	
 }

@@ -4,10 +4,21 @@ Welcome to the ESASky Jupyter notebook widget page.
 
 # Requirements
 
-Jupyter and node. Jupyter comes together with anaconda. 
-To install node run the following command:
+Jupyter and node.js
 
-$ pip install npm
+Jupyter comes together with anaconda. 
+
+For node.js:
+
+If you use conda, you can get it with:
+
+conda install -c conda-forge nodejs
+
+If you use Homebrew on Mac OS X:
+
+brew install node
+
+You can also download Node.js from the Node.js website https://nodejs.org/ and install it directly.
 
 # Installation
 
@@ -19,7 +30,6 @@ $ cd pyesasky
 
 $ sh install.sh
 
-
 # Running pyESASky samples:
 
 $ cd samples
@@ -27,7 +37,6 @@ $ cd samples
 $ jupyter notebook
 
 For the basic functionnalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
-
 
 # Run pyesasky
 
@@ -58,7 +67,6 @@ In order to be able to run pyesasky in Jupyter lab it is necessary to install th
 $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 NOTE that this requires node.js to be installed. 
-
 
 # Uninstall
 
