@@ -1,9 +1,10 @@
 import ipywidgets as widgets
-from traitlets import Unicode, default, Float
+from traitlets import Unicode, default, Float, Dict
 import requests
 import configparser
 from urllib3.exceptions import HTTPError
 
+from traitlets import observe
 from .catalogue import Catalogue
 from .footprintSet import FootprintSet
 from .footprintSetDescriptor import FootprintSetDescriptor
@@ -12,10 +13,11 @@ from .metadataDescriptor import MetadataDescriptor
 from .metadataType import MetadataType
 from .HiPS import HiPS
 import csv
+import json
 
 
 __all__ = ['ESASkyWidget']
-
+widgets.IntSlider
 
     
 class ESASkyWidget(widgets.DOMWidget):
@@ -30,11 +32,59 @@ class ESASkyWidget(widgets.DOMWidget):
     _targetname = Unicode('Mkr432').tag(sync=True)
     _fovDeg = Float(60).tag(sync=True)
     _colorPalette = Unicode('NATIVE').tag(sync=True)
-    
+    _callback = Dict().tag(sync=True)
+    _messageSync = Unicode('No message sent').tag(sync=True)
+    serverWaitMessage = 'Waiting for server response'
     
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
+
+    def printCallback(self):
+        print(self._callback)
+
+    def getAvailableHiPSAPI(self, wavelength=""):
+        if hasattr(self, '_callbackOutputLink'):
+            self._callbackOutputLink.unlink()
+        content = dict(
+                        event='getAvailableHiPS',
+                        wavelength=wavelength
+        )
+        out = widgets.Output()
+        label = widgets.Label()
+        out.append_display_data(label)
+        out
+        self._messageSync = self.serverWaitMessage
+        self._callbackOutputLink = widgets.jsdlink((self,'_messageSync'),(label,'value'))
+        self.send(content)
+        
+    def getAvailableHiPS(self, wavelength=""):
+        response = requests.get('http://sky.esa.int/esasky-tap/hips-sources')  
+        response.raise_for_status()
+        HiPSMap = self.parseHiPSJSON(response.text)
+        if len(wavelength) > 0:
+            if wavelength.upper() in HiPSMap.keys():
+                return HiPSMap[wavelength.upper()]
+            else:
+                print("No wavelength: " + wavelength + " in ESASky")
+                print("Available wavelengths are: ")
+                print(HiPSMap.keys())
+        else:
+            return HiPSMap
+
+    def parseHiPSJSON(self,HiPSJson):
+        HiPSJson = json.loads(HiPSJson)
+        if 'total' in HiPSJson.keys():
+            HiPSMap = dict()
+            for i in range(HiPSJson['total']):
+                wavelength = HiPSJson['menuEntries'][i]
+                wavelengthMap = dict()
+                for j in range(wavelength['total']):
+                    hips = wavelength['hips'][j]
+                    wavelengthMap[hips['surveyName']]=hips
+                HiPSMap[wavelength['wavelength']] = wavelengthMap
+            return HiPSMap
+
 
     def setGoToRADec(self, ra, dec):
         content = dict(
@@ -129,11 +179,11 @@ class ESASkyWidget(widgets.DOMWidget):
                         )
         self.send(content)
     
-    def getAvailableHiPS(self, wavelength):
-        content = dict(
-                        event='getAvailableHiPS',
-                        )
-        print(self.send(content))
+    # def getAvailableHiPS(self, wavelength):
+    #     content = dict(
+    #                     event='getAvailableHiPS',
+    #                     )
+    #     print(self.send(content))
         
     def clearFootprintsOverlay(self, overlayName):
         content = dict(
