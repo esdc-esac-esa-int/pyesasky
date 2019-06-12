@@ -218,11 +218,14 @@ class ESASkyWidget(widgets.DOMWidget):
             config.read_string(text)
             return config
 
-
-
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
             config = self._readProperties(hipsURL)
+            if not hipsURL.startswith('http'):
+                if hipsURL.startswith('/'):
+                    hipsURL = 'file:/' + hipsURL 
+                else:
+                    hipsURL = 'file://' + hipsURL 
             maxNorder = config.get('Dummy section','hips_order')
             imgFormat = config.get('Dummy section','hips_tile_format').split()
             cooFrame = config.get('Dummy section','hips_frame')
