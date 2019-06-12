@@ -1,4 +1,4 @@
-# pyesasky
+# pyesasky (beta 1.0.1)
 
 Welcome to the ESASky Jupyter notebook widget page. 
 
