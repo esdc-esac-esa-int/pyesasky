@@ -37,12 +37,13 @@ class ESASkyWidget(widgets.DOMWidget):
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
 
-    def getCenter(self,cooFrame = 'J200'):
-        if cooFrame not in ['J200','GALACTIC']:
+    def getCenter(self,cooFrame = 'J2000'):
+        if cooFrame not in ['J2000','GALACTIC']:
             print('Coordinate frame must be J2000 or GALACTIC')
             return
         content = dict(
-                        event='getCenter'
+                        event='getCenter',
+                        cooFrame=cooFrame
         )
         self._sendAvaitCallback(content)
 
