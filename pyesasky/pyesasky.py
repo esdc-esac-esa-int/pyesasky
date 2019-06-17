@@ -109,6 +109,12 @@ class ESASkyWidget(widgets.DOMWidget):
         self._messageSync = self.serverWaitMessage
         self._callbackOutputLink = widgets.jsdlink((self,'_messageSync'),(label,'value'))
         self.send(content)
+
+    def getResultPanelData(self):
+        content = dict(
+                event = 'getResultPanelData'
+        )
+        self._sendAvaitCallback(content)
         
     def getAvailableHiPS(self, wavelength=""):
         response = requests.get('http://sky.esa.int/esasky-tap/hips-sources')  
