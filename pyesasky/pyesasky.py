@@ -15,10 +15,7 @@ from .HiPS import HiPS
 import csv
 import json
 
-
 __all__ = ['ESASkyWidget']
-widgets.IntSlider
-
     
 class ESASkyWidget(widgets.DOMWidget):
 
@@ -32,7 +29,7 @@ class ESASkyWidget(widgets.DOMWidget):
     _targetname = Unicode('Mkr432').tag(sync=True)
     _fovDeg = Float(60).tag(sync=True)
     _colorPalette = Unicode('NATIVE').tag(sync=True)
-    _callback = Dict().tag(sync=True)
+    callback = Dict().tag(sync=True)
     _messageSync = Unicode('No message sent').tag(sync=True)
     serverWaitMessage = 'Waiting for server response'
     
@@ -40,16 +37,50 @@ class ESASkyWidget(widgets.DOMWidget):
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
 
-    def printCallback(self):
-        print(self._callback)
+    def getCenter(self,cooFrame = 'J200'):
+        if cooFrame not in ['J200','GALACTIC']:
+            print('Coordinate frame must be J2000 or GALACTIC')
+            return
+        content = dict(
+                        event='getCenter'
+        )
+        self._sendAvaitCallback(content)
 
     def getAvailableHiPSAPI(self, wavelength=""):
-        if hasattr(self, '_callbackOutputLink'):
-            self._callbackOutputLink.unlink()
         content = dict(
                         event='getAvailableHiPS',
                         wavelength=wavelength
         )
+        self._sendAvaitCallback(content)
+
+    def getObservationsCount(self):
+        content = dict(
+                event = 'getObservationsCount'
+        )
+        self._sendAvaitCallback(content)
+
+    def getCataloguesCount(self):
+        content = dict(
+                event = 'getCataloguesCount'
+        )
+        self._sendAvaitCallback(content)
+
+    def getSpectraCount(self):
+        content = dict(
+                event = 'getSpectraCount'
+        )
+        self._sendAvaitCallback(content)
+
+    def getPublicationsCount(self):
+        content = dict(
+                event = 'getPublicationsCount'
+        )
+        self._sendAvaitCallback(content)
+
+    def _sendAvaitCallback(self,content):
+        if hasattr(self, '_callbackOutputLink'):
+            self._callbackOutputLink.unlink()
+        self.send(content)
         out = widgets.Output()
         label = widgets.Label()
         out.append_display_data(label)
