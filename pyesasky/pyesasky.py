@@ -54,6 +54,27 @@ class ESASkyWidget(widgets.DOMWidget):
         )
         self._sendAvaitCallback(content)
 
+    def plotObservations(self, missionId):
+        content = dict(
+                event = 'plotObservations',
+                missionId=missionId
+        )
+        self._sendAvaitCallback(content)
+
+    def plotCatalogues(self, missionId):
+        content = dict(
+                event = 'plotCatalogues',
+                missionId=missionId
+        )
+        self._sendAvaitCallback(content)
+
+    def plotSpectra(self, missionId):
+        content = dict(
+                event = 'plotSpectra',
+                missionId=missionId
+        )
+        self._sendAvaitCallback(content)
+    
     def getObservationsCount(self):
         content = dict(
                 event = 'getObservationsCount'
@@ -81,7 +102,6 @@ class ESASkyWidget(widgets.DOMWidget):
     def _sendAvaitCallback(self,content):
         if hasattr(self, '_callbackOutputLink'):
             self._callbackOutputLink.unlink()
-        self.send(content)
         out = widgets.Output()
         label = widgets.Label()
         out.append_display_data(label)
