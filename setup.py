@@ -54,6 +54,7 @@ data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky/js/datepicker', pjoin(nb_path, 'js', 'datepicker'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/xregexp', pjoin(nb_path, 'js', 'xregexp'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/api', pjoin(nb_path, 'js', 'api'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/filesaver', pjoin(nb_path, 'js', 'filesaver'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/esaskyweb', pjoin(nb_path, 'js', 'esaskyweb'), '*.js*'),
     
     ('share/jupyter/nbextensions/pyesasky/images', pjoin(nb_path, 'images'), '*.gif*'),
