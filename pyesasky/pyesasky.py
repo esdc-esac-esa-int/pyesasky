@@ -102,10 +102,8 @@ class ESASkyWidget(widgets.DOMWidget):
     def _sendAvaitCallback(self,content):
         if hasattr(self, '_callbackOutputLink'):
             self._callbackOutputLink.unlink()
-        out = widgets.Output()
         label = widgets.Label()
-        out.append_display_data(label)
-        out
+        label
         self._messageSync = self.serverWaitMessage
         self._callbackOutputLink = widgets.jsdlink((self,'_messageSync'),(label,'value'))
         self.send(content)
