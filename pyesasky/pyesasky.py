@@ -102,8 +102,10 @@ class ESASkyWidget(widgets.DOMWidget):
     def _sendAvaitCallback(self,content):
         if hasattr(self, '_callbackOutputLink'):
             self._callbackOutputLink.unlink()
+        out = widgets.Output()
         label = widgets.Label()
-        label
+        out.append_display_data(label)
+        out
         self._messageSync = self.serverWaitMessage
         self._callbackOutputLink = widgets.jsdlink((self,'_messageSync'),(label,'value'))
         self.send(content)
@@ -299,7 +301,7 @@ class ESASkyWidget(widgets.DOMWidget):
                         event='changeHiPS',
                         content=hipsName
                         )
-            self.send(content)
+            self._sendAvaitCallback(content)
 
     def overlayFootprints(self, footprintSet):
         content = dict(
@@ -488,9 +490,6 @@ class ESASkyWidget(widgets.DOMWidget):
             j += 1
             
         self.overlayCatalogueWithDetails(astropyCatalogue)
-
-
-
 
     def convertTapType2ESASky(self, tapType):
         if tapType == 'meta.number':
