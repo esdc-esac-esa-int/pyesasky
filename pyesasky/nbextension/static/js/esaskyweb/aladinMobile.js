@@ -2907,7 +2907,7 @@ Sesame = (function() {
     };
 
     Sesame.resolve = function(objectName, callbackFunctionSuccess, callbackFunctionError) {
-        var sesameUrl = "http://cds.unistra.fr/cgi-bin/nph-sesame.jsonp?";
+        var sesameUrl = "https://cds.unistra.fr/cgi-bin/nph-sesame.jsonp?";
         $.ajax({
             url: sesameUrl,
             data: {
