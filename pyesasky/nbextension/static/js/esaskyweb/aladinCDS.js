@@ -2654,7 +2654,7 @@ SimbadPointer = (function() {
 
     SimbadPointer = {};
 
-    SimbadPointer.MIRRORS = ['//alasky.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py', '//alaskybis.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py']; // list of base URL for Simbad pointer service
+    SimbadPointer.MIRRORS = ['https://alasky.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py', 'https://alaskybis.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py']; // list of base URL for Simbad pointer service
 
 
     SimbadPointer.query = function(ra, dec, radiusDegrees, aladinInstance) {
@@ -4757,6 +4757,11 @@ Downloader = (function() {
         this.view = view; // reference to the view to be able to request redraw
         this.nbDownloads = 0; // number of current downloads
         this.dlQueue = []; // queue of items being downloaded
+        this.urlsInQueue = {};
+    };
+
+    Downloader.prototype.emptyQueue = function() {
+        this.dlQueue = [];
         this.urlsInQueue = {};
     };
 
@@ -10945,9 +10950,6 @@ HpxImageSurvey = (function() {
     /*
     function drawTexturedTriangle4Points(ctx, img, x0, y0, x1, y1, x2, y2,
             u0, v0, u1, v1, u2, v2) {
-    /*
-    function drawTexturedTriangle4Points(ctx, img, x0, y0, x1, y1, x2, y2,
-            u0, v0, u1, v1, u2, v2) {
     
     	var x3 = x1+x2-x0;
     	var y3 = y1+y2-y0;
@@ -10976,69 +10978,6 @@ HpxImageSurvey = (function() {
     //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height); // faster ??
     ctx.drawImage(img, 0, 0); // slower ??
     
-    ctx.restore();
-    }
-    */
-    	var x3 = x1+x2-x0;
-    	var y3 = y1+y2-y0;
-    // ---- centroid ----
-    var xc = (x0 + x1 + x2 + x3) / 4;
-    var yc = (y0 + y1 + y2 + y3) / 4;
-    ctx.save();
-    ctx.beginPath();
-    // ---- scale triagle by 1.05 to remove anti-aliasing and draw ----
-    ctx.moveTo((1.05 * x0 - xc * 0.05), (1.05 * y0 - yc * 0.05));
-    ctx.lineTo((1.05 * x1 - xc * 0.05), (1.05 * y1 - yc * 0.05));
-    ctx.lineTo((1.05 * x3 - xc * 0.05), (1.05 * y3 - yc * 0.05));
-    ctx.lineTo((1.05 * x2 - xc * 0.05), (1.05 * y2 - yc * 0.05));
-    ctx.closePath();
-    ctx.clip();
-    // ---- transform texture ----
-    var d_inv = 1/ (u0 * (v2 - v1) - u1 * v2 + u2 * v1 + (u1 - u2) * v0);
-    ctx.transform(
-    -(v0 * (x2 - x1) -  v1 * x2  + v2 *  x1 + (v1 - v2) * x0) * d_inv, // m11
-    (v1 *  y2 + v0  * (y1 - y2) - v2 *  y1 + (v2 - v1) * y0) * d_inv, // m12
-    (u0 * (x2 - x1) -  u1 * x2  + u2 *  x1 + (u1 - u2) * x0) * d_inv, // m21
-    -(u1 *  y2 + u0  * (y1 - y2) - u2 *  y1 + (u2 - u1) * y0) * d_inv, // m22
-    (u0 * (v2 * x1  -  v1 * x2) + v0 * (u1 *  x2 - u2  * x1) + (u2 * v1 - u1 * v2) * x0) * d_inv, // dx
-    (u0 * (v2 * y1  -  v1 * y2) + v0 * (u1 *  y2 - u2  * y1) + (u2 * v1 - u1 * v2) * y0) * d_inv  // dy
-    );
-    //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height); // faster ??
-    ctx.drawImage(img, 0, 0); // slower ??
-    /*
-    function drawTexturedTriangle4Points(ctx, img, x0, y0, x1, y1, x2, y2,
-            u0, v0, u1, v1, u2, v2) {
-    
-    	var x3 = x1+x2-x0;
-    	var y3 = y1+y2-y0;
-    // ---- centroid ----
-    var xc = (x0 + x1 + x2 + x3) / 4;
-    var yc = (y0 + y1 + y2 + y3) / 4;
-    ctx.save();
-    ctx.beginPath();
-    // ---- scale triagle by 1.05 to remove anti-aliasing and draw ----
-    ctx.moveTo((1.05 * x0 - xc * 0.05), (1.05 * y0 - yc * 0.05));
-    ctx.lineTo((1.05 * x1 - xc * 0.05), (1.05 * y1 - yc * 0.05));
-    ctx.lineTo((1.05 * x3 - xc * 0.05), (1.05 * y3 - yc * 0.05));
-    ctx.lineTo((1.05 * x2 - xc * 0.05), (1.05 * y2 - yc * 0.05));
-    ctx.closePath();
-    ctx.clip();
-    // ---- transform texture ----
-    var d_inv = 1/ (u0 * (v2 - v1) - u1 * v2 + u2 * v1 + (u1 - u2) * v0);
-    ctx.transform(
-    -(v0 * (x2 - x1) -  v1 * x2  + v2 *  x1 + (v1 - v2) * x0) * d_inv, // m11
-    (v1 *  y2 + v0  * (y1 - y2) - v2 *  y1 + (v2 - v1) * y0) * d_inv, // m12
-    (u0 * (x2 - x1) -  u1 * x2  + u2 *  x1 + (u1 - u2) * x0) * d_inv, // m21
-    -(u1 *  y2 + u0  * (y1 - y2) - u2 *  y1 + (u2 - u1) * y0) * d_inv, // m22
-    (u0 * (v2 * x1  -  v1 * x2) + v0 * (u1 *  x2 - u2  * x1) + (u2 * v1 - u1 * v2) * x0) * d_inv, // dx
-    (u0 * (v2 * y1  -  v1 * y2) + v0 * (u1 *  y2 - u2  * y1) + (u2 * v1 - u1 * v2) * y0) * d_inv  // dy
-    );
-    //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height); // faster ??
-    ctx.drawImage(img, 0, 0); // slower ??
-    
-    ctx.restore();
-    }
-    */
     ctx.restore();
     }
     */
@@ -11760,6 +11699,7 @@ View = (function() {
             view.requestRedraw(true);
         });
         var lastHoveredObject; // save last object hovered by mouse
+        var lastMouseMovePos = null;
         $(view.reticleCanvas).bind("mousemove touchmove", function(e) {
             e.preventDefault();
 
@@ -11786,6 +11726,16 @@ View = (function() {
                             y: xymouse.y
                         });
                     }
+                    // send null ra and dec when we go out of the "sky"
+                    else if (lastMouseMovePos != null) {
+                        onMouseMoveFunction({
+                            ra: null,
+                            dec: null,
+                            x: xymouse.x,
+                            y: xymouse.y
+                        });
+                    }
+                    lastMouseMovePos = pos;
                 }
 
 
@@ -12802,6 +12752,8 @@ View = (function() {
             this.tileBuffer = new TileBuffer();
         }
 
+        this.downloader.emptyQueue();
+
         newImageSurvey.isReady = false;
         this.imageSurvey = newImageSurvey;
 
@@ -13453,7 +13405,7 @@ Aladin = (function() {
     };
 
     /**** CONSTANTS ****/
-    Aladin.VERSION = "2019-03-07"; // will be filled by the build.sh script
+    Aladin.VERSION = "2019-05-07"; // will be filled by the build.sh script
 
     Aladin.JSONP_PROXY = "https://alasky.unistra.fr/cgi/JSONProxy";
     //Aladin.JSONP_PROXY = "https://alaskybis.unistra.fr/cgi/JSONProxy";

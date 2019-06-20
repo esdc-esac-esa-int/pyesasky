@@ -359,7 +359,7 @@ Per aggiungere testo o commenti alla vostra lista di oggetti, usate lo schema se
 		Informazione sull&#39;interoperabilit&#224; (SAMP)
 	</text>
 	<text key="sampConstants_sendingViaSamp">
-		Inviando @@ via SAMP
+		Inviando ====== via SAMP
 	</text>
 
 	<!-- webConstants -->

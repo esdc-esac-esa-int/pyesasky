@@ -1670,6 +1670,8 @@ AstroMath.displayMatrix = function(m) {
 function Projection(lon0, lat0) {
     this.PROJECTION = Projection.PROJ_TAN;
     this.ROT = this.tr_oR(lon0, lat0);
+
+    this.longitudeIsReversed = false;
 }
 
 //var ROT;
@@ -1722,6 +1724,14 @@ Projection.prototype = {
         this.ROT = this.tr_oR(lon0, lat0);
     },
 
+    /** Reverse the longitude
+     * If set to true, longitudes will increase from left to right
+     *
+     * */
+    reverseLongitude: function(b) {
+        this.longitudeIsReversed = b;
+    },
+
     /**
      * Set the projection to use
      * p = projection code
@@ -1736,44 +1746,25 @@ Projection.prototype = {
      * alpha, delta = longitude, lattitude
      */
     project: function(alpha, delta) {
-        //		console.log("PROJECTION ra dec "+alpha+" "+delta);
         var u1 = this.tr_ou(alpha, delta); // u1[3]
-        //		console.log("PROJECTION u1 "+u1);
         var u2 = this.tr_uu(u1, this.ROT); // u2[3]
-        //		if (u2[0] < 0){
-        //			console.log("PROJECTION u2 "+u2);
-        //		}
-
         var P = this.tr_up(this.PROJECTION, u2); // P[2] = [X,Y]
-        //		console.log("PROJECTION P "+P);
         if (P == null) {
             return null;
         }
 
-        return {
-            X: -P[0],
-            Y: -P[1]
-        };
-    },
-    project2: function(alpha, delta) {
-        //		console.log("PROJECTION ra dec "+alpha+" "+delta);
-        var u1 = this.tr_ou(alpha, delta); // u1[3]
-        //		console.log("PROJECTION u1 "+u1);
-        var u2 = this.tr_uu(u1, this.ROT); // u2[3]
-        //		if (u2[0] < 0){
-        //			console.log("PROJECTION u2 "+u2);
-        //		}
-        //		console.log("PROJECTION u2 "+u2);
-        var P = this.my_tr_up(this.PROJECTION, u2); // P[2] = [X,Y]
-        //		console.log("PROJECTION P "+P);
-        if (P == null) {
-            return null;
+        if (this.longitudeIsReversed) {
+            return {
+                X: P[0],
+                Y: -P[1]
+            };
+        } else {
+            return {
+                X: -P[0],
+                Y: -P[1]
+            };
         }
-
-        return {
-            X: -P[0],
-            Y: -P[1]
-        };
+        //return { X: -P[0], Y: -P[1] };
     },
 
     /**
@@ -1781,7 +1772,9 @@ Projection.prototype = {
      * return o = [ ra, dec ]
      */
     unproject: function(X, Y) {
-        X = -X;
+        if (!this.longitudeIsReversed) {
+            X = -X;
+        }
         Y = -Y;
         var u1 = this.tr_pu(this.PROJECTION, X, Y); // u1[3]
         var u2 = this.tr_uu1(u1, this.ROT); // u2[3]
@@ -1817,136 +1810,7 @@ Projection.prototype = {
         var X, Y;
 
         r = AstroMath.hypot(x, y); // r = cos b
-        if (z == 0) {
-            //			console.log("z zero: "+z);
-        }
-        if (r == 0.0 && z == 0.0) {
-            return null;
-        }
-
-        switch (proj) {
-            default:
-                pp = null;
-                break;
-
-            case Projection.PROJ_AITOFF:
-                den = Math.sqrt(r * (r + x) / 2.0); // cos b . cos l/2
-                X = Math.sqrt(2.0 * r * (r - x));
-                den = Math.sqrt((1.0 + den) / 2.0);
-                X = X / den;
-                Y = z / den;
-                if (y < 0.0) X = -X;
-                pp = [X, Y];
-                break;
-
-            case Projection.PROJ_GLS:
-                Y = Math.asin(z); // sin b
-                X = (r != 0) ? Math.atan2(y, x) * r : 0.0;
-                pp = [X, Y];
-                break;
-
-            case Projection.PROJ_MERCATOR:
-                if (r != 0) {
-                    X = Math.atan2(y, x);
-                    Y = AstroMath.atanh(z);
-                    pp = [X, Y];
-                } else {
-                    pp = null;
-                }
-                break;
-
-            case Projection.PROJ_TAN:
-                if (x > 0.0) {
-                    X = y / x;
-                    Y = z / x;
-                    pp = [X, Y];
-                } else {
-                    pp = null;
-                }
-                break;
-
-            case Projection.PROJ_TAN2:
-                den = (1.0 + x) / 2.0;
-                if (den > 0.0) {
-                    X = y / den;
-                    Y = z / den;
-                    pp = [X, Y];
-                } else {
-                    pp = null;
-                }
-                break;
-
-            case Projection.PROJ_ARC:
-                if (x <= -1.0) {
-                    // Distance of 180 degrees
-                    X = Math.PI
-                    Y = 0.0;
-                } else {
-                    // Arccos(x) = Arcsin(r)
-                    r = AstroMath.hypot(y, z);
-                    if (x > 0.0) den = AstroMath.asinc(r);
-                    else den = Math.acos(x) / r;
-                    X = y * den;
-                    Y = z * den;
-                }
-                pp = [X, Y];
-                break;
-
-            case Projection.PROJ_SIN:
-                if (x >= 0.0) {
-                    X = y;
-                    Y = z;
-                    pp = [X, Y];
-                } else {
-                    pp = null;
-                }
-                break;
-
-            case Projection.PROJ_SIN2: // Always possible
-                den = Math.sqrt((1.0 + x) / 2.0);
-                if (den != 0) {
-                    X = y / den;
-                    Y = z / den;
-                } else {
-                    // For x = -1
-                    X = 2.0;
-                    Y = 0.0;
-                }
-                pp = [X, Y];
-                break;
-
-            case Projection.PROJ_LAMBERT: // Always possible
-                Y = z;
-                X = 0;
-                if (r != 0) X = Math.atan2(y, x);
-                pp = [X, Y];
-                break;
-        }
-        return pp;
-    },
-
-    /**
-     * Compute projections from unit vector
-     * The center of the projection correspond to u = [1, 0, 0)
-     * proj = projection system (integer code like _PROJ_MERCATOR_
-     * u[3] = unit vector
-     * return: an array [x,y] or null
-     */
-    my_tr_up: function(proj, u) {
-        var x = u[0];
-        var y = u[1];
-        var z = u[2];
-        var r, den;
-        var pp;
-        var X, Y;
-
-        r = AstroMath.hypot(x, y); // r = cos b
-        if (z == 0) {
-            //			console.log("z zero: "+z);
-        }
-        if (r == 0.0 && z == 0.0) {
-            return null;
-        }
+        if (r == 0.0 && z == 0.0) return null;
 
         switch (proj) {
             default:
@@ -2773,6 +2637,309 @@ Numbers.toSexagesimal = function(num, prec, plus) {
 
 
 
+/******************************************************************************
+ * Aladin Lite project
+ * 
+ * File SimbadPointer.js
+ *
+ * The SIMBAD pointer will query Simbad for a given position and radius and
+ * return information on the object with 
+ *  
+ * Author: Thomas Boch [CDS]
+ * 
+ *****************************************************************************/
+
+SimbadPointer = (function() {
+
+
+    SimbadPointer = {};
+
+    SimbadPointer.MIRRORS = ['https://alasky.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py', 'https://alaskybis.u-strasbg.fr/cgi/simbad-flat/simbad-quick.py']; // list of base URL for Simbad pointer service
+
+
+    SimbadPointer.query = function(ra, dec, radiusDegrees, aladinInstance) {
+        var coo = new Coo(ra, dec, 7);
+        var params = {
+            Ident: coo.format('s/'),
+            SR: radiusDegrees
+        }
+        var successCallback = function(result) {
+            aladinInstance.view.setCursor('pointer');
+
+            var regexp = /(.*?)\/(.*?)\((.*?),(.*?)\)/g;
+            var match = regexp.exec(result);
+            if (match) {
+                var objCoo = new Coo();
+                objCoo.parse(match[1]);
+                var objName = match[2];
+                var title = '<div class="aladin-sp-title"><a target="_blank" href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=' + encodeURIComponent(objName) + '">' + objName + '</a></div>';
+                var content = '<div class="aladin-sp-content">';
+                content += '<em>Type: </em>' + match[4] + '<br>';
+                var magnitude = match[3];
+                if (Utils.isNumber(magnitude)) {
+                    content += '<em>Mag: </em>' + magnitude + '<br>';
+                }
+                content += '<br><a target="_blank" href="http://cdsportal.u-strasbg.fr/?target=' + encodeURIComponent(objName) + '">Query in CDS portal</a>';
+                content += '</div>';
+                aladinInstance.showPopup(objCoo.lon, objCoo.lat, title, content);
+            } else {
+                aladinInstance.hidePopup();
+            }
+        };
+        var failureCallback = function() {
+            aladinInstance.view.setCursor('pointer');
+            aladinInstance.hidePopup();
+        };
+        Utils.loadFromMirrors(SimbadPointer.MIRRORS, {
+            data: params,
+            onSuccess: successCallback,
+            onFailure: failureCallback,
+            timeout: 5
+        });
+
+    };
+
+    return SimbadPointer;
+})();
+
+// Copyright 2013-2017 - UDS/CNRS
+// The Aladin Lite program is distributed under the terms
+// of the GNU General Public License version 3.
+//
+// This file is part of Aladin Lite.
+//
+//    Aladin Lite is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, version 3 of the License.
+//
+//    Aladin Lite is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    The GNU General Public License is available in COPYING file
+//    along with Aladin Lite.
+//
+
+
+
+/******************************************************************************
+ * Aladin Lite project
+ * 
+ * File Box
+ *
+ * A Box instance is a GUI element providing a div nested
+ * in Aladin Lite parent div
+ * 
+ * Author: Thomas Boch [CDS]
+ * 
+ *****************************************************************************/
+Box = (function() {
+
+    // constructor
+    var Box = function(properties) {
+
+        this.$parentDiv = $('<div>');
+        this.$parentDiv.addClass('aladin-box');
+
+        properties = properties || {};
+
+        this.css = properties.css || {
+            padding: '4px'
+        };
+
+        this.position = properties.position || 'bottom'; // position can be bottom, left, top or right
+        if (this.position == 'right') {
+            this.css['left'] = 'unset';
+        }
+        this.css[this.position] = '4px';
+
+        this.contentCss = properties.contentCss || {};
+
+        this.title = properties.title || undefined;
+
+        this.content = properties.content || undefined;
+
+        this.showHandler = properties.showHandler !== undefined ? properties.showHandler : true;
+
+        this.openCallback = properties.openCallback || undefined; // callback called when the user opens the panel
+        this.closeCallback = properties.closeCallback || undefined; // callback called when the user closes the panel
+
+        this.changingDim = 'width';
+        if (this.position == 'top' || this.position == 'bottom') {
+            this.changingDim = 'height';
+        }
+
+
+        this.open = false;
+        this._render();
+        this.$parentDiv.show();
+        this.open = true;
+        this.hide();
+    };
+
+    Box.prototype = {
+
+        show: function() {
+            if (this.open) {
+                return;
+            }
+
+            this.open = true;
+            this.$parentDiv.show();
+            this._updateChevron();
+
+            if (this.changingDim == 'width') {
+                this.$parentDiv.find('.aladin-box-title-label').show();
+            }
+            var self = this;
+            var options = {};
+            options[this.changingDim] = 'show';
+            var delay = this.changingDim == 'width' ? 0 : 400;
+            this.$parentDiv.find('.aladin-box-content').animate(options, delay, function() {
+                self.css[self.position] = '4px';
+                self.updateStyle(self.css);
+
+                typeof self.openCallback === 'function' && self.openCallback();
+            });
+
+        },
+
+        hide: function() {
+            if (!this.open) {
+                return;
+            }
+
+            this.open = false;
+            this._updateChevron();
+
+            if (this.changingDim == 'width') {
+                this.$parentDiv.find('.aladin-box-title-label').hide();
+            }
+            var self = this;
+            var options = {};
+            options[this.changingDim] = 'hide';
+            var delay = this.changingDim == 'width' ? 0 : 400;
+            this.$parentDiv.find('.aladin-box-content').animate(options, delay, function() {
+                self.css[self.position] = '0px';
+                self.updateStyle(self.css);
+
+                typeof self.closeCallback === 'function' && self.closeCallback();
+            });
+        },
+
+        // complety hide parent div
+        realHide: function() {
+            this.open = false;
+            this.$parentDiv.hide();
+        },
+
+        updateStyle: function(css) {
+            this.css = css;
+            this.$parentDiv.css(css);
+        },
+
+        setContent: function(content) {
+            this.content = content;
+            this._render();
+        },
+
+        setTitle: function(title) {
+            this.title = title;
+            this._render();
+        },
+
+        enable: function() {
+            this.$parentDiv.enable();
+        },
+
+        disable: function() {
+            this.$parentDiv.disable();
+        },
+
+        // fill $parentDiv with HTML corresponding to current state
+        _render: function() {
+            var self = this;
+
+            this.$parentDiv.empty();
+            this.$parentDiv.off();
+
+            var titleDiv = $('<div class="aladin-box-title">');
+            if (this.showHandler) {
+                var chevron = $('<span class="aladin-chevron">');
+                titleDiv.append(chevron);
+            }
+            if (this.title) {
+                titleDiv.append(' <span class="aladin-box-title-label">' + this.title + '</span>');
+            }
+            this.$parentDiv.append(titleDiv);
+            var $content = $('<div class="aladin-box-content">' + (this.content ? this.content : '') + '</div>');
+            $content.css(this.contentCss);
+            this.$parentDiv.append($content);
+
+            this._updateChevron();
+            this.updateStyle(this.css);
+
+            titleDiv.on('click', function() {
+                if (self.open) {
+                    self.hide();
+                } else {
+                    self.show();
+                }
+            });
+        },
+
+        _updateChevron: function() {
+            this.$parentDiv.find('.aladin-chevron').removeClass().addClass('aladin-chevron ' + getChevronClass(this.position, this.open))
+                .attr('title', 'Click to ' + (this.open ? 'hide ' : 'show ') + (this.title ? this.title : '') + ' panel');
+        }
+    };
+
+    // return the jquery object corresponding to the given position and open/close state
+    var getChevronClass = function(position, isOpen) {
+        if (position == 'top' && isOpen || position == 'bottom' && !isOpen) {
+            return 'aladin-chevron-up';
+        }
+        if (position == 'bottom' && isOpen || position == 'top' && !isOpen) {
+            return 'aladin-chevron-down';
+        }
+        if (position == 'right' && isOpen || position == 'left' && !isOpen) {
+            return 'aladin-chevron-right';
+        }
+        if (position == 'left' && isOpen || position == 'right' && !isOpen) {
+            return 'aladin-chevron-left';
+        }
+        return '';
+    };
+
+
+
+
+    return Box;
+
+})();
+
+// Copyright 2013 - UDS/CNRS
+// The Aladin Lite program is distributed under the terms
+// of the GNU General Public License version 3.
+//
+// This file is part of Aladin Lite.
+//
+//    Aladin Lite is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, version 3 of the License.
+//
+//    Aladin Lite is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    The GNU General Public License is available in COPYING file
+//    along with Aladin Lite.
+//
+
+
+
 CooConversion = (function() {
 
     var CooConversion = {};
@@ -2865,6 +3032,8 @@ Sesame = (function() {
 
     Sesame.cache = {};
 
+    Sesame.SESAME_URL = "http://cds.u-strasbg.fr/cgi-bin/nph-sesame.jsonp";
+
     /** find RA, DEC for any target (object name or position)
      *  if successful, callback is called with an object {ra: <ra-value>, dec: <dec-value>}
      *  if not successful, errorCallback is called
@@ -2907,7 +3076,12 @@ Sesame = (function() {
     };
 
     Sesame.resolve = function(objectName, callbackFunctionSuccess, callbackFunctionError) {
-        var sesameUrl = "http://cds.unistra.fr/cgi-bin/nph-sesame.jsonp?";
+        var sesameUrl = Sesame.SESAME_URL;
+        if (Utils.isHttpsContext()) {
+            sesameUrl = sesameUrl.replace('http://', 'https://')
+        }
+
+
         $.ajax({
             url: sesameUrl,
             data: {
@@ -2987,12 +3161,16 @@ HealpixCache = (function() {
         var hpxIdx = new HealpixIndex(8);
         hpxIdx.init();
         var npix = HealpixIndex.nside2Npix(8);
+        var corners;
         for (var ipix = 0; ipix < npix; ipix++) {
-            HealpixCache.staticCache.corners.nside8[ipix] = hpxIdx.corners_nest(ipix, 1);
+            corners = hpxIdx.corners_nest(ipix, 1);
+            HealpixCache.staticCache.corners.nside8.push(corners);
         }
 
         HealpixCache.hpxIdxCache = hpxIdx;
     };
+
+    HealpixCache.init();
 
     HealpixCache.corners_nest = function(ipix, nside) {
         if (nside == 8) {
@@ -3078,54 +3256,30 @@ function relMouseCoords(event) {
         var e = event;
         var canvas = e.target;
         // http://www.jacklmoore.com/notes/mouse-position/
-        var target = e.target || e.srcElement,
-            style = target.currentStyle || window.getComputedStyle(target, null),
-            borderLeftWidth = parseInt(style['borderLeftWidth'], 10),
-            borderTopWidth = parseInt(style['borderTopWidth'], 10),
-            rect = target.getBoundingClientRect(),
-            offsetX = e.clientX - borderLeftWidth - rect.left,
-            offsetY = e.clientY - borderTopWidth - rect.top;
-        if ((isNaN(offsetX) || isNaN(offsetY)) &&
-            (e.originalEvent != null) &&
-            (e.originalEvent.changedTouches != null) &&
-            (e.originalEvent.changedTouches.length > 0)) {
+        var target = e.target || e.srcElement;
+        var style = target.currentStyle || window.getComputedStyle(target, null);
+        var borderLeftWidth = parseInt(style['borderLeftWidth'], 10);
+        var borderTopWidth = parseInt(style['borderTopWidth'], 10);
+        var rect = target.getBoundingClientRect();
 
-            offsetX = e.originalEvent.changedTouches[0].clientX - borderLeftWidth - rect.left,
-                offsetY = e.originalEvent.changedTouches[0].clientY - borderTopWidth - rect.top;
+        var clientX = e.clientX;
+        var clientY = e.clientY;
+        if (e.clientX) {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        } else {
+            clientX = e.originalEvent.changedTouches[0].clientX;
+            clientY = e.originalEvent.changedTouches[0].clientY;
         }
+
+        var offsetX = clientX - borderLeftWidth - rect.left;
+        var offsetY = clientY - borderTopWidth - rect.top
+
         return {
             x: parseInt(offsetX / Utils.cssScale),
             y: parseInt(offsetY / Utils.cssScale)
         };
     }
-
-    // TODO : should we cache the value of scrollLeft/scrollTop to prevent a reflow ? (cf. http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/ )
-    do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    }
-    while (currentElement = currentElement.offsetParent)
-
-
-    // NB: Chrome seems to always use document.body.scrollTop whereas Firefox sometimes use document.documentElement.scrollTop
-    if (event.pageX) {
-        canvasX = event.pageX - totalOffsetX - (document.body.scrollLeft || document.documentElement.scrollLeft);
-        canvasY = event.pageY - totalOffsetY - (document.body.scrollTop || document.documentElement.scrollTop);
-    }
-    // if touch events
-    else {
-        canvasX = event.originalEvent.targetTouches[0].screenX - totalOffsetX - (document.body.scrollLeft || document.documentElement.scrollLeft);
-        canvasY = event.originalEvent.targetTouches[0].screenY - totalOffsetY - (document.body.scrollTop || document.documentElement.scrollTop);
-    }
-
-
-
-
-    return {
-        x: canvasX,
-        y: canvasY
-    };
-    //return {x: parseInt(canvasX/Utils.cssScale), y: parseInt(canvasY/Utils.cssScale)};
 }
 HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
@@ -3190,6 +3344,30 @@ Utils.debounce = function(fn, delay) {
     };
 };
 
+/* return a throttled function, to rate limit the number of calls (by default, one call every 250 milliseconds) */
+Utils.throttle = function(fn, threshhold, scope) {
+    threshhold || (threshhold = 250);
+    var last,
+        deferTimer;
+    return function() {
+        var context = scope || this;
+
+        var now = +new Date,
+            args = arguments;
+        if (last && now < last + threshhold) {
+            // hold on to it
+            clearTimeout(deferTimer);
+            deferTimer = setTimeout(function() {
+                last = now;
+                fn.apply(context, args);
+            }, threshhold);
+        } else {
+            last = now;
+            fn.apply(context, args);
+        }
+    };
+}
+
 
 /* A LRU cache, inspired by https://gist.github.com/devinus/409353#file-gistfile1-js */
 // TODO : utiliser le LRU cache pour les tuiles images
@@ -3245,6 +3423,43 @@ Utils.LRUCache.prototype = {
 
 ////////////////////////////////////////////////////////////////////////////:
 
+/**
+  Make an AJAX call, given a list of potential mirrors
+  First successful call will result in options.onSuccess being called back
+  If all calls fail, onFailure is called back at the end
+
+  This method assumes the URL are CORS-compatible, no proxy will be used
+ */
+Utils.loadFromMirrors = function(urls, options) {
+    var data = options && options.data || null;
+    var method = options && options.method || 'GET';
+    var dataType = options && options.dataType || null;
+    var timeout = options && options.timeout || 20;
+
+    var onSuccess = options && options.onSuccess || null;
+    var onFailure = options && options.onFailure || null;
+
+    if (urls.length === 0) {
+        (typeof onFailure === 'function') && onFailure();
+    } else {
+        var ajaxOptions = {
+            url: urls[0],
+            data: data
+        }
+        if (dataType) {
+            ajaxOptions.dataType = dataType;
+        }
+
+        $.ajax(ajaxOptions)
+            .done(function(data) {
+                (typeof onSuccess === 'function') && onSuccess(data);
+            })
+            .fail(function() {
+                Utils.loadFromMirrors(urls.slice(1), options);
+            });
+    }
+}
+
 // return the jquery ajax object configured with the requested parameters
 // by default, we use the proxy (safer, as we don't know if the remote server supports CORS)
 Utils.getAjaxObject = function(url, method, dataType, useProxy) {
@@ -3266,6 +3481,30 @@ Utils.getAjaxObject = function(url, method, dataType, useProxy) {
         dataType: dataType
     });
 };
+
+// return true if script is executed in a HTTPS context
+// return false otherwise
+Utils.isHttpsContext = function() {
+    return (window.location.protocol === 'https:');
+};
+
+// generate an absolute URL from a relative URL
+// example: getAbsoluteURL('foo/bar/toto') return http://cds.unistra.fr/AL/foo/bar/toto if executed from page http://cds.unistra.fr/AL/
+Utils.getAbsoluteURL = function(url) {
+    var a = document.createElement('a');
+    a.href = url;
+
+    return a.href;
+};
+
+// generate a valid v4 UUID
+Utils.uuidv4 = function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 // Copyright 2013 - UDS/CNRS
 // The Aladin Lite program is distributed under the terms
@@ -3319,14 +3558,19 @@ URLBuilder = (function() {
             return 'https://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?search_type=Near+Name+Search&radius=' + (60 * radiusDegrees) + '&of=xml_main&objname=' + object;
         },
 
-        buildVizieRCSURL: function(vizCatId, target, radiusDegrees) {
+        buildVizieRCSURL: function(vizCatId, target, radiusDegrees, options) {
             if (target && (typeof target === "object")) {
                 if ('ra' in target && 'dec' in target) {
                     var coo = new Coo(target.ra, target.dec, 7);
                     target = coo.format('s');
                 }
             }
-            return 'https://vizier.unistra.fr/viz-bin/votable?-source=' + vizCatId + '&-c=' + encodeURIComponent(target) + '&-out.max=999999&-c.rd=' + radiusDegrees;
+
+            var maxNbSources = 1e5;
+            if (options && options.hasOwnProperty('limit') && Utils.isNumber(options.limit)) {
+                maxNbSources = parseInt(options.limit);
+            }
+            return 'https://vizier.unistra.fr/viz-bin/votable?-source=' + vizCatId + '&-c=' + encodeURIComponent(target) + '&-out.max=' + maxNbSources + '&-c.rd=' + radiusDegrees;
         },
 
         buildSkyBotCSURL: function(ra, dec, radius, epoch, queryOptions) {
@@ -3586,14 +3830,12 @@ AladinUtils = (function() {
          * @returns position x,y in the view. Null if projection is impossible
          */
         radecToViewXy: function(ra, dec, currentProjection, currentFrame, width, height, largestDim, zoomFactor) {
-            //        	console.log("\t pippo! "+ra+" "+dec);
-
             var xy;
-            if (currentFrame != CooFrameEnum.J2000) {
+            if (currentFrame.system != CooFrameEnum.SYSTEMS.J2000) {
                 var lonlat = CooConversion.J2000ToGalactic([ra, dec]);
                 xy = currentProjection.project(lonlat[0], lonlat[1]);
             } else {
-                xy = currentProjection.project2(ra, dec);
+                xy = currentProjection.project(ra, dec);
             }
             if (!xy) {
                 return null;
@@ -3647,7 +3889,8 @@ AladinUtils = (function() {
             var p1Projected = projection.project(p1.ra, p1.dec);
             var p2Projected = projection.project(p2.ra, p2.dec);
 
-            var zoomFactor = 1 / (p1Projected.X - p2Projected.Y);
+            var zoomFactor = 1 / Math.abs(p1Projected.X - p2Projected.Y);
+
             return zoomFactor;
         },
 
@@ -3717,8 +3960,19 @@ AladinUtils = (function() {
                 b1[c].vy += chouilla;
             }
             return b1;
-        }
+        },
 
+        // SVG icons templates are stored here rather than in a CSS, as to allow
+        // to dynamically change the fill color
+        // Pretty ugly, haven't found a prettier solution yet
+        //
+        // TODO: store this in the Stack class once it will exist
+        //
+        SVG_ICONS: {
+            CATALOG: '<svg xmlns="http://www.w3.org/2000/svg"><polygon points="1,0,5,0,5,3,1,3"  fill="FILLCOLOR" /><polygon points="7,0,9,0,9,3,7,3"  fill="FILLCOLOR" /><polygon points="10,0,12,0,12,3,10,3"  fill="FILLCOLOR" /><polygon points="13,0,15,0,15,3,13,3"  fill="FILLCOLOR" /><polyline points="1,5,5,9"  stroke="FILLCOLOR" /><polyline points="1,9,5,5" stroke="FILLCOLOR" /><line x1="7" y1="7" x2="15" y2="7" stroke="FILLCOLOR" stroke-width="2" /><polyline points="1,11,5,15"  stroke="FILLCOLOR" /><polyline points="1,15,5,11"  stroke="FILLCOLOR" /><line x1="7" y1="13" x2="15" y2="13" stroke="FILLCOLOR" stroke-width="2" /></svg>',
+            MOC: '<svg xmlns="http://www.w3.org/2000/svg"><polyline points="0.5,7,2.5,7,2.5,5,7,5,7,3,10,3,10,5,13,5,13,7,15,7,15,9,13,9,13,12,10,12,10,14,7,14,7,12,2.5,12,2.5,10,0.5,10,0.5,7" stroke-width="1" stroke="FILLCOLOR" fill="transparent" /><line x1="1" y1="10" x2="6" y2="5" stroke="FILLCOLOR" stroke-width="0.5" /><line x1="2" y1="12" x2="10" y2="4" stroke="FILLCOLOR" stroke-width="0.5" /><line x1="5" y1="12" x2="12" y2="5" stroke="FILLCOLOR" stroke-width="0.5" /><line x1="7" y1="13" x2="13" y2="7" stroke="FILLCOLOR" stroke-width="0.5" /><line x1="10" y1="13" x2="13" y2="10" stroke="FILLCOLOR" stroke-width="0.5" /></svg>',
+            OVERLAY: '<svg xmlns="http://www.w3.org/2000/svg"><polygon points="10,5,10,1,14,1,14,14,2,14,2,9,6,9,6,5" fill="transparent" stroke="FILLCOLOR" stroke-width="2"/></svg>'
+        }
 
     };
 
@@ -3790,9 +4044,25 @@ ProjectionEnum = {
 
 CooFrameEnum = (function() {
 
+    var systems = {
+        J2000: 'J2000',
+        GAL: 'Galactic'
+    };
     return {
-        J2000: "J2000",
-        GAL: "Galactic"
+        SYSTEMS: systems,
+
+        J2000: {
+            label: "J2000",
+            system: systems.J2000
+        },
+        J2000d: {
+            label: "J2000d",
+            system: systems.J2000
+        },
+        GAL: {
+            label: "Galactic",
+            system: systems.GAL
+        }
     };
 
 })();
@@ -3806,7 +4076,9 @@ CooFrameEnum.fromString = function(str, defaultValue) {
 
     str = str.toLowerCase().replace(/^\s+|\s+$/g, ''); // convert to lowercase and trim
 
-    if (str.indexOf('j2000') == 0 || str.indexOf('icrs') == 0) {
+    if (str.indexOf('j2000d') == 0 || str.indexOf('icrsd') == 0) {
+        return CooFrameEnum.J2000d;
+    } else if (str.indexOf('j2000') == 0 || str.indexOf('icrs') == 0) {
         return CooFrameEnum.J2000;
     } else if (str.indexOf('gal') == 0) {
         return CooFrameEnum.GAL;
@@ -3815,19 +4087,634 @@ CooFrameEnum.fromString = function(str, defaultValue) {
     }
 };
 
-/**
-returns a short name for
-*/
-CooFrameEnum.shortName = function(frameValue) {
-    if (frameValue == CooFrameEnum.J2000) {
-        return 'J2000';
-    }
-    if (frameValue == CooFrameEnum.GAL) {
-        return 'GAL';
-    }
+// Copyright 2013-2017 - UDS/CNRS
+// The Aladin Lite program is distributed under the terms
+// of the GNU General Public License version 3.
+//
+// This file is part of Aladin Lite.
+//
+//    Aladin Lite is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, version 3 of the License.
+//
+//    Aladin Lite is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    The GNU General Public License is available in COPYING file
+//    along with Aladin Lite.
+//
 
-    return null;
-};
+
+
+/******************************************************************************
+ * Aladin Lite project
+ * 
+ * File HiPSDefinition
+ * 
+ * Author: Thomas Boch [CDS]
+ * 
+ *****************************************************************************/
+HiPSDefinition = (function() {
+
+    // constructor
+    var HiPSDefinition = function(properties) {
+        this.properties = properties; // key-value object corresponding to the properties file
+
+        this.id = this.getID();
+        this.obsTitle = properties['obs_title'];
+        this.frame = properties['hips_frame'];
+        this.order = parseInt(properties['hips_order']);
+        this.clientSortKey = properties['client_sort_key'];
+        this.tileFormats = properties.hasOwnProperty('hips_tile_format') && properties['hips_tile_format'].split(' ');
+        this.urls = [];
+        this.urls.push(properties['hips_service_url']);
+        var k = 1;
+        while (properties.hasOwnProperty('hips_service_url_' + k)) {
+            this.urls.push(properties['hips_service_url_' + k]);
+            k++;
+        }
+
+        this.clientApplications = properties['client_application'];
+    };
+
+    HiPSDefinition.prototype = {
+
+        getServiceURLs: function(httpsOnly) {
+            httpsOnly = httpsOnly === true;
+
+            // TODO: TO BE COMPLETED
+        },
+
+        // return the ID according to the properties
+        getID: function() {
+            // ID is explicitely given
+            if (this.properties.hasOwnProperty('ID')) {
+                return this.properties['ID'];
+            }
+
+            var id = null;
+            // ID might be built from different fields
+            if (this.properties.hasOwnProperty('creator_did')) {
+                id = this.properties['creator_did'];
+            }
+            if (id == null && this.properties.hasOwnProperty('publisher_did')) {
+                id = this.properties['publisher_did'];
+            }
+
+            if (id != null) {
+                // remove ivo:// prefix
+                if (id.slice(0, 6) === 'ivo://') {
+                    id = id.slice(6);
+                }
+
+                // '?' are replaced by '/'
+                id = id.replace(/\?/g, '/')
+            }
+
+            return id;
+        }
+
+
+
+    };
+
+    // cache (at the source code level) of the list of HiPS
+    // this is the result to a query to http://alasky.u-strasbg.fr/MocServer/query?dataproduct_type=image&client_application=AladinLite&fmt=json&fields=ID,obs_title,client_sort_key,client_application,hips_service_url*,hips_order,hips_tile_format,hips_frame
+    var AL_CACHE_CLASS_LEVEL = [{
+        "ID": "CDS/P/2MASS/color",
+        "obs_title": "2MASS color J (1.23 microns), H (1.66 microns), K (2.16 microns)",
+        "client_sort_key": "04-001-00",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/2MASS/Color",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/2MASS/Color",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/2MASS/Color"
+    }, {
+        "ID": "CDS/P/AKARI/FIS/Color",
+        "obs_title": "AKARI Far-infrared All-Sky Survey - color composition WideL/WideS/N60",
+        "client_sort_key": "04-05-00",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "5",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "png jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/AKARI-FIS/ColorLSN60",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/AKARI-FIS/ColorLSN60",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/AKARI-FIS/ColorLSN60"
+    }, {
+        "ID": "CDS/P/DECaLS/DR3/color",
+        "obs_title": "DECaLS DR3 color",
+        "hips_frame": "equatorial",
+        "hips_order": "11",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/DECaLS/DR3/color"
+    }, {
+        "ID": "CDS/P/DSS2/blue",
+        "obs_title": "DSS2 Blue (XJ+S)",
+        "client_sort_key": "03-01-03",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg fits",
+        "hips_service_url": "http://alasky.unistra.fr/DSS/DSS2-blue-XJ-S",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/DSS/DSS2-blue-XJ-S",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/DSS/DSS2-blue-XJ-S",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/DSS2Blue"
+    }, {
+        "ID": "CDS/P/DSS2/color",
+        "obs_title": "DSS colored",
+        "client_sort_key": "03-00",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/DSS/DSSColor",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/DSS/DSSColor",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/DSS/DSSColor",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/DSSColorNew",
+        "hips_service_url_4": "http://skies.esac.esa.int/DSSColor/"
+    }, {
+        "ID": "CDS/P/DSS2/red",
+        "obs_title": "DSS2 Red (F+R)",
+        "client_sort_key": "03-01-02",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg fits",
+        "hips_service_url": "http://alasky.unistra.fr/DSS/DSS2Merged",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/DSS/DSS2Merged",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/DSS/DSS2Merged",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/DSS2Merged"
+    }, {
+        "ID": "P/PanSTARRS/DR1/g",
+        "hips_service_url": "http://alasky.u-strasbg.fr/Pan-STARRS/DR1/g",
+        "obs_title": "PanSTARRS DR1 g",
+        "hips_order": 11,
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg fits"
+    }, {
+        "ID": "CDS/P/Fermi/color",
+        "obs_title": "Fermi Color HEALPix survey",
+        "client_sort_key": "00-01-01",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "3",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/Fermi/Color",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/Fermi/Color",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/Fermi/Color"
+    }, {
+        "ID": "CDS/P/Finkbeiner",
+        "obs_title": "Finkbeiner Halpha composite survey",
+        "client_sort_key": "06-01",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "3",
+        "hips_frame": "galactic",
+        "hips_tile_format": "jpeg fits",
+        "hips_service_url": "http://alasky.unistra.fr/FinkbeinerHalpha",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/FinkbeinerHalpha",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/FinkbeinerHalpha"
+    }, {
+        "ID": "CDS/P/GALEXGR6/AIS/color",
+        "obs_title": "GALEX GR6 AIS (until March 2014)- Color composition",
+        "client_sort_key": "02-01-01",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "8",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "png jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/GALEX/GR6-03-2014/AIS-Color",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/GALEX/GR6-03-2014/AIS-Color",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/GALEX/GR6-03-2014/AIS-Color"
+    }, {
+        "ID": "CDS/P/IRIS/color",
+        "obs_title": "IRAS-IRIS HEALPix survey, color",
+        "client_sort_key": "04-02-01",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "3",
+        "hips_frame": "galactic",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/IRISColor",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/IRISColor",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/IRISColor",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/IRISColor",
+        "hips_service_url_4": "http://skies.esac.esa.int/IRISColor/"
+    }, {
+        "ID": "CDS/P/Mellinger/color",
+        "obs_title": "Mellinger optical survey, color",
+        "client_sort_key": "03-03",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "4",
+        "hips_frame": "galactic",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/MellingerRGB",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/MellingerRGB",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/MellingerRGB"
+    }, {
+        "ID": "CDS/P/SDSS9/color",
+        "obs_title": "SDSS 9 color",
+        "client_sort_key": "03-02-01",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "10",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/SDSS/DR9/color",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/SDSS/DR9/color",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/SDSS/DR9/color",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/SDSS9Color",
+        "hips_service_url_4": "http://skies.esac.esa.int/SDSS9Color/"
+    }, {
+        "ID": "CDS/P/SPITZER/color",
+        "obs_title": "IRAC HEALPix survey, color",
+        "client_sort_key": "04-03-00",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "galactic",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/SpitzerI1I2I4color",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/SpitzerI1I2I4color",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/SpitzerI1I2I4color",
+        "hips_service_url_3": "http://healpix.ias.u-psud.fr/SPITZERColor"
+    }, {
+        "ID": "CDS/P/allWISE/color",
+        "obs_title": "AllWISE color  Red (W4) , Green (W2) , Blue (W1) from raw Atlas Images",
+        "client_sort_key": "04-003-00",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "8",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://alasky.unistra.fr/AllWISE/RGB-W4-W2-W1",
+        "hips_service_url_1": "http://alaskybis.unistra.fr/AllWISE/RGB-W4-W2-W1",
+        "hips_service_url_2": "https://alaskybis.unistra.fr/AllWISE/RGB-W4-W2-W1"
+    }, {
+        "ID": "IPAC/P/GLIMPSE360",
+        "obs_title": "GLIMPSE360: Spitzer's Infrared Milky Way",
+        "client_sort_key": "04-03-0",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "9",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "jpeg",
+        "hips_service_url": "http://www.spitzer.caltech.edu/glimpse360/aladin/data"
+    }, {
+        "ID": "JAXA/P/MAXI_SSC_SUM",
+        "hips_tile_format": "png",
+        "hips_frame": "equatorial",
+        "obs_title": "MAXI SSC all-sky image integrated for 4.5 years",
+        "hips_order": "6",
+        "hips_service_url": "http://darts.isas.jaxa.jp/pub/judo2/HiPS/maxi_ssc_sum",
+        "hips_service_url_1": "http://alasky.unistra.fr//JAXA/JAXA_P_MAXI_SSC_SUM",
+        "hips_service_url_2": "http://alaskybis.unistra.fr//JAXA/JAXA_P_MAXI_SSC_SUM",
+        "hips_service_url_3": "https://alaskybis.unistra.fr//JAXA/JAXA_P_MAXI_SSC_SUM"
+    }, {
+        "ID": "JAXA/P/SWIFT_BAT_FLUX",
+        "hips_tile_format": "png",
+        "hips_frame": "equatorial",
+        "obs_title": "Swift-BAT 70-month all-sray hard X-ray survey image",
+        "hips_order": "6",
+        "hips_service_url": "http://darts.isas.jaxa.jp/pub/judo2/HiPS/swift_bat_flux/",
+        "hips_service_url_1": "http://alasky.unistra.fr//JAXA/JAXA_P_SWIFT_BAT_FLUX",
+        "hips_service_url_2": "http://alaskybis.unistra.fr//JAXA/JAXA_P_SWIFT_BAT_FLUX",
+        "hips_service_url_3": "https://alaskybis.unistra.fr//JAXA/JAXA_P_SWIFT_BAT_FLUX"
+    }, {
+        "ID": "ov-gso/P/VTSS/Ha",
+        "obs_title": "Virginia Tech Spectral-Line Survey (VTSS) - Halpha image",
+        "client_sort_key": "06-xx",
+        "client_application": ["AladinLite", "AladinDesktop"],
+        "hips_order": "3",
+        "hips_frame": ["galactic", "galactic"],
+        "hips_tile_format": "png jpeg fits",
+        "hips_service_url": "http://cade.irap.omp.eu/documents/Ancillary/4Aladin/VTSS",
+        "hips_service_url_1": "http://alasky.unistra.fr/IRAP/VTSS",
+        "hips_service_url_2": "http://alaskybis.unistra.fr/IRAP/VTSS",
+        "hips_service_url_3": "https://alaskybis.unistra.fr/IRAP/VTSS"
+    }, {
+        "ID": "xcatdb/P/XMM/EPIC",
+        "obs_title": "XMM-Newton stacked EPIC images",
+        "hips_frame": "equatorial",
+        "hips_order": "7",
+        "hips_service_url": "http://saada.u-strasbg.fr/xmmallsky",
+        "hips_tile_format": "png fits",
+        "hips_service_url_1": "http://alasky.unistra.fr/SSC/xmmallsky",
+        "hips_service_url_2": "http://alaskybis.unistra.fr/SSC/xmmallsky",
+        "hips_service_url_3": "https://alaskybis.unistra.fr/SSC/xmmallsky"
+    }, {
+        "ID": "xcatdb/P/XMM/PN/color",
+        "obs_title": "False color X-ray images (Red=0.5-1 Green=1-2 Blue=2-4.5)Kev",
+        "hips_order": "7",
+        "hips_frame": "equatorial",
+        "hips_tile_format": "png jpeg",
+        "hips_service_url": "http://saada.unistra.fr/xmmpnsky",
+        "hips_service_url_1": "http://alasky.unistra.fr/SSC/xmmpnsky",
+        "hips_service_url_2": "http://alaskybis.unistra.fr/SSC/xmmpnsky",
+        "hips_service_url_3": "https://alaskybis.unistra.fr/SSC/xmmpnsky"
+    }];
+
+    var listHipsProperties = []; // this variable stores our current knowledge
+
+    HiPSDefinition.LOCAL_STORAGE_KEY = 'aladin:hips-list';
+
+    var RETRIEVAL_TIMESTAMP_KEY = '_timestamp_retrieved';
+    var LAST_URL_KEY = '_last_used_url'; // URL previousy used to retrieve data from this HiPS
+    // retrieve definitions previousy stored in local storage
+    // @return an array with the HiPS definitions, empty array if nothing found or if an error occured
+    HiPSDefinition.getLocalStorageDefinitions = function() {
+        try {
+            var defs = window.localStorage.getItem(HiPSDefinition.LOCAL_STORAGE_KEY);
+            return defs === null ? [] : window.JSON.parse(defs);
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    };
+
+    // store in local storage a list of HiPSDefinition objects
+    // @return true if storage was successful
+    HiPSDefinition.storeInLocalStorage = function(properties) {
+        try {
+            window.localStorage.setItem(HiPSDefinition.LOCAL_STORAGE_KEY, window.JSON.stringify(properties));
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+
+        return true;
+    };
+
+    var MOCSERVER_MIRRORS_HTTP = ['http://alasky.u-strasbg.fr/MocServer/query', 'http://alaskybis.u-strasbg.fr/MocServer/query']; // list of base URL for MocServer mirrors, available in HTTP
+    var MOCSERVER_MIRRORS_HTTPS = ['https://alasky.u-strasbg.fr/MocServer/query', 'https://alaskybis.unistra.fr/MocServer/query']; // list of base URL for MocServer mirrors, available in HTTPS
+
+    // get HiPS definitions, by querying the MocServer
+    // return data as dict-like objects
+    HiPSDefinition.getRemoteDefinitions = function(params, successCallbackFn, failureCallbackFn) {
+        var params = params || {
+            client_application: 'AladinLite'
+        }; // by default, retrieve only HiPS tagged "Aladin Lite"
+
+        params['fmt'] = 'json';
+        params['fields'] = 'ID,obs_title,client_sort_key,client_application,hips_service_url*,hips_order,hips_tile_format,hips_frame';
+
+        var urls = Utils.isHttpsContext() ? MOCSERVER_MIRRORS_HTTPS : MOCSERVER_MIRRORS_HTTP;
+
+        var successCallback = function(data) {
+            (typeof successCallbackFn === 'function') && successCallbackFn(data);
+        };
+        var failureCallback = function() {
+            console.error('Could not load HiPS definitions from urls ' + urls);
+            (typeof failureCallbackFn === 'function') && failureCallbackFn();
+        };
+
+        Utils.loadFromMirrors(urls, {
+            data: params,
+            onSuccess: successCallback,
+            onFailure: failureCallback,
+            timeout: 5
+        });
+    };
+
+    // complement the baseList with the items in newList
+    var merge = function(baseList, newList) {
+        var updatedList = [];
+        var newListById = {};
+        for (var k = 0; k < newList.length; k++) {
+            var item = newList[k];
+            newListById[item.ID] = item;
+        }
+
+        for (var k = 0; k < baseList.length; k++) {
+            var item = baseList[k];
+            var id = item.ID;
+            if (newListById.hasOwnProperty(id)) {
+                var itemToAdd = newListById[id];
+                // we keep the last used URL property
+                if (item.hasOwnProperty(LAST_URL_KEY) && !itemToAdd.hasOwnProperty(LAST_URL_KEY)) {
+                    itemToAdd[LAST_URL_KEY] = item[LAST_URL_KEY];
+                }
+                updatedList.push(itemToAdd);
+            } else {
+                updatedList.push(item);
+            }
+        }
+
+        return updatedList;
+    };
+
+    HiPSDefinition.CACHE_RETENTION_TIME_SECONDS = 7 * 86400; // definitions can be kept 7 days
+    HiPSDefinition.init = function() {
+        // first, merge local definitions at class level with definitions in local storage
+        listHipsProperties = AL_CACHE_CLASS_LEVEL;
+
+        // second, remove old definitions (client != AladinLite and timestamp older than CACHE_RETENTION_TIME_SECONDS) and merge
+        var localDefs = HiPSDefinition.getLocalStorageDefinitions();
+        // 2.1 remove old defs
+        var now = new Date().getTime();
+        var indicesToRemove = [];
+        for (var k = 0; k < localDefs.length; k++) {
+            var def = localDefs[k];
+            if (def.hasOwnProperty(RETRIEVAL_TIMESTAMP_KEY) && (now - def[RETRIEVAL_TIMESTAMP_KEY]) > 1000 * HiPSDefinition.CACHE_RETENTION_TIME_SECONDS) {
+                indicesToRemove.push(k);
+            }
+        }
+        // we have to browse the array in reverse order in order not to mess up indices
+        for (var k = indicesToRemove.length - 1; k >= 0; k--) {
+            localDefs.splice(indicesToRemove[k], 1);
+        }
+        // 2.2 merge
+        listHipsProperties = merge(listHipsProperties, localDefs);
+
+        // third, retrieve remote definitions, merge and save
+        HiPSDefinition.getRemoteDefinitions({
+            dataproduct_type: 'image',
+            client_application: 'AladinLite'
+        }, function(remoteDefs) {
+            // adding timestamp of retrieval
+            var now = new Date().getTime();
+            for (var k = 0; k < remoteDefs.length; k++) {
+                remoteDefs[k][RETRIEVAL_TIMESTAMP_KEY] = now;
+            }
+            listHipsProperties = merge(listHipsProperties, remoteDefs);
+            HiPSDefinition.storeInLocalStorage(listHipsProperties);
+        });
+
+    };
+
+    // return list of HiPSDefinition objects, filtering out definitions whose client_application is not AladinLite
+    HiPSDefinition.getALDefaultHiPSDefinitions = function() {
+        // filter out definitions with client_application != 'AladinLite'
+        var ret = [];
+        for (var k = 0; k < listHipsProperties.length; k++) {
+            var properties = listHipsProperties[k];
+            if (!properties.hasOwnProperty('client_application') || properties['client_application'].indexOf('AladinLite') < 0) {
+                continue;
+            }
+
+            ret.push(new HiPSDefinition(properties));
+        }
+
+        return ret;
+    };
+
+    // return list of known HiPSDefinition objects
+    HiPSDefinition.getDefinitions = function() {
+        var ret = [];
+        for (var k = 0; k < listHipsProperties.length; k++) {
+            var properties = listHipsProperties[k];
+            ret.push(new HiPSDefinition(properties));
+        }
+
+        return ret;
+    };
+
+    // parse a HiPS properties and return a dict-like object with corresponding key-values
+    // return null if parsing failed
+    HiPSDefinition.parseHiPSProperties = function(propertiesStr) {
+        if (propertiesStr == null) {
+            return null;
+        }
+
+        var propertiesDict = {};
+        // remove CR characters
+        propertiesStr = propertiesStr.replace(/[\r]/g, '');
+        // split on LF
+        var lines = propertiesStr.split('\n');
+        for (var k = 0; k < lines.length; k++) {
+            var l = $.trim(lines[k]);
+            // ignore comments lines
+            if (l.slice(0, 1) === '#') {
+                continue;
+            }
+            var idx = l.indexOf('=');
+            if (idx < 0) {
+                continue;
+            }
+            var key = $.trim(l.slice(0, idx));
+            var value = $.trim(l.slice(idx + 1));
+
+            propertiesDict[key] = value;
+        }
+
+        return propertiesDict;
+    };
+
+
+    // find a HiPSDefinition by id.
+    // look first locally, and remotely only if local search was unsuccessful
+    //
+    // call callback function with a list of HiPSDefinition candidates, empty array if nothing found
+
+    HiPSDefinition.findByID = function(id, callback) {
+        // look first locally
+        var candidates = findByIDLocal(id);
+        if (candidates.length > 0) {
+            (typeof callback === 'function') && callback(candidates);
+            return;
+        }
+
+        // then remotely
+        findByIDRemote(id, callback);
+    };
+
+    // find a HiPSDefinition by id.
+    // search is done on the local knowledge of HiPSDefinitions
+    HiPSDefinition.findByIDLocal = function(id2search, callback) {
+        var candidates = [];
+        for (var k = 0; k < listHipsProperties.length; k++) {
+            var properties = listHipsProperties[k];
+            var id = properties['ID'];
+            if (id.match(id2search) != null) {
+                candidates.push(new HiPSDefinition(properties));
+            }
+        }
+
+        return candidates;
+    };
+
+    // find remotely a HiPSDefinition by ID
+    HiPSDefinition.findByIDRemote = function(id, callback) {
+        HiPSDefinition.findHiPSRemote({
+            ID: '*' + id + '*'
+        }, callback);
+    };
+
+    // search a HiPS according to some criteria
+    HiPSDefinition.findHiPSRemote = function(searchOptions, callback) {
+        searchOptions = searchOptions || {};
+        if (!searchOptions.hasOwnProperty('dataproduct_type')) {
+            searchOptions['dataproduct_type'] = 'image';
+        }
+        HiPSDefinition.getRemoteDefinitions(searchOptions, function(candidates) {
+            var defs = [];
+            for (var k = 0; k < candidates.length; k++) {
+                defs.push(new HiPSDefinition(candidates[k]));
+            }
+            (typeof callback === 'function') && callback(defs);
+        });
+    };
+
+
+    // Create a HiPSDefinition object from a URL
+    //
+    // If the URL ends with 'properties', it is assumed to be the URL of the properties file
+    // else, it is assumed to be the base URL of the HiPS
+    //
+    // return a HiPSDefinition if successful, null if it failed
+    HiPSDefinition.fromURL = function(url, callback) {
+        var hipsUrl, propertiesUrl;
+        if (url.slice(-10) === 'properties') {
+            propertiesUrl = url;
+            hipsUrl = propertiesUrl.slice(0, -11);
+        } else {
+            if (url.slice(-1) === '/') {
+                url = url.slice(0, -1);
+            }
+            hipsUrl = url;
+            propertiesUrl = hipsUrl + '/properties';
+        }
+
+        var callbackWhenPropertiesLoaded = function(properties) {
+            // Sometimes, hips_service_url is missing. That can happen for instance Hipsgen does not set the hips_service_url keyword
+            // --> in that case, we add as an attribyte the URL that was given as input parameter
+            var hipsPropertiesDict = HiPSDefinition.parseHiPSProperties(properties);
+            if (!hipsPropertiesDict.hasOwnProperty('hips_service_url')) {
+                hipsPropertiesDict['hips_service_url'] = hipsUrl;
+            }
+            (typeof callback === 'function') && callback(new HiPSDefinition(hipsPropertiesDict));
+        };
+
+        // try first without proxy
+        var ajax = Utils.getAjaxObject(propertiesUrl, 'GET', 'text', false);
+        ajax
+            .done(function(data) {
+                callbackWhenPropertiesLoaded(data);
+            })
+            .fail(function() {
+                // if not working, try with the proxy
+                var ajax = Utils.getAjaxObject(propertiesUrl, 'GET', 'text', true);
+                ajax
+                    .done(function(data) {
+                        callbackWhenPropertiesLoaded(data);
+                    })
+                    .fail(function() {
+                        (typeof callback === 'function') && callback(null);
+                    })
+            });
+    };
+
+    // HiPSDefinition generation from a properties dict-like object
+    HiPSDefinition.fromProperties = function(properties) {
+        return new HiPSDefinition(properties);
+    };
+
+
+
+
+    HiPSDefinition.init();
+
+    return HiPSDefinition;
+
+})();
+
 // Copyright 2013 - UDS/CNRS
 // The Aladin Lite program is distributed under the terms
 // of the GNU General Public License version 3.
@@ -3870,6 +4757,11 @@ Downloader = (function() {
         this.view = view; // reference to the view to be able to request redraw
         this.nbDownloads = 0; // number of current downloads
         this.dlQueue = []; // queue of items being downloaded
+        this.urlsInQueue = {};
+    };
+
+    Downloader.prototype.emptyQueue = function() {
+        this.dlQueue = [];
         this.urlsInQueue = {};
     };
 
@@ -3927,6 +4819,7 @@ Downloader = (function() {
 
     Downloader.prototype.completeDownload = function(img, success) {
         delete this.urlsInQueue[img.src];
+        img.crossOrigin = 'anonymous';
         img.onerror = null;
         img.onload = null;
         this.nbDownloads--;
@@ -4039,6 +4932,13 @@ Downloader = (function() {
                 xhr = new XMLHttpRequest();
                 xhr.open('GET', this.arg);
                 xhr.responseType = 'arraybuffer';
+
+                // the onerror handling has been added wrt the original fitsjs library as retrieved on the astrojs github repo
+                // if an error occurs, we return an empty object
+                xhr.onerror = function() {
+                    _this.invoke(_this.callback, _this.opts);
+                }
+
                 xhr.onload = function() {
                     if (xhr.status !== 200) {
                         _this.invoke(_this.callback, _this.opts);
@@ -5687,8 +6587,8 @@ Downloader = (function() {
 MOC = (function() {
     MOC = function(options) {
         this.order = undefined;
-        this._highResCells = {};
-        this._lowResCells = {};
+
+        this.type = 'moc';
 
         // TODO homogenize options parsing for all kind of overlay (footprints, catalog, MOC)
         options = options || {};
@@ -5697,10 +6597,22 @@ MOC = (function() {
         this.opacity = options.opacity || 1;
         this.opacity = Math.max(0, Math.min(1, this.opacity)); // 0 <= this.opacity <= 1
         this.lineWidth = options["lineWidth"] || 1;
+        this.adaptativeDisplay = options['adaptativeDisplay'] !== false;
 
+        this.proxyCalled = false; // this is a flag to check whether we already tried to load the MOC through the proxy
 
+        // index of MOC cells at high and low resolution
+        this._highResIndexOrder3 = new Array(768);
+        this._lowResIndexOrder3 = new Array(768);
+        for (var k = 0; k < 768; k++) {
+            this._highResIndexOrder3[k] = {};
+            this._lowResIndexOrder3[k] = {};
+        }
+
+        this.nbCellsDeepestLevel = 0; // needed to compute the sky fraction of the MOC
 
         this.isShowing = true;
+        this.ready = false;
     }
 
 
@@ -5711,67 +6623,97 @@ MOC = (function() {
     // max norder we can currently handle (limitation of healpix.js)
     MOC.MAX_NORDER = 13; // NSIDE = 8192
 
-    MOC.LOWRES_MAXORDER = 5; // 5 or 6 ??
+    MOC.LOWRES_MAXORDER = 6; // 5 or 6 ??
     MOC.HIGHRES_MAXORDER = 11; // ??
 
     // TODO: options to modifiy this ?
-    MOC.PIVOT_FOV = 20; // when do we switch from low res cells to high res cells (fov in degrees)
+    MOC.PIVOT_FOV = 30; // when do we switch from low res cells to high res cells (fov in degrees)
+
+    // at end of parsing, we need to remove duplicates from the 2 indexes
+    MOC.prototype._removeDuplicatesFromIndexes = function() {
+        var a, aDedup;
+        for (var k = 0; k < 768; k++) {
+            for (var key in this._highResIndexOrder3[k]) {
+                a = this._highResIndexOrder3[k][key];
+                aDedup = uniq(a);
+                this._highResIndexOrder3[k][key] = aDedup;
+            }
+            for (var key in this._lowResIndexOrder3[k]) {
+                a = this._lowResIndexOrder3[k][key];
+                aDedup = uniq(a);
+                this._lowResIndexOrder3[k][key] = aDedup;
+            }
+        }
+
+    }
 
     // add pixel (order, ipix)
     MOC.prototype._addPix = function(order, ipix) {
+        var ipixOrder3 = Math.floor(ipix * Math.pow(4, (3 - order)));
         // fill low and high level cells
         // 1. if order <= LOWRES_MAXORDER, just store value in low and high res cells
         if (order <= MOC.LOWRES_MAXORDER) {
-            if (!(order in this._lowResCells)) {
-                this._lowResCells[order] = [];
-                this._highResCells[order] = [];
+            if (!(order in this._lowResIndexOrder3[ipixOrder3])) {
+                this._lowResIndexOrder3[ipixOrder3][order] = [];
+                this._highResIndexOrder3[ipixOrder3][order] = [];
             }
-            this._lowResCells[order].push(ipix);
-            this._highResCells[order].push(ipix);
+            this._lowResIndexOrder3[ipixOrder3][order].push(ipix);
+            this._highResIndexOrder3[ipixOrder3][order].push(ipix);
         }
         // 2. if LOWRES_MAXORDER < order <= HIGHRES_MAXORDER , degrade ipix for low res cells
         else if (order <= MOC.HIGHRES_MAXORDER) {
-            if (!(order in this._highResCells)) {
-                this._highResCells[order] = [];
+            if (!(order in this._highResIndexOrder3[ipixOrder3])) {
+                this._highResIndexOrder3[ipixOrder3][order] = [];
             }
-            this._highResCells[order].push(ipix);
+            this._highResIndexOrder3[ipixOrder3][order].push(ipix);
 
             var degradedOrder = MOC.LOWRES_MAXORDER;
             var degradedIpix = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
-            if (!(degradedOrder in this._lowResCells)) {
-                this._lowResCells = [];
+            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
+            if (!(degradedOrder in this._lowResIndexOrder3[degradedIpixOrder3])) {
+                this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
             }
-            this._lowResCells[degradedOrder].push(degradedIpix);
+            this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
         }
         // 3. if order > HIGHRES_MAXORDER , degrade ipix for low res and high res cells
         else {
             // low res cells
             var degradedOrder = MOC.LOWRES_MAXORDER;
             var degradedIpix = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
-            if (!(degradedOrder in this._lowResCells)) {
-                this._lowResCells = [];
+            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
+            if (!(degradedOrder in this._lowResIndexOrder3[degradedIpixOrder3])) {
+                this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
             }
-            this._lowResCells[degradedOrder].push(degradedIpix);
+            this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
+
 
             // high res cells
             degradedOrder = MOC.HIGHRES_MAXORDER;
             degradedIpix = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
-            if (!(degradedOrder in this._highResCells)) {
-                this._highResCells = [];
+            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
+            if (!(degradedOrder in this._highResIndexOrder3[degradedIpixOrder3])) {
+                this._highResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
             }
-            this._highResCells[degradedOrder].push(degradedIpix);
+            this._highResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
         }
+
+        this.nbCellsDeepestLevel += Math.pow(4, (this.order - order));
     };
 
+
+    /**
+     *  Return a value between 0 and 1 denoting the fraction of the sky
+     *  covered by the MOC
+     */
+    MOC.prototype.skyFraction = function() {
+        return this.nbCellsDeepestLevel / (12 * Math.pow(4, this.order));
+    };
 
     /**
      * set MOC data by parsing a MOC serialized in JSON
      * (as defined in IVOA MOC document, section 3.1.1)
      */
     MOC.prototype.dataFromJSON = function(jsonMOC) {
-        this._highResCells = {};
-        this._lowResCells = {};
-
         var order, ipix;
         for (var orderStr in jsonMOC) {
             if (jsonMOC.hasOwnProperty(orderStr)) {
@@ -5785,15 +6727,15 @@ MOC = (function() {
                 }
             }
         }
+
+        this.reportChange();
+        this.ready = true;
     };
 
     /**
      * set MOC data by parsing a URL pointing to a FITS MOC file
      */
     MOC.prototype.dataFromFITSURL = function(mocURL, successCallback) {
-        this._highResCells = {};
-        this._lowResCells = {};
-
         var self = this;
         var callback = function() {
             // note: in the callback, 'this' refers to the FITS instance
@@ -5801,6 +6743,17 @@ MOC = (function() {
             // first, let's find MOC norder
             var hdr0;
             try {
+                // A zero-length hdus array might mean the served URL does not have CORS header
+                // --> let's try again through the proxy
+                if (this.hdus.length == 0) {
+                    if (self.proxyCalled !== true) {
+                        self.proxyCalled = true;
+                        var proxiedURL = Aladin.JSONP_PROXY + '?url=' + encodeURIComponent(self.dataURL);
+                        new astro.FITS(proxiedURL, callback);
+                    }
+
+                    return;
+                }
                 hdr0 = this.getHeader(0);
             } catch (e) {
                 console.error('Could not get header of extension #0');
@@ -5838,34 +6791,38 @@ MOC = (function() {
             });
             data = null; // this helps releasing memory
 
+            self._removeDuplicatesFromIndexes();
+
             if (successCallback) {
                 successCallback();
             }
+
+            self.reportChange();
+            self.ready = true;
         }; // end of callback function
 
         this.dataURL = mocURL;
-        // TODO: general method to retrieve data (through dedicated class ?)
-        var proxiedURL = Aladin.JSONP_PROXY + '?url=' + encodeURIComponent(this.dataURL);
-        new astro.FITS(proxiedURL, callback);
+
+        // instantiate the FITS object which will fetch the URL passed as parameter
+        new astro.FITS(this.dataURL, callback);
     };
 
     MOC.prototype.setView = function(view) {
         this.view = view;
+        this.reportChange();
     };
 
     MOC.prototype.draw = function(ctx, projection, viewFrame, width, height, largestDim, zoomFactor, fov) {
-        if (!this.isShowing) {
+        if (!this.isShowing || !this.ready) {
             return;
         }
 
-        var mocCells = fov > MOC.PIVOT_FOV ? this._lowResCells : this._highResCells;
+        var mocCells = fov > MOC.PIVOT_FOV && this.adaptativeDisplay ? this._lowResIndexOrder3 : this._highResIndexOrder3;
 
         this._drawCells(ctx, mocCells, fov, projection, viewFrame, CooFrameEnum.J2000, width, height, largestDim, zoomFactor);
-
-
     };
 
-    MOC.prototype._drawCells = function(ctx, mocCells, fov, projection, viewFrame, surveyFrame, width, height, largestDim, zoomFactor) {
+    MOC.prototype._drawCells = function(ctx, mocCellsIdxOrder3, fov, projection, viewFrame, surveyFrame, width, height, largestDim, zoomFactor) {
         ctx.lineWidth = this.lineWidth;
         // if opacity==1, we draw solid lines, else we fill each HEALPix cell
         if (this.opacity == 1) {
@@ -5879,46 +6836,37 @@ MOC = (function() {
         ctx.beginPath();
 
         var orderedKeys = [];
-        for (key in mocCells) {
-            orderedKeys.push(key);
-        }
-        orderedKeys.sort();
-        var nside, xyCorners, ipix;
-
-        // go through all MOC cells
-        if (fov > 80) {
-            var norder;
-            for (var i = 0; i < orderedKeys.length; i++) {
-                norder = parseInt(orderedKeys[i]);
-                nside = 1 << norder;
-
-                for (var j = 0; j < mocCells[norder].length; j++) {
-                    ipix = mocCells[norder][j];
-                    if (norder >= 3) {
-                        xyCorners = getXYCorners(nside, ipix, viewFrame, surveyFrame, width, height, largestDim, zoomFactor, projection);
-                        if (xyCorners) {
-                            drawCorners(ctx, xyCorners);
-                        }
-                    } else { // compute all norder 3 ipix indexes
-                        var factor = Math.pow(4, (3 - norder));
-                        var startIpix = ipix * factor;
-
-                        for (var k = 0; k < factor; k++) {
-                            xyCorners = getXYCorners(8, startIpix + k, viewFrame, surveyFrame, width, height, largestDim, zoomFactor, projection);
-                            if (xyCorners) {
-                                drawCorners(ctx, xyCorners);
-                            }
-                        }
-                    }
-                }
+        for (var k = 0; k < 768; k++) {
+            var mocCells = mocCellsIdxOrder3[k];
+            for (key in mocCells) {
+                orderedKeys.push(parseInt(key));
             }
-        } else {
-            var visibleHpxCellsOrder3 = this.view.getVisiblePixList(3, CooFrameEnum.J2000);
-            var cellsOrder3ToIgnore = {}
-            var norderMax = parseInt(orderedKeys[orderedKeys.length - 1]);
-            for (var norder = 1; norder <= norderMax; norder++) {
-                nside = 1 << norder;
+        }
+        orderedKeys.sort(function(a, b) {
+            return a - b;
+        });
+        var norderMax = orderedKeys[orderedKeys.length - 1];
 
+        var nside, xyCorners, ipix;
+        var potentialVisibleHpxCellsOrder3 = this.view.getVisiblePixList(3, CooFrameEnum.J2000);
+        var visibleHpxCellsOrder3 = [];
+        // let's test first all potential visible cells and keep only the one with a projection inside the view
+        for (var k = 0; k < potentialVisibleHpxCellsOrder3.length; k++) {
+            var ipix = potentialVisibleHpxCellsOrder3[k];
+            xyCorners = getXYCorners(8, ipix, viewFrame, surveyFrame, width, height, largestDim, zoomFactor, projection);
+            if (xyCorners) {
+                visibleHpxCellsOrder3.push(ipix);
+            }
+        }
+
+        var counter = 0;
+        var mocCells;
+        for (var norder = 0; norder <= norderMax; norder++) {
+            nside = 1 << norder;
+
+            for (var i = 0; i < visibleHpxCellsOrder3.length; i++) {
+                var ipixOrder3 = visibleHpxCellsOrder3[i];
+                mocCells = mocCellsIdxOrder3[ipixOrder3];
                 if (typeof mocCells[norder] === 'undefined') {
                     continue;
                 }
@@ -5934,18 +6882,12 @@ MOC = (function() {
                             if (xyCorners) {
                                 drawCorners(ctx, xyCorners);
                             }
-                            cellsOrder3ToIgnore[norder3Ipix] = 1;
                         }
                     }
-                }
-                // TODO: this part could be improved by eliminating ipix already rendered
-                else {
+                } else {
                     for (var j = 0; j < mocCells[norder].length; j++) {
                         ipix = mocCells[norder][j];
                         var parentIpixOrder3 = Math.floor(ipix / Math.pow(4, norder - 3));
-                        if (parentIpixOrder3 in cellsOrder3ToIgnore) {
-                            continue;
-                        }
                         xyCorners = getXYCorners(nside, ipix, viewFrame, surveyFrame, width, height, largestDim, zoomFactor, projection);
                         if (xyCorners) {
                             drawCorners(ctx, xyCorners);
@@ -5972,24 +6914,43 @@ MOC = (function() {
         ctx.lineTo(xyCorners[0].vx, xyCorners[0].vy);
     }
 
+    // remove duplicate items from array a
+    var uniq = function(a) {
+        var seen = {};
+        var out = [];
+        var len = a.length;
+        var j = 0;
+        for (var i = 0; i < len; i++) {
+            var item = a[i];
+            if (seen[item] !== 1) {
+                seen[item] = 1;
+                out[j++] = item;
+            }
+        }
+
+        return out;
+    };
+
+
     // TODO: merge with what is done in View.getVisibleCells
+    var _spVec = new SpatialVector();
     var getXYCorners = function(nside, ipix, viewFrame, surveyFrame, width, height, largestDim, zoomFactor, projection) {
         var cornersXYView = [];
         var cornersXY = [];
 
-        var spVec = new SpatialVector();
+        var spVec = _spVec;
 
         var corners = HealpixCache.corners_nest(ipix, nside);
         for (var k = 0; k < 4; k++) {
             spVec.setXYZ(corners[k].x, corners[k].y, corners[k].z);
 
             // need for frame transformation ?
-            if (surveyFrame && surveyFrame != viewFrame) {
-                if (surveyFrame == CooFrameEnum.J2000) {
+            if (surveyFrame && surveyFrame.system != viewFrame.system) {
+                if (surveyFrame.system == CooFrameEnum.SYSTEMS.J2000) {
                     var radec = CooConversion.J2000ToGalactic([spVec.ra(), spVec.dec()]);
                     lon = radec[0];
                     lat = radec[1];
-                } else if (surveyFrame == CooFrameEnum.GAL) {
+                } else if (surveyFrame.system == CooFrameEnum.SYSTEMS.GAL) {
                     var radec = CooConversion.GalacticToJ2000([spVec.ra(), spVec.dec()]);
                     lon = radec[0];
                     lat = radec[1];
@@ -6032,7 +6993,7 @@ MOC = (function() {
     };
 
     MOC.prototype.reportChange = function() {
-        this.view.requestRedraw();
+        this.view && this.view.requestRedraw();
     };
 
     MOC.prototype.show = function() {
@@ -6051,9 +7012,51 @@ MOC = (function() {
         this.reportChange();
     };
 
+    // Tests whether a given (ra, dec) point on the sky is within the current MOC object
+    //
+    // returns true if point is contained, false otherwise
+    MOC.prototype.contains = function(ra, dec) {
+        var hpxIdx = new HealpixIndex(Math.pow(2, this.order));
+        hpxIdx.init();
+        var polar = Utils.radecToPolar(ra, dec);
+        var ipix = hpxIdx.ang2pix_nest(polar.theta, polar.phi);
+        var ipixMapByOrder = {};
+        for (var curOrder = 0; curOrder <= this.order; curOrder++) {
+            ipixMapByOrder[curOrder] = Math.floor(ipix / Math.pow(4, this.order - curOrder));
+        }
+
+        // first look for large HEALPix cells (order<3)
+        for (var ipixOrder3 = 0; ipixOrder3 < 768; ipixOrder3++) {
+            var mocCells = this._highResIndexOrder3[ipixOrder3];
+            for (var order in mocCells) {
+                if (order < 3) {
+                    for (var k = mocCells[order].length; k >= 0; k--) {
+                        if (ipixMapByOrder[order] == mocCells[order][k]) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // look for finer cells
+        var ipixOrder3 = ipixMapByOrder[3];
+        var mocCells = this._highResIndexOrder3[ipixOrder3];
+        for (var order in mocCells) {
+            for (var k = mocCells[order].length; k >= 0; k--) {
+                if (ipixMapByOrder[order] == mocCells[order][k]) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    };
+
 
 
     return MOC;
+
 })();
 
 
@@ -6249,121 +7252,89 @@ Footprint = (function() {
     Footprint = function(polygons) {
         this.polygons = polygons;
         this.overlay = null;
-        this.shapeId = -1;
+
+        // TODO : all graphic overlays should have an id
+        this.id = 'footprint-' + Utils.uuidv4();
+
         this.isShowing = true;
         this.isSelected = false;
-        this.isHovered = false;
     };
 
     Footprint.prototype.setOverlay = function(overlay) {
         this.overlay = overlay;
-        this.selectionEvent = new CustomEvent("shapeSelected", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.overlay.name,
-                shapeobj: this
-            }
-        });
-        this.deselectionEvent = new CustomEvent("shapeDeselected", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.overlay.name,
-                shapeobj: this
-            }
-        });
-        this.hoverStartEvent = new CustomEvent("shapeHoverStart", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.overlay.name
-            }
-        });
-        this.hoverStopEvent = new CustomEvent("shapeHoverStop", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.overlay.name
-            }
-        });
     };
 
-    Footprint.prototype.show = function(throwEvent) {
+    Footprint.prototype.show = function() {
         if (this.isShowing) {
             return;
         }
         this.isShowing = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                this.overlay.reportChange();
-            }
+        if (this.overlay) {
+            this.overlay.reportChange();
         }
     };
 
-    Footprint.prototype.hide = function(throwEvent) {
+    Footprint.prototype.hide = function() {
         if (!this.isShowing) {
             return;
         }
         this.isShowing = false;
-
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                this.overlay.reportChange();
-            }
+        if (this.overlay) {
+            this.overlay.reportChange();
         }
     };
 
-    Footprint.prototype.select = function(throwEvent) {
+    Footprint.prototype.dispatchClickEvent = function() {
+        if (this.overlay) {
+            // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
+            //window.dispatchEvent(new CustomEvent("footprintClicked", {
+            window.dispatchEvent(new CustomEvent("footprintClicked", {
+                detail: {
+                    shape: this
+                }
+            }));
+        }
+    };
+
+    Footprint.prototype.select = function() {
         if (this.isSelected) {
             return;
         }
         this.isSelected = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                window.dispatchEvent(this.selectionEvent);
-                this.overlay.reportChange();
-            }
+        if (this.overlay) {
+            /*
+                        // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
+                        //window.dispatchEvent(new CustomEvent("footprintClicked", {
+                        this.overlay.view.aladinDiv.dispatchEvent(new CustomEvent("footprintClicked", {
+                            detail: {
+                                footprintId: this.id,
+                                overlayName: this.overlay.name
+                            }
+                        }));
+            */
+
+            this.overlay.reportChange();
         }
     };
 
-    Footprint.prototype.deselect = function(throwEvent) {
+    Footprint.prototype.deselect = function() {
         if (!this.isSelected) {
             return;
         }
         this.isSelected = false;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                window.dispatchEvent(this.deselectionEvent);
-                this.overlay.reportChange();
-            }
+        if (this.overlay) {
+            this.overlay.reportChange();
         }
     };
 
-    Footprint.prototype.hoverStart = function(throwEvent) {
-        if (this.isHovered) {
+    Footprint.prototype.hover = function(isHovered) {
+        if (this.isHovered == isHovered) {
             return;
         }
-        this.isHovered = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                window.dispatchEvent(this.hoverStartEvent);
-                this.overlay.reportChange();
-            }
+        this.isHovered = isHovered;
+        if (this.overlay) {
+            this.overlay.reportChange();
         }
-    };
-
-    Footprint.prototype.hoverStop = function(throwEvent) {
-        if (!this.isHovered) {
-            return;
-        }
-        this.isHovered = false;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.overlay) {
-                window.dispatchEvent(this.hoverStopEvent);
-                this.overlay.reportChange();
-            }
-        }
-    };
-
-    Footprint.prototype.setShapeId = function(newShapeId) {
-        this.shapeId = newShapeId;
     };
 
     return Footprint;
@@ -6402,9 +7373,12 @@ Popup = (function() {
 
 
     // constructor
-    Popup = function(parentDiv) {
+    Popup = function(parentDiv, view) {
         this.domEl = $('<div class="aladin-popup-container"><div class="aladin-popup"><a class="aladin-closeBtn">&times;</a><div class="aladin-popupTitle"></div><div class="aladin-popupText"></div></div><div class="aladin-popup-arrow"></div></div>');
         this.domEl.appendTo(parentDiv);
+
+        this.view = view;
+
 
         var self = this;
         // close popup
@@ -6416,6 +7390,9 @@ Popup = (function() {
 
     Popup.prototype.hide = function() {
         this.domEl.hide();
+
+        this.view.mustClearCatalog = true;
+        this.view.catalogForPopup.hide();
     };
 
     Popup.prototype.show = function() {
@@ -6444,10 +7421,13 @@ Popup = (function() {
 
     Popup.prototype.setPosition = function(x, y) {
         var newX = x - this.w / 2;
-        var newY = y - this.h + this.source.catalog.sourceSize / 2;
+        var newY = y - this.h;
+        if (this.source) {
+            newY += this.source.catalog.sourceSize / 2;
+        }
+
         this.domEl[0].style.left = newX + 'px';
         this.domEl[0].style.top = newY + 'px';
-        //this.domEl.css({'left': newX+'px', 'top': newY+'px'});
     };
 
     return Popup;
@@ -6491,6 +7471,9 @@ Circle = (function() {
 
         this.color = options['color'] || undefined;
 
+        // TODO : all graphic overlays should have an id
+        this.id = 'circle-' + Utils.uuidv4();
+
         this.setCenter(centerRaDec);
         this.setRadius(radiusDegrees);
         this.overlay = null;
@@ -6520,6 +7503,19 @@ Circle = (function() {
         this.isShowing = false;
         if (this.overlay) {
             this.overlay.reportChange();
+        }
+    };
+
+    Circle.prototype.dispatchClickEvent = function() {
+        if (this.overlay) {
+            // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
+            //window.dispatchEvent(new CustomEvent("footprintClicked", {
+            this.overlay.view.aladinDiv.dispatchEvent(new CustomEvent("footprintClicked", {
+                detail: {
+                    footprintId: this.id,
+                    overlayName: this.overlay.name
+                }
+            }));
         }
     };
 
@@ -6569,13 +7565,16 @@ Circle = (function() {
     };
 
     // TODO
-    Circle.prototype.draw = function(ctx, projection, frame, width, height, largestDim, zoomFactor) {
+    Circle.prototype.draw = function(ctx, projection, frame, width, height, largestDim, zoomFactor, noStroke) {
         if (!this.isShowing) {
             return;
         }
 
+
+        noStroke = noStroke === true || false;
+
         var centerXy;
-        if (frame != CooFrameEnum.J2000) {
+        if (frame.system != CooFrameEnum.SYSTEMS.J2000) {
             var lonlat = CooConversion.J2000ToGalactic([this.centerRaDec[0], this.centerRaDec[1]]);
             centerXy = projection.project(lonlat[0], lonlat[1]);
         } else {
@@ -6590,7 +7589,7 @@ Circle = (function() {
         var circlePtXy;
         var ra = this.centerRaDec[0];
         var dec = this.centerRaDec[1] + (ra > 0 ? -this.radiusDegrees : this.radiusDegrees);
-        if (frame != CooFrameEnum.J2000) {
+        if (frame.system != CooFrameEnum.SYSTEMS.J2000) {
             var lonlat = CooConversion.J2000ToGalactic([ra, dec]);
             circlePtXy = projection.project(lonlat[0], lonlat[1]);
         } else {
@@ -6605,13 +7604,27 @@ Circle = (function() {
         var radiusInPix = Math.sqrt(dx * dx + dy * dy);
 
         // TODO : check each 4 point until show
-
-        if (this.color) {
-            ctx.strokeStyle = this.color;
+        var baseColor = this.color;
+        if (!baseColor && this.overlay) {
+            baseColor = this.overlay.color;
         }
+        if (!baseColor) {
+            baseColor = '#ff0000';
+        }
+
+        if (this.isSelected) {
+            ctx.strokeStyle = Overlay.increaseBrightness(baseColor, 80);
+        } else if (this.isHovered) {
+            ctx.strokeStyle = Overlay.increaseBrightness(baseColor, 55);
+        } else {
+            ctx.strokeStyle = baseColor;
+        }
+
         ctx.beginPath();
         ctx.arc(centerXyview.vx, centerXyview.vy, radiusInPix, 0, 2 * Math.PI, false);
-        ctx.stroke();
+        if (!noStroke) {
+            ctx.stroke();
+        }
     };
 
     return Circle;
@@ -6680,9 +7693,9 @@ Polyline = (function() {
     };
 
     Polyline.prototype.hide = function() {
-        //if (! this.isShowing) {
-        //    return;
-        //}
+        if (!this.isShowing) {
+            return;
+        }
         this.isShowing = false;
         if (this.overlay) {
             this.overlay.reportChange();
@@ -6739,7 +7752,6 @@ Polyline = (function() {
         }
         var start = AladinUtils.radecToViewXy(this.radecArray[0][0], this.radecArray[0][1], projection, frame, width, height, largestDim, zoomFactor);
 
-
         for (var k = 0; k < this.radecArray.length; k++) {
             start = AladinUtils.radecToViewXy(this.radecArray[k][0], this.radecArray[k][1], projection, frame, width, height, largestDim, zoomFactor);
             if (start) {
@@ -6757,16 +7769,15 @@ Polyline = (function() {
         for (var k = 1; k < this.radecArray.length; k++) {
             pt = AladinUtils.radecToViewXy(this.radecArray[k][0], this.radecArray[k][1], projection, frame, width, height, largestDim, zoomFactor);
             if (!pt) {
-                //            	console.log ("pt null "+pt);
                 if (drawingNewSeg) {
-                    //            		console.log("closing segment");
+                    //console.log("closing segment");
                     ctx.stroke();
                 }
                 drawingNewSeg = false;
                 newSeg = true;
             } else {
                 if (newSeg) {
-                    //        		  console.log ("starting newSeg at "+pt.vx+" "+pt.vy);
+                    //console.log ("starting newSeg at "+pt.vx+" "+pt.vy);
                     drawingNewSeg = true;
                     ctx.beginPath();
                     ctx.lineWidth = this.lineWidth;
@@ -6778,6 +7789,7 @@ Polyline = (function() {
             }
 
         }
+
 
         ctx.stroke();
     };
@@ -6856,18 +7868,17 @@ Overlay = (function() {
 
     // return an array of Footprint from a STC-S string
     Overlay.parseSTCS = function(stcs) {
-        var polygons = [];
+        var footprints = [];
         var parts = stcs.match(/\S+/g);
         var k = 0,
             len = parts.length;
-        var curPolygon;
         while (k < len) {
             var s = parts[k].toLowerCase();
             if (s == 'polygon') {
-                curPolygon = [];
+                var curPolygon = [];
                 k++;
                 frame = parts[k].toLowerCase();
-                if (frame == 'icrs' || frame == 'j2000') {
+                if (frame == 'icrs' || frame == 'j2000' || frame == 'fk5') {
                     while (k + 2 < len) {
                         var ra = parseFloat(parts[k + 1]);
                         if (isNaN(ra)) {
@@ -6878,30 +7889,55 @@ Overlay = (function() {
                         k += 2;
                     }
                     curPolygon.push(curPolygon[0]);
-                    polygons.push(curPolygon);
+                    footprints.push(new Footprint(curPolygon));
+                }
+            } else if (s == 'circle') {
+                var frame;
+                k++;
+                frame = parts[k].toLowerCase();
+
+                if (frame == 'icrs' || frame == 'j2000' || frame == 'fk5') {
+                    var ra, dec, radiusDegrees;
+
+                    ra = parseFloat(parts[k + 1]);
+                    dec = parseFloat(parts[k + 2]);
+                    radiusDegrees = parseFloat(parts[k + 3]);
+
+                    footprints.push(A.circle(ra, dec, radiusDegrees));
+
+                    k += 3;
                 }
             }
+
             k++;
         }
 
-        return polygons;
+        return footprints;
     };
 
-    // ajout d'un tableau d'overlays (= footprints)
+    // ajout d'un tableau d'overlays (= objets Footprint, Circle ou Polyline)
     Overlay.prototype.addFootprints = function(overlaysToAdd) {
-        this.overlays = this.overlays.concat(overlaysToAdd);
         for (var k = 0, len = overlaysToAdd.length; k < len; k++) {
-            overlaysToAdd[k].setOverlay(this);
+            this.add(overlaysToAdd[k], false);
         }
+
         this.view.requestRedraw();
     };
 
     // TODO : item doit pouvoir prendre n'importe quoi en param (footprint, circle, polyline)
-    Overlay.prototype.add = function(item) {
-        this.overlay_items.push(item);
+    Overlay.prototype.add = function(item, requestRedraw) {
+        requestRedraw = requestRedraw !== undefined ? requestRedraw : true;
+
+        if (item instanceof Footprint) {
+            this.overlays.push(item);
+        } else {
+            this.overlay_items.push(item);
+        }
         item.setOverlay(this);
 
-        this.view.requestRedraw();
+        if (requestRedraw) {
+            this.view.requestRedraw();
+        }
     };
 
 
@@ -6944,7 +7980,7 @@ Overlay = (function() {
         ctx.stroke();
 
         // Hover drawing
-        ctx.strokeStyle = Overlay.increase_brightness(this.color, 55);
+        ctx.strokeStyle = Overlay.increaseBrightness(this.color, 55);
         //ctx.strokeStyle= 'green';
         ctx.beginPath();
         for (var k = 0, len = this.overlays.length; k < len; k++) {
@@ -6956,8 +7992,7 @@ Overlay = (function() {
         ctx.stroke();
 
         // selection drawing
-        ctx.strokeStyle = Overlay.increase_brightness(this.color, 80);
-        //ctx.strokeStyle= 'green';
+        ctx.strokeStyle = Overlay.increaseBrightness(this.color, 80);
         ctx.beginPath();
         for (var k = 0, len = this.overlays.length; k < len; k++) {
             if (!this.overlays[k].isSelected) {
@@ -6974,7 +8009,7 @@ Overlay = (function() {
         }
     };
 
-    Overlay.increase_brightness = function(hex, percent) {
+    Overlay.increaseBrightness = function(hex, percent) {
         // strip the leading # if it's there
         hex = hex.replace(/^\s*#|\s*$/g, '');
 
@@ -7004,7 +8039,7 @@ Overlay = (function() {
         // for
         for (var k = 0, len = radecArray.length; k < len; k++) {
             var xy;
-            if (frame != CooFrameEnum.J2000) {
+            if (frame.system != CooFrameEnum.SYSTEMS.J2000) {
                 var lonlat = CooConversion.J2000ToGalactic([radecArray[k][0], radecArray[k][1]]);
                 xy = projection.project(lonlat[0], lonlat[1]);
             } else {
@@ -7107,133 +8142,79 @@ cds.Source = (function() {
         if (this.marker) {
             this.popupTitle = (options && options.popupTitle) ? options.popupTitle : '';
             this.popupDesc = (options && options.popupDesc) ? options.popupDesc : '';
+            this.useMarkerDefaultIcon = (options && options.useMarkerDefaultIcon !== undefined) ? options.useMarkerDefaultIcon : true;
         }
+
         this.isShowing = true;
         this.isSelected = false;
-        this.shapeId = -1;
-        this.isHovered = false;
     };
 
     cds.Source.prototype.setCatalog = function(catalog) {
         this.catalog = catalog;
 
-        this.selectionEvent = new CustomEvent("sourceSelected", {
+        this.selectionEvent = new CustomEvent("shapeSelected", {
             detail: {
-                shapeId: this.shapeId,
+                id: this.id,
                 overlayName: this.catalog.name,
                 shapeobj: this
             }
         });
-        this.deselectionEvent = new CustomEvent("sourceDeselected", {
+        this.deselectionEvent = new CustomEvent("shapeDeselected", {
             detail: {
-                shapeId: this.shapeId,
+                id: this.id,
                 overlayName: this.catalog.name,
                 shapeobj: this
-            }
-        });
-
-        this.hoverStartEvent = new CustomEvent("sourceHoverStart", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.catalog.name
-            }
-        });
-        this.hoverStopEvent = new CustomEvent("sourceHoverStop", {
-            detail: {
-                shapeId: this.shapeId,
-                overlayName: this.catalog.name
             }
         });
     };
 
-    cds.Source.prototype.show = function(throwEvent) {
+    cds.Source.prototype.show = function() {
         if (this.isShowing) {
             return;
         }
         this.isShowing = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                this.catalog.reportChange();
-            }
+        if (this.catalog) {
+            this.catalog.reportChange();
         }
     };
 
-    cds.Source.prototype.hide = function(throwEvent) {
+    cds.Source.prototype.hide = function() {
         if (!this.isShowing) {
             return;
         }
         this.isShowing = false;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                this.catalog.reportChange();
-            }
+        if (this.catalog) {
+            this.catalog.reportChange();
         }
     };
 
-    cds.Source.prototype.select = function(throwEvent) {
-        this.hoverStop();
+    cds.Source.prototype.select = function() {
         if (this.isSelected) {
             return;
         }
         this.isSelected = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                window.dispatchEvent(this.selectionEvent);
-                this.catalog.reportChange();
-            }
+        if (this.catalog) {
+            this.catalog.reportChange();
         }
     };
 
-    cds.Source.prototype.deselect = function(throwEvent) {
+    cds.Source.prototype.deselect = function() {
         if (!this.isSelected) {
             return;
         }
         this.isSelected = false;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                window.dispatchEvent(this.deselectionEvent);
-                this.catalog.reportChange();
-            }
+        if (this.catalog) {
+            this.catalog.reportChange();
         }
-    };
-
-    cds.Source.prototype.hoverStart = function(throwEvent) {
-        if (this.isHovered || this.isSelected) {
-            return;
-        }
-        this.isHovered = true;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                window.dispatchEvent(this.hoverStartEvent);
-                this.catalog.reportChange();
-            }
-        }
-    };
-
-    cds.Source.prototype.hoverStop = function(throwEvent) {
-        if (!this.isHovered) {
-            return;
-        }
-        this.isHovered = false;
-        if (throwEvent === undefined || throwEvent === true) {
-            if (this.catalog) {
-                window.dispatchEvent(this.hoverStopEvent);
-                this.catalog.reportChange();
-            }
-        }
-    };
-
-    cds.Source.prototype.setShapeId = function(newShapeId) {
-        this.shapeId = newShapeId;
     };
 
     // function called when a source is clicked. Called by the View object
     cds.Source.prototype.actionClicked = function() {
-        this.select();
         if (this.catalog && this.catalog.onClick) {
             var view = this.catalog.view;
             if (this.catalog.onClick == 'showTable') {
                 view.aladin.measurementTable.showMeasurement(this);
+                this.select();
             } else if (this.catalog.onClick == 'showPopup') {
                 view.popup.setTitle('<br><br>');
                 var m = '<div class="aladin-marker-measurement">';
@@ -7246,13 +8227,34 @@ cds.Source = (function() {
                 view.popup.setText(m);
                 view.popup.setSource(this);
                 view.popup.show();
+            } else if (typeof this.catalog.onClick === 'function') {
+                this.catalog.onClick(this);
+                view.lastClickedObject = this;
             }
+
+        }
+        if (this.isSelected) {
+            this.deselect();
+            window.dispatchEvent(this.deselectionEvent);
+        } else {
+            this.hover(false);
+            this.select();
+            window.dispatchEvent(this.selectionEvent);
         }
     };
 
+    cds.Source.prototype.hover = function(isHovered) {
+        if (this.isHovered == isHovered || this.isSelected) {
+            return;
+        }
+        this.isHovered = isHovered;
+        if (this.catalog) {
+            this.catalog.reportChange();
+        }
+    };
 
     cds.Source.prototype.actionOtherObjectClicked = function() {
-        if (this.catalog && this.catalog.onClick && this.catalog.onClick == 'showTable') {
+        if (this.catalog && this.catalog.onClick) {
             this.deselect();
         }
     };
@@ -7283,7 +8285,799 @@ cds.Source = (function() {
 
 /******************************************************************************
  * Aladin Lite project
- *
+ * 
+ * File Catalog
+ * 
+ * Author: Thomas Boch[CDS]
+ * 
+ *****************************************************************************/
+
+// TODO : harmoniser parsing avec classe ProgressiveCat
+cds.Catalog = (function() {
+    cds.Catalog = function(options) {
+        options = options || {};
+
+        this.type = 'catalog';
+        this.name = options.name || "catalog";
+        this.color = options.color || Color.getNextColor();
+        this.sourceSize = options.sourceSize || 8;
+        this.markerSize = options.sourceSize || 12;
+        this.shape = options.shape || "square";
+        this.maxNbSources = options.limit || undefined;
+        this.onClick = options.onClick || undefined;
+
+        this.raField = options.raField || undefined; // ID or name of the field holding RA
+        this.decField = options.decField || undefined; // ID or name of the field holding dec
+
+        this.indexationNorder = 5; // à quel niveau indexe-t-on les sources
+        this.sources = [];
+        this.hpxIdx = new HealpixIndex(this.indexationNorder);
+        this.hpxIdx.init();
+
+        if (options.arrowColor) {
+            this.arrowColor = options.arrowColor;
+        }
+        if (options.arrowWidth) {
+            this.arrowWidth = options.arrowWidth;
+        }
+        if (options.arrowLength) {
+            this.arrowLength = options.arrowLength;
+            this.arrowScale = 1.0;
+        }
+
+        this.avgPMRaInc = null; //Used to remove average proper motion on proper motion arrows
+        this.avgPMDecInc = null;
+        this.removeAvgPM = false;
+
+        this.displayLabel = options.displayLabel || false;
+        this.labelColor = options.labelColor || this.color;
+        this.labelFont = options.labelFont || '10px sans-serif';
+        if (this.displayLabel) {
+            this.labelColumn = options.labelColumn;
+            if (!this.labelColumn) {
+                this.displayLabel = false;
+            }
+        }
+
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) {
+            this.sourceSize = this.shape.width;
+        }
+        this._shapeIsFunction = false; // if true, the shape is a function drawing on the canvas
+        if ($.isFunction(this.shape)) {
+            this._shapeIsFunction = true;
+        }
+
+        this.selectionColor = '#00ff00';
+
+
+        // create this.cacheCanvas    	
+        // cacheCanvas permet de ne créer le path de la source qu'une fois, et de le réutiliser (cf. http://simonsarris.com/blog/427-increasing-performance-by-caching-paths-on-canvas)
+        this.updateShape(options);
+
+        this.cacheMarkerCanvas = document.createElement('canvas');
+        this.cacheMarkerCanvas.width = this.markerSize;
+        this.cacheMarkerCanvas.height = this.markerSize;
+        var cacheMarkerCtx = this.cacheMarkerCanvas.getContext('2d');
+        cacheMarkerCtx.fillStyle = this.color;
+        cacheMarkerCtx.beginPath();
+        var half = (this.markerSize) / 2.;
+        cacheMarkerCtx.arc(half, half, half - 2, 0, 2 * Math.PI, false);
+        cacheMarkerCtx.fill();
+        cacheMarkerCtx.lineWidth = 2;
+        cacheMarkerCtx.strokeStyle = '#ccc';
+        cacheMarkerCtx.stroke();
+
+
+        this.isShowing = true;
+    };
+
+    cds.Catalog.createShape = function(shapeName, color, sourceSize) {
+        if (shapeName instanceof Image || shapeName instanceof HTMLCanvasElement) { // in this case, the shape is already created
+            return shapeName;
+        }
+        var c = document.createElement('canvas');
+        c.width = c.height = sourceSize;
+        var ctx = c.getContext('2d');
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.0;
+        if (shapeName == "plus") {
+            ctx.moveTo(sourceSize / 2., 0);
+            ctx.lineTo(sourceSize / 2., sourceSize);
+            ctx.stroke();
+
+            ctx.moveTo(0, sourceSize / 2.);
+            ctx.lineTo(sourceSize, sourceSize / 2.);
+            ctx.stroke();
+        } else if (shapeName == "cross") {
+            ctx.moveTo(0, 0);
+            ctx.lineTo(sourceSize - 1, sourceSize - 1);
+            ctx.stroke();
+
+            ctx.moveTo(sourceSize - 1, 0);
+            ctx.lineTo(0, sourceSize - 1);
+            ctx.stroke();
+        } else if (shapeName == "rhomb") {
+            ctx.moveTo(sourceSize / 2, 0);
+            ctx.lineTo(0, sourceSize / 2);
+            ctx.lineTo(sourceSize / 2, sourceSize);
+            ctx.lineTo(sourceSize, sourceSize / 2);
+            ctx.lineTo(sourceSize / 2, 0);
+            ctx.stroke();
+        } else if (shapeName == "triangle") {
+            ctx.moveTo(sourceSize / 2, 0);
+            ctx.lineTo(0, sourceSize - 1);
+            ctx.lineTo(sourceSize - 1, sourceSize - 1);
+            ctx.lineTo(sourceSize / 2, 0);
+            ctx.stroke();
+        } else if (shapeName == "circle") {
+            ctx.arc(sourceSize / 2, sourceSize / 2, sourceSize / 2 - 1, 0, 2 * Math.PI, true);
+            ctx.stroke();
+        } else { // default shape: square
+            ctx.moveTo(1, 0);
+            ctx.lineTo(1, sourceSize - 1);
+            ctx.lineTo(sourceSize - 1, sourceSize - 1);
+            ctx.lineTo(sourceSize - 1, 1);
+            ctx.lineTo(1, 1);
+            ctx.stroke();
+        }
+
+        return c;
+
+    };
+
+
+    // find RA, Dec fields among the given fields
+    //
+    // @param fields: list of objects with ucd, unit, ID, name attributes
+    // @param raField:  index or name of right ascension column (might be undefined)
+    // @param decField: index or name of declination column (might be undefined)
+    //
+    function findRADecFields(fields, raField, decField) {
+        var raFieldIdx, decFieldIdx;
+        raFieldIdx = decFieldIdx = null;
+
+        // first, look if RA/DEC fields have been already given
+        if (raField) { // ID or name of RA field given at catalogue creation
+            for (var l = 0, len = fields.length; l < len; l++) {
+                var field = fields[l];
+                if (Utils.isInt(raField) && raField < fields.length) { // raField can be given as an index
+                    raFieldIdx = raField;
+                    break;
+                }
+                if ((field.ID && field.ID === raField) || (field.name && field.name === raField)) {
+                    raFieldIdx = l;
+                    break;
+                }
+            }
+        }
+        if (decField) { // ID or name of dec field given at catalogue creation
+            for (var l = 0, len = fields.length; l < len; l++) {
+                var field = fields[l];
+                if (Utils.isInt(decField) && decField < fields.length) { // decField can be given as an index
+                    decFieldIdx = decField;
+                    break;
+                }
+                if ((field.ID && field.ID === decField) || (field.name && field.name === decField)) {
+                    decFieldIdx = l;
+                    break;
+                }
+            }
+        }
+        // if not already given, let's guess position columns on the basis of UCDs
+        for (var l = 0, len = fields.length; l < len; l++) {
+            if (raFieldIdx != null && decFieldIdx != null) {
+                break;
+            }
+
+            var field = fields[l];
+            if (!raFieldIdx) {
+                if (field.ucd) {
+                    var ucd = $.trim(field.ucd.toLowerCase());
+                    if (ucd.indexOf('pos.eq.ra') == 0 || ucd.indexOf('pos_eq_ra') == 0) {
+                        raFieldIdx = l;
+                        continue;
+                    }
+                }
+            }
+
+            if (!decFieldIdx) {
+                if (field.ucd) {
+                    var ucd = $.trim(field.ucd.toLowerCase());
+                    if (ucd.indexOf('pos.eq.dec') == 0 || ucd.indexOf('pos_eq_dec') == 0) {
+                        decFieldIdx = l;
+                        continue;
+                    }
+                }
+            }
+        }
+
+        // still not found ? try some common names for RA and Dec columns
+        if (raFieldIdx == null && decFieldIdx == null) {
+            for (var l = 0, len = fields.length; l < len; l++) {
+                var field = fields[l];
+                var name = field.name || field.ID || '';
+                name = name.toLowerCase();
+
+                if (!raFieldIdx) {
+                    if (name.indexOf('ra') == 0 || name.indexOf('_ra') == 0 || name.indexOf('ra(icrs)') == 0 || name.indexOf('_ra') == 0 || name.indexOf('alpha') == 0) {
+                        raFieldIdx = l;
+                        continue;
+                    }
+                }
+
+                if (!decFieldIdx) {
+                    if (name.indexOf('dej2000') == 0 || name.indexOf('_dej2000') == 0 || name.indexOf('de') == 0 || name.indexOf('de(icrs)') == 0 || name.indexOf('_de') == 0 || name.indexOf('delta') == 0) {
+                        decFieldIdx = l;
+                        continue;
+                    }
+                }
+
+            }
+        }
+
+        // last resort: take two first fieds
+        if (raFieldIdx == null || decFieldIdx == null) {
+            raFieldIdx = 0;
+            decFieldIdx = 1
+        }
+
+        return [raFieldIdx, decFieldIdx];
+    };
+
+
+
+    // return an array of Source(s) from a VOTable url
+    // callback function is called each time a TABLE element has been parsed
+    cds.Catalog.parseVOTable = function(url, callback, maxNbSources, useProxy, raField, decField) {
+
+        // adapted from votable.js
+        function getPrefix($xml) {
+            var prefix;
+            // If Webkit chrome/safari/... (no need prefix)
+            if ($xml.find('RESOURCE').length > 0) {
+                prefix = '';
+            } else {
+                // Select all data in the document
+                prefix = $xml.find("*").first();
+
+                if (prefix.length == 0) {
+                    return '';
+                }
+
+                // get name of the first tag
+                prefix = prefix.prop("tagName");
+
+                var idx = prefix.indexOf(':');
+
+                prefix = prefix.substring(0, idx) + "\\:";
+
+
+            }
+
+            return prefix;
+        }
+
+        function doParseVOTable(xml, callback) {
+            xml = xml.replace(/^\s+/g, ''); // we need to trim whitespaces at start of document
+            var attributes = ["name", "ID", "ucd", "utype", "unit", "datatype", "arraysize", "width", "precision"];
+
+            var fields = [];
+            var k = 0;
+            var $xml = $($.parseXML(xml));
+            var prefix = getPrefix($xml);
+            $xml.find(prefix + "FIELD").each(function() {
+                var f = {};
+                for (var i = 0; i < attributes.length; i++) {
+                    var attribute = attributes[i];
+                    if ($(this).attr(attribute)) {
+                        f[attribute] = $(this).attr(attribute);
+                    }
+                }
+                if (!f.ID) {
+                    f.ID = "col_" + k;
+                }
+                fields.push(f);
+                k++;
+            });
+
+            var raDecFieldIdxes = findRADecFields(fields, raField, decField);
+            var raFieldIdx, decFieldIdx;
+            raFieldIdx = raDecFieldIdxes[0];
+            decFieldIdx = raDecFieldIdxes[1];
+
+            var sources = [];
+
+            var coo = new Coo();
+            var ra, dec;
+            $xml.find(prefix + "TR").each(function() {
+                var mesures = {};
+                var k = 0;
+                $(this).find(prefix + "TD").each(function() {
+                    var key = fields[k].name ? fields[k].name : fields[k].id;
+                    mesures[key] = $(this).text();
+                    k++;
+                });
+                var keyRa = fields[raFieldIdx].name ? fields[raFieldIdx].name : fields[raFieldIdx].id;
+                var keyDec = fields[decFieldIdx].name ? fields[decFieldIdx].name : fields[decFieldIdx].id;
+
+                if (Utils.isNumber(mesures[keyRa]) && Utils.isNumber(mesures[keyDec])) {
+                    ra = parseFloat(mesures[keyRa]);
+                    dec = parseFloat(mesures[keyDec]);
+                } else {
+                    coo.parse(mesures[keyRa] + " " + mesures[keyDec]);
+                    ra = coo.lon;
+                    dec = coo.lat;
+                }
+                sources.push(new cds.Source(ra, dec, mesures));
+                if (maxNbSources && sources.length == maxNbSources) {
+                    return false; // break the .each loop
+                }
+
+            });
+            if (callback) {
+                callback(sources);
+            }
+        }
+
+        var ajax = Utils.getAjaxObject(url, 'GET', 'text', useProxy);
+        ajax.done(function(xml) {
+            doParseVOTable(xml, callback);
+        });
+    };
+
+    // API
+    cds.Catalog.prototype.updateShape = function(options) {
+        options = options || {};
+        this.color = options.color || this.color || Color.getNextColor();
+        this.sourceSize = options.sourceSize || this.sourceSize || 6;
+        this.shape = options.shape || this.shape || "square";
+
+        this.selectSize = this.sourceSize + 2;
+
+        this.cacheCanvas = cds.Catalog.createShape(this.shape, this.color, this.sourceSize);
+        this.cacheHoverCanvas = cds.Catalog.createShape(this.shape, Overlay.increaseBrightness(this.color, 55), this.selectSize);
+        this.cacheSelectCanvas = cds.Catalog.createShape(this.shape, Overlay.increaseBrightness(this.color, 80), this.selectSize);
+
+        this.reportChange();
+    };
+
+    cds.Catalog.prototype.reCreateShape = function() {
+        var shape = (this._shapeIsFunction) ? (this.customShape || "square") : this.shape;
+        this.cacheCanvas = cds.Catalog.createShape(shape, this.color, this.sourceSize);
+        this.selectSize = this.sourceSize + 2;
+        this.cacheHoverCanvas = cds.Catalog.createShape(this.shape, Overlay.increaseBrightness(this.color, 55), this.selectSize);
+        this.cacheSelectCanvas = cds.Catalog.createShape(this.shape, Overlay.increaseBrightness(this.color, 80), this.selectSize);
+        this.reportChange();
+    };
+
+    // API
+    cds.Catalog.prototype.addSources = function(sourcesToAdd) {
+        sourcesToAdd = [].concat(sourcesToAdd); // make sure we have an array and not an individual source
+        this.sources = this.sources.concat(sourcesToAdd);
+        for (var k = 0, len = sourcesToAdd.length; k < len; k++) {
+            sourcesToAdd[k].setCatalog(this);
+        }
+        this.reportChange();
+    };
+
+    // API
+    //
+    // create sources from a 2d array and add them to the catalog
+    //
+    // @param columnNames: array with names of the columns
+    // @array: 2D-array, each item being a 1d-array with the same number of items as columnNames
+    cds.Catalog.prototype.addSourcesAsArray = function(columnNames, array) {
+        var fields = [];
+        for (var colIdx = 0; colIdx < columnNames.length; colIdx++) {
+            fields.push({
+                name: columnNames[colIdx]
+            });
+        }
+        var raDecFieldIdxes = findRADecFields(fields, this.raField, this.decField);
+        var raFieldIdx, decFieldIdx;
+        raFieldIdx = raDecFieldIdxes[0];
+        decFieldIdx = raDecFieldIdxes[1];
+
+
+        var newSources = [];
+        var coo = new Coo();
+        var ra, dec, row, dataDict;
+        for (var rowIdx = 0; rowIdx < array.length; rowIdx++) {
+            row = array[rowIdx];
+            if (Utils.isNumber(row[raFieldIdx]) && Utils.isNumber(row[decFieldIdx])) {
+                ra = parseFloat(row[raFieldIdx]);
+                dec = parseFloat(row[decFieldIdx]);
+            } else {
+                coo.parse(row[raFieldIdx] + " " + row[decFieldIdx]);
+                ra = coo.lon;
+                dec = coo.lat;
+            }
+
+            dataDict = {};
+            for (var colIdx = 0; colIdx < columnNames.length; colIdx++) {
+                dataDict[columnNames[colIdx]] = row[colIdx];
+            }
+
+            newSources.push(A.source(ra, dec, dataDict));
+        }
+
+        this.addSources(newSources);
+    };
+
+    // return the current list of Source objects
+    cds.Catalog.prototype.getSources = function() {
+        return this.sources;
+    };
+
+    // TODO : fonction générique traversant la liste des sources
+    cds.Catalog.prototype.selectAll = function() {
+        if (!this.sources) {
+            return;
+        }
+
+        for (var k = 0; k < this.sources.length; k++) {
+            this.sources[k].select();
+        }
+    };
+
+    cds.Catalog.prototype.deselectAll = function() {
+        if (!this.sources) {
+            return;
+        }
+
+        for (var k = 0; k < this.sources.length; k++) {
+            this.sources[k].deselect();
+        }
+    };
+
+    // return a source by index
+    cds.Catalog.prototype.getSource = function(idx) {
+        if (idx < this.sources.length) {
+            return this.sources[idx];
+        } else {
+            return null;
+        }
+    };
+
+    cds.Catalog.prototype.setView = function(view) {
+        this.view = view;
+        this.reportChange();
+    };
+
+    cds.Catalog.prototype.setColor = function(color) {
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the color
+            return;
+        }
+
+        this.color = color;
+        this.reCreateShape();
+    };
+
+    cds.Catalog.prototype.setSourceSize = function(sourceSize) {
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the size
+            return;
+        }
+
+        this.sourceSize = sourceSize;
+        this.reCreateShape();
+    };
+
+    cds.Catalog.prototype.getSourceSize = function() {
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the size
+            return;
+        }
+        return this.sourceSize;
+    };
+
+    cds.Catalog.prototype.setShape = function(shape) {
+        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the shape
+            return;
+        } else if (this._shapeIsFunction) {
+            this.customShape = shape;
+        } else {
+            this.shape = shape;
+        }
+
+        this.reCreateShape();
+    };
+
+    cds.Catalog.prototype.setArrowColor = function(arrowColor) {
+        this.arrowColor = arrowColor;
+        this.reportChange();
+    };
+
+    cds.Catalog.prototype.setArrowScale = function(arrowScale) {
+        this.arrowScale = arrowScale;
+        this.reportChange();
+    };
+
+    cds.Catalog.prototype.setCatalogAvgProperMotion = function(removeAvgPM, useMedian, reportChange) {
+        this.removeAvgPM = removeAvgPM;
+        this.avgPMRaInc = 0.0;
+        this.avgPMDecInc = 0.0;
+
+        if (this.removeAvgPM) {
+
+            if (!useMedian) {
+
+                //Recalculates the average proper motion
+                var sumPMRaInc = 0.0;
+                var sumPMDecInc = 0.0;
+                var visibleSources = 0;
+
+                for (var k = 0, len = this.sources.length; k < len; k++) {
+                    var source = this.sources[k];
+                    if (source.isShowing && source.data && source.data["arrowRa"] && source.data["arrowDec"]) {
+
+                        if (typeof source.data["arrowRa"] === 'string' || source.data["arrowRa"] instanceof String) {
+                            //Avoid parsing to float each draw, data comes as string from GWT
+                            source.data["arrowRa"] = parseFloat(source.data["arrowRa"]);
+                            source.data["arrowDec"] = parseFloat(source.data["arrowDec"]);
+                        }
+
+                        sumPMRaInc += (source.data["arrowRa"] - parseFloat(source.ra));
+                        sumPMDecInc += (source.data["arrowDec"] - parseFloat(source.dec));
+                        visibleSources++;
+
+                        //Cleans stored calculations on source
+                        source.data["avgPMra"] = null;
+                        source.data["avgPMdec"] = null;
+                    }
+                }
+
+                if (visibleSources > 0) {
+                    this.avgPMRaInc = sumPMRaInc / visibleSources;
+                    this.avgPMDecInc = sumPMDecInc / visibleSources;
+                }
+
+            } else {
+
+                //Calculates the median of the sources pm slopes -> decInc / raInc
+                var pmSlopes = [];
+                for (var k = 0, len = this.sources.length; k < len; k++) {
+                    var source = this.sources[k];
+                    if (source.isShowing && source.data && source.data["arrowRa"] && source.data["arrowDec"]) {
+
+                        if (typeof source.data["arrowRa"] === 'string' || source.data["arrowRa"] instanceof String) {
+                            //Avoid parsing to float each draw, data comes as string from GWT
+                            source.data["arrowRa"] = parseFloat(source.data["arrowRa"]);
+                            source.data["arrowDec"] = parseFloat(source.data["arrowDec"]);
+                        }
+
+                        // Calculates the slope and stores it in an object
+                        var raInc = (source.data["arrowRa"] - parseFloat(source.ra));
+                        var decInc = (source.data["arrowDec"] - parseFloat(source.dec));
+                        var slope = decInc / raInc;
+                        pmSlopes.push({
+                            "slope": slope,
+                            "raInc": raInc,
+                            "decInc": decInc
+                        });
+
+                        //Cleans stored calculations on source
+                        source.data["avgPMra"] = null;
+                        source.data["avgPMdec"] = null;
+                    }
+                }
+
+                if (pmSlopes.length > 0) {
+                    pmSlopes.sort(function(a, b) {
+                        return a.slope - b.slope;
+                    });
+
+                    var half = Math.floor(pmSlopes.length / 2);
+
+                    if (pmSlopes.length % 2) {
+                        this.avgPMRaInc = pmSlopes[half].raInc;
+                        this.avgPMDecInc = pmSlopes[half].decInc;
+                    } else {
+                        this.avgPMRaInc = (pmSlopes[half - 1].raInc + pmSlopes[half].raInc) / 2.0;
+                        this.avgPMDecInc = (pmSlopes[half - 1].decInc + pmSlopes[half].decInc) / 2.0;
+                    }
+
+                }
+            }
+        }
+
+        if (reportChange) {
+            this.reportChange();
+        }
+    };
+
+    cds.Catalog.prototype.removeAll = cds.Catalog.prototype.clear = function() {
+        // TODO : RAZ de l'index
+        this.sources = [];
+    };
+
+    cds.Catalog.prototype.draw = function(ctx, projection, frame, width, height, largestDim, zoomFactor) {
+        if (!this.isShowing) {
+            return;
+        }
+        // tracé simple
+        //ctx.strokeStyle= this.color;
+
+        //ctx.lineWidth = 1;
+        //ctx.beginPath();
+        if (this._shapeIsFunction) {
+            ctx.save();
+        }
+        var sourcesInView = [];
+        for (var k = 0, len = this.sources.length; k < len; k++) {
+            var inView = cds.Catalog.drawSource(this, this.sources[k], ctx, projection, frame, width, height, largestDim, zoomFactor);
+            if (inView) {
+                sourcesInView.push(this.sources[k]);
+            }
+        }
+        if (this._shapeIsFunction) {
+            ctx.restore();
+        }
+        //ctx.stroke();
+
+        // tracé sélection
+        ctx.strokeStyle = this.selectionColor;
+        //ctx.beginPath();
+        var source;
+        for (var k = 0, len = sourcesInView.length; k < len; k++) {
+            source = sourcesInView[k];
+            if (source.isSelected) {
+                cds.Catalog.drawSourceSelection(this, source, ctx);
+            } else if (source.isHovered) {
+                cds.Catalog.drawSourceHover(this, source, ctx);
+            }
+
+        }
+        // NEEDED ?
+        //ctx.stroke();
+
+        // tracé label
+        if (this.displayLabel) {
+            ctx.fillStyle = this.labelColor;
+            ctx.font = this.labelFont;
+            for (var k = 0, len = sourcesInView.length; k < len; k++) {
+                cds.Catalog.drawSourceLabel(this, sourcesInView[k], ctx);
+            }
+        }
+    };
+
+
+
+    cds.Catalog.drawSource = function(catalogInstance, s, ctx, projection, frame, width, height, largestDim, zoomFactor) {
+        if (!s.isShowing) {
+            return false;
+        }
+        var sourceSize = catalogInstance.sourceSize;
+        // TODO : we could factorize this code with Aladin.world2pix
+        var xy;
+        if (frame.system != CooFrameEnum.SYSTEMS.J2000) {
+            var lonlat = CooConversion.J2000ToGalactic([s.ra, s.dec]);
+            xy = projection.project(lonlat[0], lonlat[1]);
+        } else {
+            xy = projection.project(s.ra, s.dec);
+        }
+
+        if (xy) {
+            var xyview = AladinUtils.xyToView(xy.X, xy.Y, width, height, largestDim, zoomFactor, true);
+            var max = s.popup ? 100 : s.sourceSize;
+            if (xyview) {
+                // TODO : index sources by HEALPix cells at level 3, 4 ?
+
+                // check if source is visible in view
+                if (xyview.vx > (width + max) || xyview.vx < (0 - max) ||
+                    xyview.vy > (height + max) || xyview.vy < (0 - max)) {
+                    s.x = s.y = undefined;
+                    return false;
+                }
+
+                s.x = xyview.vx;
+                s.y = xyview.vy;
+                if (catalogInstance._shapeIsFunction) {
+                    catalogInstance.shape(s, ctx, catalogInstance.view.getViewParams());
+                } else if (s.marker && s.useMarkerDefaultIcon) {
+                    ctx.drawImage(catalogInstance.cacheMarkerCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
+                } else {
+                    ctx.drawImage(catalogInstance.cacheCanvas, s.x - catalogInstance.cacheCanvas.width / 2, s.y - catalogInstance.cacheCanvas.height / 2);
+                }
+
+
+                // has associated popup ?
+                if (s.popup) {
+                    s.popup.setPosition(s.x, s.y);
+                }
+
+
+            }
+            return true;
+        } else {
+            return false;
+        }
+
+
+    };
+
+    cds.Catalog.drawSourceHover = function(catalogInstance, s, ctx) {
+        if (!s || !s.isShowing || !s.x || !s.y) {
+            return;
+        }
+        var sourceSize = catalogInstance.selectSize;
+
+        ctx.drawImage(catalogInstance.cacheHoverCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
+    };
+
+    cds.Catalog.drawSourceSelection = function(catalogInstance, s, ctx) {
+        if (!s || !s.isShowing || !s.x || !s.y) {
+            return;
+        }
+        var sourceSize = catalogInstance.selectSize;
+
+        ctx.drawImage(catalogInstance.cacheSelectCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
+    };
+
+    cds.Catalog.drawSourceLabel = function(catalogInstance, s, ctx) {
+        if (!s || !s.isShowing || !s.x || !s.y) {
+            return;
+        }
+
+        var label = s.data[catalogInstance.labelColumn];
+        if (!label) {
+            return;
+        }
+
+        ctx.fillText(label, s.x, s.y);
+    };
+
+
+    // callback function to be called when the status of one of the sources has changed
+    cds.Catalog.prototype.reportChange = function() {
+        this.view && this.view.requestRedraw();
+    };
+
+    cds.Catalog.prototype.show = function() {
+        if (this.isShowing) {
+            return;
+        }
+        this.isShowing = true;
+        this.reportChange();
+    };
+
+    cds.Catalog.prototype.hide = function() {
+        if (!this.isShowing) {
+            return;
+        }
+        this.isShowing = false;
+        if (this.view && this.view.popup && this.view.popup.source && this.view.popup.source.catalog == this) {
+            this.view.popup.hide();
+        }
+
+        this.reportChange();
+    };
+
+    return cds.Catalog;
+})();
+// Copyright 2013 - UDS/CNRS
+// The Aladin Lite program is distributed under the terms
+// of the GNU General Public License version 3.
+//
+// This file is part of Aladin Lite.
+//
+//    Aladin Lite is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, version 3 of the License.
+//
+//    Aladin Lite is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    The GNU General Public License is available in COPYING file
+//    along with Aladin Lite.
+//
+
+
+
+/******************************************************************************
+ * Aladin Lite project
+ * 
  * File ProgressiveCat.js
  * 
  * Author: Thomas Boch[CDS]
@@ -7304,6 +9098,11 @@ ProgressiveCat = (function() {
         this.type = 'progressivecat';
 
         this.rootUrl = rootUrl; // TODO: method to sanitize rootURL (absolute, no duplicate slashes, remove end slash if existing)
+        // fast fix for HTTPS support --> will work for all HiPS served by CDS
+        if (Utils.isHttpsContext() && (/u-strasbg.fr/i.test(this.rootUrl) || /unistra.fr/i.test(this.rootUrl))) {
+            this.rootUrl = this.rootUrl.replace('http://', 'https://');
+        }
+
         this.frameStr = frameStr;
         this.frame = CooFrameEnum.fromString(frameStr) || CooFrameEnum.J2000;
         this.maxOrder = maxOrder;
@@ -7324,21 +9123,8 @@ ProgressiveCat = (function() {
         // we cache the list of sources in each healpix tile. Key of the cache is norder+'-'+npix
         this.sourcesCache = new Utils.LRUCache(100);
 
-        this.cacheCanvas = cds.Catalog.createShape(this.shape, this.color, this.sourceSize);
+        this.updateShape(options);
 
-        this.cacheSelectCanvas = document.createElement('canvas');
-        this.cacheSelectCanvas.width = this.selectSize;
-        this.cacheSelectCanvas.height = this.selectSize;
-        var cacheSelectCtx = this.cacheSelectCanvas.getContext('2d');
-        cacheSelectCtx.beginPath();
-        cacheSelectCtx.strokeStyle = this.selectionColor;
-        cacheSelectCtx.lineWidth = 2.0;
-        cacheSelectCtx.moveTo(0, 0);
-        cacheSelectCtx.lineTo(0, this.selectSize);
-        cacheSelectCtx.lineTo(this.selectSize, this.selectSize);
-        cacheSelectCtx.lineTo(this.selectSize, 0);
-        cacheSelectCtx.lineTo(0, 0);
-        cacheSelectCtx.stroke(); // TODO: to be merged with Catalog
 
 
 
@@ -7494,6 +9280,8 @@ ProgressiveCat = (function() {
             }
         },
 
+        updateShape: cds.Catalog.prototype.updateShape,
+
         _loadMetadata: function() {
             var self = this;
             $.ajax({
@@ -7519,7 +9307,7 @@ ProgressiveCat = (function() {
 
                     if (self.order2Sources) {
                         self.isReady = true;
-                        self.view.requestRedraw();
+                        self._finishInitWhenReady();
                     }
                 },
                 error: function(err) {
@@ -7535,7 +9323,7 @@ ProgressiveCat = (function() {
 
                     if (self.order1Sources) {
                         self.isReady = true;
-                        self.view.requestRedraw();
+                        self._finishInitWhenReady();
                     }
                 },
                 error: function(err) {
@@ -7561,7 +9349,7 @@ ProgressiveCat = (function() {
                     self.order2Sources = getSources(self, $(xml).find('CSV').text(), self.fields);
                     if (self.order3Sources) {
                         self.isReady = true;
-                        self.view.requestRedraw();
+                        self._finishInitWhenReady();
                     }
                 },
                 error: function(err) {
@@ -7579,13 +9367,18 @@ ProgressiveCat = (function() {
                     self.order3Sources = getSources(self, $(xml).find('CSV').text(), self.fields);
                     if (self.order2Sources) {
                         self.isReady = true;
-                        self.view.requestRedraw();
+                        self._finishInitWhenReady();
                     }
                 },
                 error: function(err) {
                     console.log('Something went wrong: ' + err);
                 }
             });
+        },
+
+        _finishInitWhenReady: function() {
+            this.view.requestRedraw();
+            this.loadNeededTiles();
         },
 
         draw: function(ctx, projection, frame, width, height, largestDim, zoomFactor) {
@@ -7620,10 +9413,11 @@ ProgressiveCat = (function() {
                 cds.Catalog.drawSource(this, sources[k], ctx, projection, frame, width, height, largestDim, zoomFactor);
             }
             for (var k = 0, len = sources.length; k < len; k++) {
-                if (!sources[k].isSelected) {
-                    continue;
+                if (sources[k].isSelected) {
+                    cds.Catalog.drawSourceSelection(this, sources[k], ctx);
+                } else if (sources[k].isHovered) {
+                    cds.Catalog.drawSourceHover(this, sources[k], ctx);
                 }
-                cds.Catalog.drawSourceSelection(this, sources[k], ctx);
             }
         },
 
@@ -7690,6 +9484,7 @@ ProgressiveCat = (function() {
                 return;
             }
             this.isShowing = true;
+            this.loadNeededTiles();
             this.reportChange();
         },
         hide: function() {
@@ -7699,9 +9494,9 @@ ProgressiveCat = (function() {
             this.isShowing = false;
             this.reportChange();
         },
-        //        reportChange: function() {
-        //            this.view.requestRedraw();
-        //        },
+        reportChange: function() {
+            this.view.requestRedraw();
+        },
 
         getTileURL: function(norder, npix) {
             var dirIdx = Math.floor(npix / 10000) * 10000;
@@ -7709,9 +9504,11 @@ ProgressiveCat = (function() {
         },
 
         loadNeededTiles: function() {
+            if (!this.isShowing) {
+                return;
+            }
             this.tilesInView = [];
 
-            this.otherSources = [];
             var norder = this.view.realNorder;
             if (norder > this.maxOrder) {
                 norder = this.maxOrder;
@@ -7721,7 +9518,7 @@ ProgressiveCat = (function() {
             }
             var cells = this.view.getVisibleCells(norder, this.frame);
             var ipixList, ipix;
-            for (var curOrder = 4; curOrder <= norder; curOrder++) {
+            for (var curOrder = 3; curOrder <= norder; curOrder++) {
                 ipixList = [];
                 for (var k = 0; k < cells.length; k++) {
                     ipix = Math.floor(cells[k].ipix / Math.pow(4, norder - curOrder));
@@ -7801,724 +9598,7 @@ ProgressiveCat = (function() {
 
 /******************************************************************************
  * Aladin Lite project
- *
- * File Catalog
- *
- * Author: Thomas Boch[CDS]
- *
- *****************************************************************************/
-
-// TODO : harmoniser parsing avec classe ProgressiveCat
-cds.Catalog = (function() {
-    cds.Catalog = function(options) {
-
-        options = options || {};
-        this.type = 'catalog';
-        this.name = options.name || "catalog";
-        this.color = options.color || Color.getNextColor();
-        this.sourceSize = options.sourceSize || 6;
-        this.markerSize = options.sourceSize || 12;
-        this.shape = options.shape || "square";
-        this.maxNbSources = options.limit || undefined;
-        this.onClick = options.onClick || undefined;
-
-        this.raField = options.raField || undefined; // ID or name of the field holding RA
-        this.decField = options.decField || undefined; // ID or name of the field holding dec
-
-        if (options.arrowColor) {
-            this.arrowColor = options.arrowColor;
-        }
-        if (options.arrowWidth) {
-            this.arrowWidth = options.arrowWidth;
-        }
-        if (options.arrowLength) {
-            this.arrowLength = options.arrowLength;
-            this.arrowScale = 1.0;
-        }
-
-        this.avgPMRaInc = null; //Used to remove average proper motion on proper motion arrows
-        this.avgPMDecInc = null;
-        this.removeAvgPM = false;
-
-        this.displayLabel = options.displayLabel || false;
-        this.labelColor = options.labelColor || this.color;
-        this.labelFont = options.labelFont || '10px sans-serif';
-        if (this.displayLabel) {
-            this.labelColumn = options.labelColumn;
-            if (!this.labelColumn) {
-                this.displayLabel = false;
-            }
-        }
-
-        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) {
-            if (this.shape.width != 0) {
-                this.sourceSize = this.shape.width;
-            }
-        }
-        this._shapeIsFunction = false; // if true, the shape is a function drawing on the canvas
-        if ($.isFunction(this.shape)) {
-            this._shapeIsFunction = true;
-        }
-        this.selectSize = this.sourceSize + 2;
-
-        this.isShowing = true;
-
-
-        this.indexationNorder = 5; // à quel niveau indexe-t-on les sources
-        this.sources = [];
-        this.hpxIdx = new HealpixIndex(this.indexationNorder);
-        this.hpxIdx.init();
-        this.selectionColor = '#00ff00';
-
-
-        // cacheCanvas permet de ne créer le path de la source qu'une fois, et de le réutiliser (cf. http://simonsarris.com/blog/427-increasing-performance-by-caching-paths-on-canvas)
-        this.cacheCanvas = cds.Catalog.createShape(this.shape, this.color, this.sourceSize);
-
-        this.cacheMarkerCanvas = document.createElement('canvas');
-        this.cacheMarkerCanvas.width = this.markerSize;
-        this.cacheMarkerCanvas.height = this.markerSize;
-        var cacheMarkerCtx = this.cacheMarkerCanvas.getContext('2d');
-        cacheMarkerCtx.fillStyle = this.color;
-        cacheMarkerCtx.beginPath();
-        var half = (this.markerSize) / 2.;
-        cacheMarkerCtx.arc(half, half, half - 2, 0, 2 * Math.PI, false);
-        cacheMarkerCtx.fill();
-        cacheMarkerCtx.lineWidth = 2;
-        cacheMarkerCtx.strokeStyle = '#ccc';
-        cacheMarkerCtx.stroke();
-
-        this.cacheSelectCanvas = document.createElement('canvas');
-        this.cacheSelectCanvas.width = this.selectSize;
-        this.cacheSelectCanvas.height = this.selectSize;
-        var cacheSelectCtx = this.cacheSelectCanvas.getContext('2d');
-        cacheSelectCtx.beginPath();
-        cacheSelectCtx.strokeStyle = this.selectionColor;
-        cacheSelectCtx.lineWidth = 2.0;
-        cacheSelectCtx.moveTo(0, 0);
-        cacheSelectCtx.lineTo(0, this.selectSize);
-        cacheSelectCtx.lineTo(this.selectSize, this.selectSize);
-        cacheSelectCtx.lineTo(this.selectSize, 0);
-        cacheSelectCtx.lineTo(0, 0);
-        cacheSelectCtx.stroke();
-
-        this.cacheHoverCanvas = document.createElement('canvas');
-        this.cacheHoverCanvas.width = this.selectSize;
-        this.cacheHoverCanvas.height = this.selectSize;
-        var cacheHoverCtx = this.cacheHoverCanvas.getContext('2d');
-        cacheHoverCtx.beginPath();
-        cacheHoverCtx.strokeStyle = cds.Catalog.decrease_brightness(this.selectionColor, 20);
-        cacheHoverCtx.lineWidth = 2.0;
-        cacheHoverCtx.moveTo(0, 0);
-        cacheHoverCtx.lineTo(0, this.selectSize);
-        cacheHoverCtx.lineTo(this.selectSize, this.selectSize);
-        cacheHoverCtx.lineTo(this.selectSize, 0);
-        cacheHoverCtx.lineTo(0, 0);
-        cacheHoverCtx.stroke();
-
-    };
-
-    cds.Catalog.createShape = function(shapeName, color, sourceSize) {
-        if (shapeName instanceof Image || shapeName instanceof HTMLCanvasElement) { // in this case, the shape is already created
-            return shapeName;
-        }
-        var c = document.createElement('canvas');
-        c.width = c.height = sourceSize;
-        var ctx = c.getContext('2d');
-        ctx.beginPath();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2.0;
-        if (shapeName == "plus") {
-            ctx.moveTo(sourceSize / 2., 0);
-            ctx.lineTo(sourceSize / 2., sourceSize);
-            ctx.stroke();
-
-            ctx.moveTo(0, sourceSize / 2.);
-            ctx.lineTo(sourceSize, sourceSize / 2.);
-            ctx.stroke();
-        } else if (shapeName == "cross") {
-            ctx.moveTo(0, 0);
-            ctx.lineTo(sourceSize - 1, sourceSize - 1);
-            ctx.stroke();
-
-            ctx.moveTo(sourceSize - 1, 0);
-            ctx.lineTo(0, sourceSize - 1);
-            ctx.stroke();
-        } else if (shapeName == "rhomb") {
-            ctx.moveTo(sourceSize / 2, 0);
-            ctx.lineTo(0, sourceSize / 2);
-            ctx.lineTo(sourceSize / 2, sourceSize);
-            ctx.lineTo(sourceSize, sourceSize / 2);
-            ctx.lineTo(sourceSize / 2, 0);
-            ctx.stroke();
-        } else if (shapeName == "triangle") {
-            ctx.moveTo(sourceSize / 2, 0);
-            ctx.lineTo(0, sourceSize - 1);
-            ctx.lineTo(sourceSize - 1, sourceSize - 1);
-            ctx.lineTo(sourceSize / 2, 0);
-            ctx.stroke();
-        } else if (shapeName == "circle") {
-            ctx.arc(sourceSize / 2, sourceSize / 2, (sourceSize / 2) - 1, 0, 2 * Math.PI);
-            ctx.stroke();
-        } else { // default shape: square
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, sourceSize);
-            ctx.lineTo(sourceSize, sourceSize);
-            ctx.lineTo(sourceSize, 0);
-            ctx.lineTo(0, 0);
-            ctx.stroke();
-        }
-
-        return c;
-
-    };
-
-
-
-
-    // return an array of Source(s) from a VOTable url
-    // callback function is called each time a TABLE element has been parsed
-    cds.Catalog.parseVOTable = function(url, callback, maxNbSources, useProxy, raField, decField) {
-
-        // adapted from votable.js
-        function getPrefix($xml) {
-            var prefix;
-            // If Webkit chrome/safari/... (no need prefix)
-            if ($xml.find('RESOURCE').length > 0) {
-                prefix = '';
-            } else {
-                // Select all data in the document
-                prefix = $xml.find("*").first();
-
-                if (prefix.length == 0) {
-                    return '';
-                }
-
-                // get name of the first tag
-                prefix = prefix.prop("tagName");
-
-                var idx = prefix.indexOf(':');
-
-                prefix = prefix.substring(0, idx) + "\\:";
-
-
-            }
-
-            return prefix;
-        }
-
-        function doParseVOTable(xml, callback) {
-            xml = xml.replace(/^\s+/g, ''); // we need to trim whitespaces at start of document
-            var attributes = ["name", "ID", "ucd", "utype", "unit", "datatype", "arraysize", "width", "precision"];
-
-            var fields = [];
-            var k = 0;
-            var $xml = $(xml);
-            var prefix = getPrefix($xml);
-            $xml.find(prefix + "FIELD").each(function() {
-                var f = {};
-                for (var i = 0; i < attributes.length; i++) {
-                    var attribute = attributes[i];
-                    if ($(this).attr(attribute)) {
-                        f[attribute] = $(this).attr(attribute);
-                    }
-                }
-                if (!f.ID) {
-                    f.ID = "col_" + k;
-                }
-                fields.push(f);
-                k++;
-            });
-
-            //// find RA/DEC fields ////
-            var raFieldIdx, decFieldIdx;
-            raFieldIdx = decFieldIdx = null;
-
-            // first, look if RA/DEC fields have been already given
-            if (raField) { // ID or name of RA field given at catalogue creation
-                for (var l = 0, len = fields.length; l < len; l++) {
-                    var field = fields[l];
-                    if (Utils.isInt(raField) && raField < fields.length) { // raField can be given as an index
-                        raFieldIdx = raField;
-                        break;
-                    }
-                    if ((field.ID && field.ID === raField) || (field.name && field.name === raField)) {
-                        raFieldIdx = l;
-                        break;
-                    }
-                }
-            }
-            if (decField) { // ID or name of dec field given at catalogue creation
-                for (var l = 0, len = fields.length; l < len; l++) {
-                    var field = fields[l];
-                    if (Utils.isInt(decField) && decField < fields.length) { // decField can be given as an index
-                        decFieldIdx = decField;
-                        break;
-                    }
-                    if ((field.ID && field.ID === decField) || (field.name && field.name === decField)) {
-                        decFieldIdx = l;
-                        break;
-                    }
-                }
-            }
-            // if not already given, let's guess position columns on the basis of UCDs
-            for (var l = 0, len = fields.length; l < len; l++) {
-                if (raFieldIdx != null && decFieldIdx != null) {
-                    break;
-                }
-
-                var field = fields[l];
-                if (!raFieldIdx) {
-                    if (field.ucd) {
-                        var ucd = $.trim(field.ucd.toLowerCase());
-                        if (ucd.indexOf('pos.eq.ra') == 0 || ucd.indexOf('pos_eq_ra') == 0) {
-                            raFieldIdx = l;
-                            continue;
-                        }
-                    }
-                }
-
-                if (!decFieldIdx) {
-                    if (field.ucd) {
-                        var ucd = $.trim(field.ucd.toLowerCase());
-                        if (ucd.indexOf('pos.eq.dec') == 0 || ucd.indexOf('pos_eq_dec') == 0) {
-                            decFieldIdx = l;
-                            continue;
-                        }
-                    }
-                }
-
-            }
-            var sources = [];
-
-            var coo = new Coo();
-            var ra, dec;
-            $xml.find(prefix + "TR").each(function() {
-                var mesures = {};
-                var k = 0;
-                $(this).find(prefix + "TD").each(function() {
-                    var key = fields[k].name ? fields[k].name : fields[k].id;
-                    mesures[key] = $(this).text();
-                    k++;
-                });
-                var keyRa = fields[raFieldIdx].name ? fields[raFieldIdx].name : fields[raFieldIdx].id;
-                var keyDec = fields[decFieldIdx].name ? fields[decFieldIdx].name : fields[decFieldIdx].id;
-
-                if (Utils.isNumber(mesures[keyRa]) && Utils.isNumber(mesures[keyDec])) {
-                    ra = parseFloat(mesures[keyRa]);
-                    dec = parseFloat(mesures[keyDec]);
-                } else {
-                    coo.parse(mesures[keyRa] + " " + mesures[keyDec]);
-                    ra = coo.lon;
-                    dec = coo.lat;
-                }
-                sources.push(new cds.Source(ra, dec, mesures));
-                if (maxNbSources && sources.length == maxNbSources) {
-                    return false; // break the .each loop
-                }
-
-            });
-            if (callback) {
-                callback(sources);
-            }
-        }
-
-        var ajax = Utils.getAjaxObject(url, 'GET', 'text', useProxy);
-        ajax.done(function(xml) {
-            doParseVOTable(xml, callback);
-        });
-    };
-
-    cds.Catalog.prototype.addSources = function(sourcesToAdd) {
-        this.sources = this.sources.concat(sourcesToAdd);
-        for (var k = 0, len = sourcesToAdd.length; k < len; k++) {
-            sourcesToAdd[k].setCatalog(this);
-        }
-        this.reportChange();
-    };
-
-    // return the currnet list of Source objects
-    cds.Catalog.prototype.getSources = function() {
-        return this.sources;
-    };
-
-    // TODO : fonction générique traversant la liste des sources
-    cds.Catalog.prototype.selectAll = function() {
-        if (!this.sources) {
-            return;
-        }
-
-        for (var k = 0; k < this.sources.length; k++) {
-            this.sources[k].select();
-        }
-    };
-
-    cds.Catalog.prototype.deselectAll = function() {
-        if (!this.sources) {
-            return;
-        }
-
-        for (var k = 0; k < this.sources.length; k++) {
-            this.sources[k].deselect();
-        }
-    };
-
-    // return a source by index
-    cds.Catalog.prototype.getSource = function(idx) {
-        if (idx < this.sources.length) {
-            return this.sources[idx];
-        } else {
-            return null;
-        }
-    };
-
-    cds.Catalog.prototype.setView = function(view) {
-        this.view = view;
-        this.reportChange();
-    };
-
-    cds.Catalog.prototype.setColor = function(color) {
-        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the color
-            return;
-        }
-
-        this.color = color;
-        this.reCreateShape();
-    };
-
-    cds.Catalog.prototype.setSourceSize = function(sourceSize) {
-        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the size
-            return;
-        }
-
-        this.sourceSize = sourceSize;
-        this.reCreateShape();
-    };
-
-    cds.Catalog.prototype.setShape = function(shape) {
-        if (this.shape instanceof Image || this.shape instanceof HTMLCanvasElement) { // in this case, we cannot set the shape
-            return;
-        } else if (this._shapeIsFunction) {
-            this.customShape = shape;
-        } else {
-            this.shape = shape;
-        }
-
-        this.reCreateShape();
-    };
-
-    cds.Catalog.prototype.reCreateShape = function() {
-        var shape = (this._shapeIsFunction) ? (this.customShape || "square") : this.shape;
-        this.cacheCanvas = cds.Catalog.createShape(shape, this.color, this.sourceSize);
-        this.reportChange();
-    };
-
-    cds.Catalog.prototype.setArrowColor = function(arrowColor) {
-        this.arrowColor = arrowColor;
-        this.reportChange();
-    };
-
-    cds.Catalog.prototype.setArrowScale = function(arrowScale) {
-        this.arrowScale = arrowScale;
-        this.reportChange();
-    };
-
-    cds.Catalog.prototype.setCatalogAvgProperMotion = function(removeAvgPM, useMedian, reportChange) {
-        this.removeAvgPM = removeAvgPM;
-        this.avgPMRaInc = 0.0;
-        this.avgPMDecInc = 0.0;
-
-        if (this.removeAvgPM) {
-
-            if (!useMedian) {
-
-                //Recalculates the average proper motion
-                var sumPMRaInc = 0.0;
-                var sumPMDecInc = 0.0;
-                var visibleSources = 0;
-
-                for (var k = 0, len = this.sources.length; k < len; k++) {
-                    var source = this.sources[k];
-                    if (source.isShowing && source.data && source.data["arrowRa"] && source.data["arrowDec"]) {
-
-                        if (typeof source.data["arrowRa"] === 'string' || source.data["arrowRa"] instanceof String) {
-                            //Avoid parsing to float each draw, data comes as string from GWT
-                            source.data["arrowRa"] = parseFloat(source.data["arrowRa"]);
-                            source.data["arrowDec"] = parseFloat(source.data["arrowDec"]);
-                        }
-
-                        sumPMRaInc += (source.data["arrowRa"] - parseFloat(source.ra));
-                        sumPMDecInc += (source.data["arrowDec"] - parseFloat(source.dec));
-                        visibleSources++;
-
-                        //Cleans stored calculations on source
-                        source.data["avgPMra"] = null;
-                        source.data["avgPMdec"] = null;
-                    }
-                }
-
-                if (visibleSources > 0) {
-                    this.avgPMRaInc = sumPMRaInc / visibleSources;
-                    this.avgPMDecInc = sumPMDecInc / visibleSources;
-                }
-
-            } else {
-
-                //Calculates the median of the sources pm slopes -> decInc / raInc
-                var pmSlopes = [];
-                for (var k = 0, len = this.sources.length; k < len; k++) {
-                    var source = this.sources[k];
-                    if (source.isShowing && source.data && source.data["arrowRa"] && source.data["arrowDec"]) {
-
-                        if (typeof source.data["arrowRa"] === 'string' || source.data["arrowRa"] instanceof String) {
-                            //Avoid parsing to float each draw, data comes as string from GWT
-                            source.data["arrowRa"] = parseFloat(source.data["arrowRa"]);
-                            source.data["arrowDec"] = parseFloat(source.data["arrowDec"]);
-                        }
-
-                        // Calculates the slope and stores it in an object
-                        var raInc = (source.data["arrowRa"] - parseFloat(source.ra));
-                        var decInc = (source.data["arrowDec"] - parseFloat(source.dec));
-                        var slope = decInc / raInc;
-                        pmSlopes.push({
-                            "slope": slope,
-                            "raInc": raInc,
-                            "decInc": decInc
-                        });
-
-                        //Cleans stored calculations on source
-                        source.data["avgPMra"] = null;
-                        source.data["avgPMdec"] = null;
-                    }
-                }
-
-                if (pmSlopes.length > 0) {
-                    pmSlopes.sort(function(a, b) {
-                        return a.slope - b.slope;
-                    });
-
-                    var half = Math.floor(pmSlopes.length / 2);
-
-                    if (pmSlopes.length % 2) {
-                        this.avgPMRaInc = pmSlopes[half].raInc;
-                        this.avgPMDecInc = pmSlopes[half].decInc;
-                    } else {
-                        this.avgPMRaInc = (pmSlopes[half - 1].raInc + pmSlopes[half].raInc) / 2.0;
-                        this.avgPMDecInc = (pmSlopes[half - 1].decInc + pmSlopes[half].decInc) / 2.0;
-                    }
-
-                }
-            }
-        }
-
-        if (reportChange) {
-            this.reportChange();
-        }
-    };
-
-    cds.Catalog.prototype.removeAll = cds.Catalog.prototype.clear = function() {
-        // TODO : RAZ de l'index
-        this.sources = [];
-    };
-
-    cds.Catalog.prototype.draw = function(ctx, projection, frame, width, height, largestDim, zoomFactor) {
-        if (!this.isShowing) {
-            return;
-        }
-        // tracé simple
-        //ctx.strokeStyle= this.color;
-
-        //ctx.lineWidth = 1;
-        if (this._shapeIsFunction) {
-            ctx.save();
-        }
-        for (var k = 0, len = this.sources.length; k < len; k++) {
-            cds.Catalog.drawSource(this, this.sources[k], ctx, projection, frame, width, height, largestDim, zoomFactor);
-        }
-        if (this._shapeIsFunction) {
-            ctx.restore();
-        }
-
-
-        // Hover drawing
-        for (var k = 0, len = this.sources.length; k < len; k++) {
-            if (!this.sources[k].isHovered) {
-                continue;
-            }
-            cds.Catalog.drawSourceHover(this, this.sources[k], ctx);
-
-        }
-
-        // tracé sélection
-        ctx.strokeStyle = this.selectionColor;
-        for (var k = 0, len = this.sources.length; k < len; k++) {
-            if (!this.sources[k].isSelected) {
-                continue;
-            }
-            cds.Catalog.drawSourceSelection(this, this.sources[k], ctx);
-
-        }
-
-        // tracé label
-        if (this.displayLabel) {
-            ctx.fillStyle = this.labelColor;
-            ctx.font = this.labelFont;
-            for (var k = 0, len = this.sources.length; k < len; k++) {
-                cds.Catalog.drawSourceLabel(this, this.sources[k], ctx);
-            }
-        }
-    };
-
-
-
-    cds.Catalog.drawSource = function(catalogInstance, s, ctx, projection, frame, width, height, largestDim, zoomFactor) {
-        if (!s.isShowing) {
-            return;
-        }
-        var sourceSize = catalogInstance.sourceSize;
-        // TODO : we could factorize this code with Aladin.world2pix
-        var xy;
-        if (frame != CooFrameEnum.J2000) {
-            var lonlat = CooConversion.J2000ToGalactic([s.ra, s.dec]);
-            xy = projection.project(lonlat[0], lonlat[1]);
-        } else {
-            xy = projection.project(s.ra, s.dec);
-        }
-
-        s.x = s.y = undefined;
-        if (xy) {
-            var xyview = AladinUtils.xyToView(xy.X, xy.Y, width, height, largestDim, zoomFactor, true);
-            var max = s.popup ? 100 : s.sourceSize;
-            if (xyview) {
-                // TODO : index sources by HEALPix cells at level 3, 4 ?
-
-                // check if source is visible in view
-                if (xyview.vx > (width + max) || xyview.vx < (0 - max) ||
-                    xyview.vy > (height + max) || xyview.vy < (0 - max)) {
-                    return;
-                }
-
-                s.x = xyview.vx;
-                s.y = xyview.vy;
-                if (catalogInstance._shapeIsFunction) {
-                    catalogInstance.shape(s, ctx, catalogInstance.view.getViewParams());
-                } else if (s.marker) {
-                    ctx.drawImage(catalogInstance.cacheMarkerCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
-                } else {
-                    ctx.drawImage(catalogInstance.cacheCanvas, s.x - catalogInstance.cacheCanvas.width / 2, s.y - catalogInstance.cacheCanvas.height / 2);
-                }
-
-
-                // has associated popup ?
-                if (s.popup) {
-                    s.popup.setPosition(s.x, s.y);
-                }
-
-
-            }
-        }
-    };
-
-    cds.Catalog.drawSourceHover = function(catalogInstance, s, ctx) {
-        if (!s || !s.isShowing || !s.x || !s.y) {
-            return;
-        }
-        var sourceSize = catalogInstance.selectSize;
-
-        ctx.drawImage(catalogInstance.cacheHoverCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
-    };
-
-    cds.Catalog.drawSourceSelection = function(catalogInstance, s, ctx) {
-        if (!s || !s.isShowing || !s.x || !s.y) {
-            return;
-        }
-        var sourceSize = catalogInstance.selectSize;
-
-        ctx.drawImage(catalogInstance.cacheSelectCanvas, s.x - sourceSize / 2, s.y - sourceSize / 2);
-    };
-
-    cds.Catalog.drawSourceLabel = function(catalogInstance, s, ctx) {
-        if (!s || !s.isShowing || !s.x || !s.y) {
-            return;
-        }
-
-        var label = s.data[catalogInstance.labelColumn];
-        if (!label) {
-            return;
-        }
-
-        ctx.fillText(label, s.x, s.y);
-    };
-
-
-    // callback function to be called when the status of one of the sources has changed
-    cds.Catalog.prototype.reportChange = function() {
-        this.view && this.view.requestRedraw();
-    };
-
-    cds.Catalog.prototype.show = function() {
-        if (this.isShowing) {
-            return;
-        }
-        this.isShowing = true;
-        this.reportChange();
-    };
-
-    cds.Catalog.prototype.hide = function() {
-        if (!this.isShowing) {
-            return;
-        }
-        this.isShowing = false;
-        if (this.view && this.view.popup && this.view.popup.source && this.view.popup.source.catalog == this) {
-            this.view.popup.hide();
-        }
-        this.reportChange();
-    };
-
-    cds.Catalog.decrease_brightness = function(hex, percent) {
-        // strip the leading # if it's there
-        hex = hex.replace(/^\s*#|\s*$/g, '');
-
-        // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-        if (hex.length == 3) {
-            hex = hex.replace(/(.)/g, '$1$1');
-        }
-
-        var r = parseInt(hex.substr(0, 2), 16),
-            g = parseInt(hex.substr(2, 2), 16),
-            b = parseInt(hex.substr(4, 2), 16);
-
-        return '#' +
-            ((0 | (1 << 8) + r * (100 - percent) / 100).toString(16)).substr(1) +
-            ((0 | (1 << 8) + g * (100 - percent) / 100).toString(16)).substr(1) +
-            ((0 | (1 << 8) + b * (100 - percent) / 100).toString(16)).substr(1);
-    };
-
-    return cds.Catalog;
-})();
-// Copyright 2013 - UDS/CNRS
-// The Aladin Lite program is distributed under the terms
-// of the GNU General Public License version 3.
-//
-// This file is part of Aladin Lite.
-//
-//    Aladin Lite is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, version 3 of the License.
-//
-//    Aladin Lite is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    The GNU General Public License is available in COPYING file
-//    along with Aladin Lite.
-//
-
-
-
-/******************************************************************************
- * Aladin Lite project
- *
+ * 
  * File Tile
  * 
  * Author: Thomas Boch[CDS]
@@ -9103,12 +10183,12 @@ HpxKey = (function() {
                 spVec.setXYZ(corners[k].x, corners[k].y, corners[k].z);
 
                 // need for frame transformation ?
-                if (this.frame != view.cooFrame) {
-                    if (this.frame == CooFrameEnum.J2000) {
+                if (this.frame.system != view.cooFrame.system) {
+                    if (this.frame.system == CooFrameEnum.SYSTEMS.J2000) {
                         var radec = CooConversion.J2000ToGalactic([spVec.ra(), spVec.dec()]);
                         lon = radec[0];
                         lat = radec[1];
-                    } else if (this.frame == CooFrameEnum.GAL) {
+                    } else if (this.frame.system == CooFrameEnum.SYSTEMS.GAL) {
                         var radec = CooConversion.GalacticToJ2000([spVec.ra(), spVec.dec()]);
                         lon = radec[0];
                         lat = radec[1];
@@ -9217,41 +10297,70 @@ HpxImageSurvey = (function() {
      * They will be determined by reading the properties file
      *  
      */
-    var HpxImageSurvey = function(id, name, rootUrl, cooFrame, maxOrder, options) {
-        this.id = id;
-        this.name = name;
-        if (rootUrl.slice(-1) === '/') {
-            this.rootUrl = rootUrl.substr(0, rootUrl.length - 1);
+    var HpxImageSurvey = function(idOrHiPSDefinition, name, rootUrl, cooFrame, maxOrder, options) {
+        // new way
+        if (idOrHiPSDefinition instanceof HiPSDefinition) {
+            this.hipsDefinition = idOrHiPSDefinition;
+
         } else {
-            this.rootUrl = rootUrl;
+            // REPRENDRE LA,  EN CREANT l'OBJET HiPSDefinition ou FAIRE dans l'autre sens
+            // old way, we retrofit parameters into a HiPSDefinition object
+            var hipsDefProps = {};
+
+            this.id = idOrHiPSDefinition;
+            hipsDefProps['ID'] = this.id;
+
+            this.name = name;
+            hipsDefProps['obs_title'] = this.name;
+
+            // remove final slash
+            if (rootUrl.slice(-1) === '/') {
+                this.rootUrl = rootUrl.substr(0, rootUrl.length - 1);
+            } else {
+                this.rootUrl = rootUrl;
+            }
+            this.additionalParams = (options && options.additionalParams) || null; // parameters for cut, stretch, etc
+
+            // make URL absolute
+            this.rootUrl = Utils.getAbsoluteURL(this.rootUrl);
+
+            // fast fix for HTTPS support --> will work for all HiPS served by CDS
+            if (Utils.isHttpsContext() && (/u-strasbg.fr/i.test(this.rootUrl) || /unistra.fr/i.test(this.rootUrl))) {
+                this.rootUrl = this.rootUrl.replace('http://', 'https://');
+            }
+
+            // temporary fix when alasky is under maintenance
+            //this.rootUrl = this.rootUrl.replace('alasky.', 'alaskybis.');
+
+            options = options || {};
+            // TODO : support PNG
+            this.imgFormat = options.imgFormat || 'jpg';
+
+            // permet de forcer l'affichage d'un certain niveau
+            this.minOrder = options.minOrder || null;
+
+
+            // TODO : lire depuis fichier properties
+            this.cooFrame = CooFrameEnum.fromString(cooFrame, CooFrameEnum.J2000);
+
+            this.longitudeReversed = options.longitudeReversed || false;
+
+            // force coo frame for Glimpse 360
+            if (this.rootUrl.indexOf('/glimpse360/aladin/data') >= 0) {
+                this.cooFrame = CooFrameEnum.J2000;
+            }
+            // TODO : lire depuis fichier properties
+            this.maxOrder = maxOrder;
+
+            this.hipsDefinition = HiPSDefinition.fromProperties(hipsDefProps);
         }
 
-        options = options || {};
-        // TODO : support PNG
-        this.imgFormat = options.imgFormat || 'jpg';
-
-        // permet de forcer l'affichage d'un certain niveau
-        this.minOrder = options.minOrder || null;
+        this.ascendingLongitude = false;
 
         this.tileSize = undefined;
-
-        // TODO : lire depuis fichier properties
-        this.cooFrame = CooFrameEnum.fromString(cooFrame, CooFrameEnum.J2000);
-
-        // force coo frame for Glimpse 360
-        if (this.rootUrl.indexOf('/glimpse360/aladin/data') >= 0) {
-            this.cooFrame = CooFrameEnum.J2000;
-        }
-
-        // TODO : lire depuis fichier properties
-        this.maxOrder = maxOrder;
-
         this.allskyTexture = null;
-
         this.alpha = 0.0; // opacity value between 0 and 1 (if this layer is an opacity layer)
-
         this.allskyTextureSize = 0;
-
         this.lastUpdateDateNeededTiles = 0;
 
         var found = false;
@@ -9272,7 +10381,6 @@ HpxImageSurvey = (function() {
         HpxImageSurvey.SURVEYS_OBJECTS[this.id] = this;
     };
 
-    HpxImageSurvey.HTTPS_CONTEXT = (window.location.protocol === 'https:');
 
 
     HpxImageSurvey.UPDATE_NEEDED_TILES_DELAY = 1000; // in milliseconds
@@ -9288,13 +10396,13 @@ HpxImageSurvey = (function() {
         //this.tileBuffer = new TileBuffer();
         this.tileBuffer = this.view.tileBuffer;
 
-        this.useCors = false;
+        this.useCors = true;
         var self = this;
         if ($.support.cors) {
             // testing if server supports CORS ( http://www.html5rocks.com/en/tutorials/cors/ )
             $.ajax({
                 type: 'GET',
-                url: this.rootUrl + '/properties',
+                url: this.rootUrl + '/properties' + (this.additionalParams ? ('?' + this.additionalParams) : ''),
                 dataType: 'text',
                 xhrFields: {},
                 headers: {},
@@ -9506,7 +10614,7 @@ HpxImageSurvey = (function() {
 
     HpxImageSurvey.prototype.getTileURL = function(norder, npix) {
         var dirIdx = Math.floor(npix / 10000) * 10000;
-        return this.rootUrl + "/" + "Norder" + norder + "/Dir" + dirIdx + "/Npix" + npix + "." + this.imgFormat;
+        return this.rootUrl + "/" + "Norder" + norder + "/Dir" + dirIdx + "/Npix" + npix + "." + this.imgFormat + (this.additionalParams ? ('?' + this.additionalParams) : '');;
     };
 
     HpxImageSurvey.prototype.retrieveAllskyTextures = function() {
@@ -9536,7 +10644,7 @@ HpxImageSurvey = (function() {
             */
             self.view.requestRedraw();
         };
-        img.src = this.rootUrl + '/Norder3/Allsky.' + this.imgFormat;
+        img.src = this.rootUrl + '/Norder3/Allsky.' + this.imgFormat + (this.additionalParams ? ('?' + this.additionalParams) : '');
 
     };
 
@@ -9568,10 +10676,13 @@ HpxImageSurvey = (function() {
 
         // new way of drawing
         if (subdivide) {
+
+            if (curOverlayNorder <= 4) {
+                this.drawAllsky(ctx, cornersXYViewMapAllsky, norder4Display, view);
+            }
+
             if (curOverlayNorder >= 3) {
                 this.drawHighres(ctx, cornersXYViewMapHighres, norder4Display, view);
-            } else {
-                this.drawAllsky(ctx, cornersXYViewMapAllsky, norder4Display, view);
             }
             /*
                         else {
@@ -9594,14 +10705,58 @@ HpxImageSurvey = (function() {
     };
 
     HpxImageSurvey.prototype.drawHighres = function(ctx, cornersXYViewMap, norder, view) {
-        var hpxKeys = [];
-        var tSize = this.tileSize || 512;
+        //////////////////////////////
+        var parentTilesToDraw = [];
+        var parentTilesToDrawIndex = {};
+        var parentTilesMissingIndex = {};
         for (var k = 0; k < cornersXYViewMap.length; k++) {
-            hpxKeys.push(new HpxKey(norder, cornersXYViewMap[k].ipix, this, tSize, tSize));
+            var ipix = cornersXYViewMap[k].ipix
+            var tileURL = this.getTileURL(norder, ipix);
+            var tile = this.tileBuffer.getTile(tileURL);
+            var tileAvailable = tile && Tile.isImageOk(tile.img);
+            if (!tileAvailable) { // if tile is not available, search if upper level tiles can be drawn
+                var MAX_UPPER_LEVELS = 4; // we search parent tiles up to 4 levels
+                for (var parentOrder = norder - 1; parentOrder >= 3 && parentOrder >= norder - MAX_UPPER_LEVELS; parentOrder--) {
+                    var parentIpix = ~~(ipix / Math.pow(4, norder - parentOrder));
+                    var key = parentOrder + '-' + parentIpix;
+                    if (parentTilesToDrawIndex[key] === true || parentTilesMissingIndex === true) {
+                        break;
+                    }
+                    var parentTileURL = this.getTileURL(parentOrder, parentIpix);
+                    var parentTile = this.tileBuffer.getTile(parentTileURL);
+                    var parentTileAvailable = parentTile && Tile.isImageOk(parentTile.img);
+                    if (parentTileAvailable) {
+                        parentTilesToDraw.push({
+                            ipix: parentIpix,
+                            order: parentOrder
+                        });
+                        parentTilesToDrawIndex[key] = true;
+
+                        break;
+                    } else {
+                        parentTilesMissingIndex[key] = true;
+                    }
+                }
+            }
+        }
+        // sort to draw lower norder first
+        parentTilesToDraw = parentTilesToDraw.sort(function(itemA, itemB) {
+            return itemA.order - itemB.order;
+        });
+
+        //////////////////////////////
+
+        var tSize = this.tileSize || 512;
+        // draw parent tiles
+        for (var k = 0; k < parentTilesToDraw.length; k++) {
+            var t = parentTilesToDraw[k];
+            new HpxKey(t.order, t.ipix, this, tSize, tSize).draw(ctx, view);
         }
 
-        for (var k = 0; k < hpxKeys.length; k++) {
-            hpxKeys[k].draw(ctx, view);
+        // TODO : we could have a pool of HpxKey to prevent object re-creation at each frame
+        // draw tiles
+        for (var k = 0; k < cornersXYViewMap.length; k++) {
+            new HpxKey(norder, cornersXYViewMap[k].ipix, this, tSize, tSize).draw(ctx, view);
         }
     };
 
@@ -9832,6 +10987,7 @@ HpxImageSurvey = (function() {
             if (img.fadingStart) {
                 if (img.fadingEnd && now < img.fadingEnd) {
                     alpha = 0.2 + (now - img.fadingStart) / (img.fadingEnd - img.fadingStart) * 0.8;
+                    this.requestRedraw();
                 }
             }
             this.drawOneTile(ctx, img, tilesToDraw[k].corners, img.width, alpha);
@@ -9905,7 +11061,7 @@ HpxImageSurvey = (function() {
         //  var flagDiamond =  round(b[0].vx - b[2].vx) == round(b[1].vx - b[3].vx)
         //                  && round(b[0].vy - b[2].vy) == round(b[1].vy - b[3].vy); 
 
-        var delta = norder <= 3 ? 0.2 : 0;
+        var delta = norder <= 3 ? (textureSize < 100 ? 0.5 : 0.2) : 0;
         drawTexturedTriangle2(ctx, newImg,
             cornersXYView[0].vx, cornersXYView[0].vy,
             cornersXYView[1].vx, cornersXYView[1].vy,
@@ -10076,9 +11232,6 @@ HpxImageSurvey = (function() {
     /*
     function drawTexturedTriangle4Points(ctx, img, x0, y0, x1, y1, x2, y2,
             u0, v0, u1, v1, u2, v2) {
-    /*
-    function drawTexturedTriangle4Points(ctx, img, x0, y0, x1, y1, x2, y2,
-            u0, v0, u1, v1, u2, v2) {
     
     	var x3 = x1+x2-x0;
     	var y3 = y1+y2-y0;
@@ -10106,7 +11259,7 @@ HpxImageSurvey = (function() {
     );
     //ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height); // faster ??
     ctx.drawImage(img, 0, 0); // slower ??
-
+    
     ctx.restore();
     }
     */
@@ -10235,22 +11388,13 @@ Location = (function() {
     Location.prototype.update = function(lon, lat, cooFrame, isViewCenterPosition) {
         isViewCenterPosition = (isViewCenterPosition && isViewCenterPosition === true) || false;
         var coo = new Coo(lon, lat, 7);
-        var coordinateStr;
         if (cooFrame == CooFrameEnum.J2000) {
-        	coordinateStr = coo.format('s/')
+            this.$div.html(coo.format('s/'));
+        } else if (cooFrame == CooFrameEnum.J2000d) {
+            this.$div.html(coo.format('d/'));
+        } else {
+            this.$div.html(coo.format('d/'));
         }
-        else {
-        	coordinateStr = coo.format('d/')
-        }
-        this.$div.html(coordinateStr);
-
-        window.dispatchEvent(new CustomEvent("coordinatesChanged", {
-            detail: {
-                ra: lon,
-                dec: lat,
-                isViewCenterPosition: isViewCenterPosition
-            }
-        }));
 
         this.$div.toggleClass('aladin-reticleColor', isViewCenterPosition);
     };
@@ -10296,7 +11440,7 @@ View = (function() {
         this.aladin = aladin;
         this.options = aladin.options;
         this.aladinDiv = this.aladin.aladinDiv;
-        this.popup = new Popup(this.aladinDiv);
+        this.popup = new Popup(this.aladinDiv, this);
 
         this.createCanvases();
         this.location = location;
@@ -10337,10 +11481,33 @@ View = (function() {
         this.imageSurvey = null;
         // current catalogs displayed
         this.catalogs = [];
+        // a dedicated catalog for the popup
+        var c = document.createElement('canvas');
+        c.width = c.height = 24;
+        var ctx = c.getContext('2d');
+        ctx.lineWidth = 6.0;
+        ctx.beginPath();
+        ctx.strokeStyle = '#eee';
+        ctx.arc(12, 12, 8, 0, 2 * Math.PI, true);
+        ctx.stroke();
+        ctx.lineWidth = 3.0;
+        ctx.beginPath();
+        ctx.strokeStyle = '#c38';
+        ctx.arc(12, 12, 8, 0, 2 * Math.PI, true);
+        ctx.stroke();
+        this.catalogForPopup = A.catalog({
+            shape: c,
+            sourceSize: 24
+        });
+        //this.catalogForPopup = A.catalog({sourceSize: 18, shape: 'circle', color: '#c38'});
+        this.catalogForPopup.hide();
+        this.catalogForPopup.setView(this);
         // overlays (footprints for instance)
         this.overlays = [];
         // MOCs
         this.mocs = [];
+        // reference to all overlay layers (= catalogs + overlays + mocs)
+        this.allOverlayLayers = []
 
 
 
@@ -10357,6 +11524,13 @@ View = (function() {
         this.dragx = null;
         this.dragy = null;
         this.needRedraw = true;
+
+        // zoom pinching
+        this.pinchZoomParameters = {
+            isPinching: false, // true if a pinch zoom is ongoing
+            initialFov: undefined,
+            initialDistance: undefined
+        };
 
         this.downloader = new Downloader(this); // the downloader object is shared across all HpxImageSurveys
         this.flagForceRedraw = false;
@@ -10379,16 +11553,33 @@ View = (function() {
                 self.fixLayoutDimensions(self)
             }, 100);
         });
+
+
+        // in some contexts (Jupyter notebook for instance), the parent div changes little time after Aladin Lite creation
+        // this results in canvas dimension to be incorrect.
+        // The following line tries to fix this issue
+        setTimeout(function() {
+            var computedWidth = $(self.aladinDiv).width();
+            var computedHeight = $(self.aladinDiv).height();
+
+            if (self.width !== computedWidth || self.height === computedHeight) {
+                self.fixLayoutDimensions();
+                self.setZoomLevel(self.zoomLevel); // needed to force recomputation of displayed FoV
+            }
+        }, 1000);
     };
 
     // different available modes
     View.PAN = 0;
     View.SELECT = 1;
+    View.TOOL_SIMBAD_POINTER = 2;
 
 
     // TODO: should be put as an option at layer level    
     View.DRAW_SOURCES_WHILE_DRAGGING = true;
     View.DRAW_MOCS_WHILE_DRAGGING = true;
+
+    View.CALLBACKS_THROTTLE_TIME_MS = 100; // minimum time between two consecutive callback calls
 
 
     // (re)create needed canvases
@@ -10411,11 +11602,11 @@ View = (function() {
     View.prototype.fixLayoutDimensions = function() {
         Utils.cssScale = undefined;
 
-        this.width = $(this.aladinDiv).width();
-        this.height = $(this.aladinDiv).height();
+        var computedWidth = $(this.aladinDiv).width();
+        var computedHeight = $(this.aladinDiv).height();
 
-        this.width = Math.max(this.width, 1);
-        this.height = Math.max(this.height, 1); // this prevents many problems when div size is 0s
+        this.width = Math.max(computedWidth, 1);
+        this.height = Math.max(computedHeight, 1); // this prevents many problems when div size is equal to 0
 
 
         this.cx = this.width / 2;
@@ -10442,7 +11633,7 @@ View = (function() {
         this.catalogCtx.canvas.height = this.height;
         this.reticleCtx.canvas.height = this.height;
 
-        pixelateCanvasContext(this.imageCtx);
+        pixelateCanvasContext(this.imageCtx, this.aladin.options.pixelateCanvas);
 
         // change logo
         if (!this.logoDiv) {
@@ -10463,12 +11654,13 @@ View = (function() {
         this.requestRedraw();
     };
 
-    var pixelateCanvasContext = function(ctx) {
-        ctx.imageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
-        ctx.oImageSmoothingEnabled = false;
+    var pixelateCanvasContext = function(ctx, pixelateFlag) {
+        var value = !pixelateFlag;
+        ctx.imageSmoothingEnabled = value;
+        ctx.webkitImageSmoothingEnabled = value;
+        ctx.mozImageSmoothingEnabled = value;
+        ctx.msImageSmoothingEnabled = value;
+        ctx.oImageSmoothingEnabled = value;
     }
 
 
@@ -10476,6 +11668,10 @@ View = (function() {
         this.mode = mode;
         if (this.mode == View.SELECT) {
             this.setCursor('crosshair');
+        } else if (this.mode == View.TOOL_SIMBAD_POINTER) {
+            this.popup.hide();
+            this.reticleCanvas.style.cursor = '';
+            $(this.reticleCanvas).addClass('aladin-sp-cursor');
         } else {
             this.setCursor('default');
         }
@@ -10483,6 +11679,9 @@ View = (function() {
 
     View.prototype.setCursor = function(cursor) {
         if (this.reticleCanvas.style.cursor == cursor) {
+            return;
+        }
+        if (this.mode == View.TOOL_SIMBAD_POINTER) {
             return;
         }
         this.reticleCanvas.style.cursor = cursor;
@@ -10493,31 +11692,26 @@ View = (function() {
     /**
      * return dataURL string corresponding to the current view
      */
-    View.prototype.getCanvasDataURL = function(imgType) {
+    View.prototype.getCanvasDataURL = function(imgType, width, height) {
         imgType = imgType || "image/png";
-        var c = document.createElement('canvas');
-        c.width = this.width;
-        c.height = this.height;
-        var ctx = c.getContext('2d');
-        ctx.drawImage(this.imageCanvas, 0, 0);
-        ctx.drawImage(this.catalogCanvas, 0, 0);
-        ctx.drawImage(this.reticleCanvas, 0, 0);
+        return this.getCanvas(width, height).toDataURL(imgType);
+    };
 
-        return c.toDataURL(imgType);
+    View.prototype.getCanvas = function(width, height) {
+        var c = document.createElement('canvas');
+        width = width || this.width;
+        height = height || this.height;
+        c.width = width;
+        c.height = height;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(this.imageCanvas, 0, 0, c.width, c.height);
+        ctx.drawImage(this.catalogCanvas, 0, 0, c.width, c.height);
+        ctx.drawImage(this.reticleCanvas, 0, 0, c.width, c.height);
+
+        return c;
         //return c.toDataURL("image/jpeg", 0.01); // setting quality only works for JPEG (?)
     };
 
-    View.prototype.getCanvas = function(imgType) {
-        imgType = imgType || "image/png";
-        var c = document.createElement('canvas');
-        c.width = this.width;
-        c.height = this.height;
-        var ctx = c.getContext('2d');
-        ctx.drawImage(this.imageCanvas, 0, 0);
-        ctx.drawImage(this.catalogCanvas, 0, 0);
-        ctx.drawImage(this.reticleCanvas, 0, 0);
-        return c;
-    }
 
     /**
      * Compute the FoV in degrees of the view and update mouseMoveIncrement
@@ -10527,11 +11721,6 @@ View = (function() {
      */
     computeFov = function(view) {
         var fov = doComputeFov(view, view.zoomFactor);
-        window.dispatchEvent(new CustomEvent("fovChanged", {
-            detail: {
-                fov: fov
-            }
-        }));
 
 
         view.mouseMoveIncrement = fov / view.imageCanvas.width;
@@ -10548,6 +11737,7 @@ View = (function() {
 
             var xy2 = AladinUtils.viewToXy(view.imageCanvas.width - 1, view.cy, view.width, view.height, view.largestDim, zoomFactor);
             var lonlat2 = view.projection.unproject(xy2.x, xy2.y);
+
 
             fov = new Coo(lonlat1.ra, lonlat1.dec).distance(new Coo(lonlat2.ra, lonlat2.dec));
             if (fov > 180) {
@@ -10579,55 +11769,53 @@ View = (function() {
 
 
     createListeners = function(view) {
-
-        var hasTouchEvents = ('ontouchstart' in window);
-        var isTouchZoom = false;
-        var zoomCentralRA = null;
-        var zoomCentralDec = null;
-        var lastTouchDistance = -1.0;
-        var lastClickedObject; // save last object clicked by mouse
-        var lastHoveredObject; // save last object hovered by mouse
-
-        // various listeners
-        if (!hasTouchEvents) {
-            $(view.reticleCanvas).dblclick(function(e) {
-
-                var xymouse = view.imageCanvas.relMouseCoords(e);
-                var xy = AladinUtils.viewToXy(xymouse.x, xymouse.y, view.width, view.height, view.largestDim, view.zoomFactor);
-                try {
-                    var lonlat = view.projection.unproject(xy.x, xy.y);
-                } catch (err) {
-                    return;
-                }
-
-                // convert to J2000 if needed
-                radec = [];
-                if (view.cooFrame == CooFrameEnum.GAL) {
-                    radec = CooConversion.GalacticToJ2000([lonlat.ra, lonlat.dec]);
-                } else {
-                    radec = [lonlat.ra, lonlat.dec];
-                }
-
-                view.pointTo(radec[0], radec[1]);
-            });
+        var hasTouchEvents = false;
+        if ('ontouchstart' in window) {
+            hasTouchEvents = true;
         }
 
+        // various listeners
+        onDblClick = function(e) {
+            var xymouse = view.imageCanvas.relMouseCoords(e);
+            var xy = AladinUtils.viewToXy(xymouse.x, xymouse.y, view.width, view.height, view.largestDim, view.zoomFactor);
+            try {
+                var lonlat = view.projection.unproject(xy.x, xy.y);
+            } catch (err) {
+                return;
+            }
+            radec = [];
+            // convert to J2000 if needed
+            if (view.cooFrame.system == CooFrameEnum.SYSTEMS.GAL) {
+                radec = CooConversion.GalacticToJ2000([lonlat.ra, lonlat.dec]);
+            } else {
+                radec = [lonlat.ra, lonlat.dec];
+            }
+
+            view.pointTo(radec[0], radec[1]);
+        };
+        if (!hasTouchEvents) {
+            $(view.reticleCanvas).dblclick(onDblClick);
+        }
+
+
         $(view.reticleCanvas).bind("mousedown touchstart", function(e) {
+            // zoom pinching
+            if (e.type === 'touchstart' && e.originalEvent && e.originalEvent.targetTouches && e.originalEvent.targetTouches.length == 2) {
+                view.dragging = false;
+
+                view.pinchZoomParameters.isPinching = true;
+                var fov = view.aladin.getFov();
+                view.pinchZoomParameters.initialFov = Math.max(fov[0], fov[1]);
+                view.pinchZoomParameters.initialDistance = Math.sqrt(Math.pow(e.originalEvent.targetTouches[0].clientX - e.originalEvent.targetTouches[1].clientX, 2) + Math.pow(e.originalEvent.targetTouches[0].clientY - e.originalEvent.targetTouches[1].clientY, 2));
+
+                return;
+            }
 
             if (e.which != 0 && e.which != 1) { //only listen to primary input (touch and left click)
                 return;
             }
 
             var xymouse = view.imageCanvas.relMouseCoords(e);
-            if (e.type === "touchstart" && e.originalEvent.touches.length == 2 && !isTouchZoom) {
-                //            	zoomCentralRA = view.viewCenter.lon;
-                //            	zoomCentralDec = view.viewCenter.lat;
-            } else if (isTouchZoom) {
-                view.dragx = e.originalEvent.targetTouches[0].clientX;
-                view.dragy = e.originalEvent.targetTouches[0].clientY;
-                return;
-            }
-
             if (e.originalEvent && e.originalEvent.targetTouches) {
                 view.dragx = e.originalEvent.targetTouches[0].clientX;
                 view.dragy = e.originalEvent.targetTouches[0].clientY;
@@ -10644,190 +11832,253 @@ View = (function() {
             view.dragging = true;
             if (view.mode == View.PAN) {
                 view.setCursor('move');
+                var posChangedFn = view.aladin.callbacksByEventName['positionChanged'];
+                if (typeof posChangedFn === 'function') {
+                    var pos = view.aladin.pix2world(view.width / 2, view.height / 2);
+                    if (pos !== undefined) {
+                        posChangedFn({
+                            ra: pos[0],
+                            dec: pos[1],
+                            dragging: true
+                        });
+                    }
+                }
             } else if (view.mode == View.SELECT) {
                 view.selectStartCoo = {
                     x: view.dragx,
                     y: view.dragy
                 };
             }
-
-            return true;
+            return true; // false disables default browser behaviour like possibility to touch hold for context menu. To disable text selection use css user-select: none instead of putting this value to false
         });
 
+        //$(view.reticleCanvas).bind("mouseup mouseout touchend", function(e) {
         $(view.reticleCanvas).bind("click mouseout touchend touchcancel", function(e) { // reacting on 'click' rather on 'mouseup' is more reliable when panning the view
+            if ((e.type === 'touchcancel' || e.type === 'touchend') && view.pinchZoomParameters.isPinching) {
+                view.pinchZoomParameters.isPinching = false;
+                view.pinchZoomParameters.initialFov = view.pinchZoomParameters.initialDistance = undefined;
 
-            if (e.type === "touchend" && isTouchZoom) {
-                if (e.originalEvent.touches.length == 1) {
-                    if (view.dragging) {
-                        view.setCursor('default');
-                        view.dragging = false;
-                    }
-                } else if (e.originalEvent.touches.length == 0) {
-
-                    isTouchZoom = false;
-                    if (view.dragging) {
-                        view.setCursor('default');
-                        view.dragging = false;
-                    }
-                }
-                view.requestRedraw(true);
-                updateLocation(view, view.width / 2, view.height / 2, true);
                 return;
             }
 
-            if (view.mode == View.SELECT && view.dragging) {
+
+            var wasDragging = view.realDragging === true;
+            var selectionHasEnded = view.mode === View.SELECT && view.dragging;
+
+            if (view.dragging) { // if we were dragging, reset to default cursor
+                view.setCursor('default');
+                view.dragging = false;
+
+                if (wasDragging) {
+                    view.realDragging = false;
+
+                    // call positionChanged one last time after dragging, with dragging: false
+                    var posChangedFn = view.aladin.callbacksByEventName['positionChanged'];
+                    if (typeof posChangedFn === 'function') {
+                        var pos = view.aladin.pix2world(view.width / 2, view.height / 2);
+                        if (pos !== undefined) {
+                            posChangedFn({
+                                ra: pos[0],
+                                dec: pos[1],
+                                dragging: false
+                            });
+                        }
+                    }
+                }
+            } // end of "if (view.dragging) ... "
+
+            if (selectionHasEnded) {
                 view.aladin.fire('selectend',
                     view.getObjectsInBBox(view.selectStartCoo.x, view.selectStartCoo.y,
                         view.dragx - view.selectStartCoo.x, view.dragy - view.selectStartCoo.y));
+
+                view.mustRedrawReticle = true; // pour effacer selection bounding box
+                view.requestRedraw();
+
+                return;
             }
 
-            if (view.dragging) {
-                view.setCursor('default');
-                view.dragging = false;
-            }
+
 
             view.mustClearCatalog = true;
             view.mustRedrawReticle = true; // pour effacer selection bounding box
             view.dragx = view.dragy = null;
 
-            if (e.type === "mouseout") {
+
+
+            if (e.type === "mouseout" || e.type === "touchend" || e.type === "touchcancel") {
                 view.requestRedraw(true);
                 updateLocation(view, view.width / 2, view.height / 2, true);
-                return;
+
+
+                if (e.type === "mouseout") {
+                    if (view.mode === View.TOOL_SIMBAD_POINTER) {
+                        view.setMode(View.PAN);
+                    }
+                    var posChangedFn = view.aladin.callbacksByEventName['positionChanged'];
+                    if (typeof posChangedFn === 'function') {
+                        var pos = view.aladin.pix2world(view.width / 2, view.height / 2);
+                        if (pos !== undefined) {
+                            posChangedFn({
+                                ra: pos[0],
+                                dec: pos[1],
+                                dragging: true
+                            });
+                        }
+                    }
+                    return;
+                }
             }
 
             var xymouse = view.imageCanvas.relMouseCoords(e);
+
+            if (view.mode == View.TOOL_SIMBAD_POINTER) {
+                var radec = view.aladin.pix2world(xymouse.x, xymouse.y);
+
+                view.setMode(View.PAN);
+                view.setCursor('wait');
+
+                SimbadPointer.query(radec[0], radec[1], Math.min(1, 15 * view.fov / view.largestDim), view.aladin);
+
+                return; // when in TOOL_SIMBAD_POINTER mode, we do not call the listeners
+            }
+
             // popup to show ?
-            var closest = view.closestObjects(xymouse.x, xymouse.y, 25);
-            if (closest) {
-                if (closest instanceof Footprint) {
-                    if (closest.isSelected) {
-                        closest.deselect();
-                    } else {
-                        closest.select();
-                    }
+            var objs = view.closestObjects(xymouse.x, xymouse.y, 20);
+            if (!wasDragging && objs) {
+                var o = objs[0];
 
-                } else if (closest.marker) {
-                    // could be factorized in Source.actionClicked
-                    view.popup.setTitle(closest.popupTitle);
-                    view.popup.setText(closest.popupDesc);
-                    view.popup.setSource(closest);
-                    view.popup.show();
-
-                } else {
-                    if (view.aladin.objClickedFunction) {
-                        view.aladin.objClickedFunction(closest);
-                    }
-                    if (lastClickedObject) {
-                        lastClickedObject.actionOtherObjectClicked();
-                    }
-                    closest.actionClicked();
-                    lastClickedObject = closest;
+                // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
+                if (o instanceof Footprint || o instanceof Circle) {
+                    o.dispatchClickEvent();
                 }
 
-            } else {
-                if (lastClickedObject) {
-                    view.aladin.measurementTable.hide();
-                    lastClickedObject.actionOtherObjectClicked();
-
-                    lastClickedObject = null;
-                    if (view.aladin.objClickedFunction) {
-                        var ret = view.aladin.objClickedFunction(null);
+                // display marker
+                else if (o.marker) {
+                    // could be factorized in Source.actionClicked
+                    view.popup.setTitle(o.popupTitle);
+                    view.popup.setText(o.popupDesc);
+                    view.popup.setSource(o);
+                    view.popup.show();
+                }
+                // show measurements
+                else {
+                    if (view.lastClickedObject) {
+                        view.lastClickedObject.actionOtherObjectClicked && view.lastClickedObject.actionOtherObjectClicked();
                     }
+                    o.actionClicked();
+                }
+                view.lastClickedObject = o;
+                var objClickedFunction = view.aladin.callbacksByEventName['objectClicked'];
+                (typeof objClickedFunction === 'function') && objClickedFunction(o);
+            } else {
+                if (view.lastClickedObject && !wasDragging) {
+                    view.aladin.measurementTable.hide();
+                    view.popup.hide();
+
+                    if (view.lastClickedObject instanceof Footprint) {
+                        //view.lastClickedObject.deselect();
+                    } else {
+                        view.lastClickedObject.actionOtherObjectClicked();
+                    }
+
+                    view.lastClickedObject = null;
+                    var objClickedFunction = view.aladin.callbacksByEventName['objectClicked'];
+                    (typeof objClickedFunction === 'function') && objClickedFunction(null);
                 }
             }
+
+            // call listener of 'click' event
+            var onClickFunction = view.aladin.callbacksByEventName['click'];
+            if (typeof onClickFunction === 'function') {
+                var pos = view.aladin.pix2world(xymouse.x, xymouse.y);
+                if (pos !== undefined) {
+                    onClickFunction({
+                        ra: pos[0],
+                        dec: pos[1],
+                        x: xymouse.x,
+                        y: xymouse.y,
+                        isDragging: wasDragging
+                    });
+                }
+            }
+
 
             // TODO : remplacer par mecanisme de listeners
             // on avertit les catalogues progressifs
             view.refreshProgressiveCats();
+
             view.requestRedraw(true);
         });
-
+        var lastHoveredObject; // save last object hovered by mouse
+        var lastMouseMovePos = null;
         $(view.reticleCanvas).bind("mousemove touchmove", function(e) {
             e.preventDefault();
 
-            if (e.type === "touchmove" && e.originalEvent.touches.length == 1 && isTouchZoom) {
-                var x1 = e.originalEvent.touches[0].clientX;
-                var y1 = e.originalEvent.touches[0].clientY;
-                view.requestRedraw(true);
-                updateLocation(view, view.width / 2, view.height / 2, true);
+            if (e.type === 'touchmove' && view.pinchZoomParameters.isPinching && e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length == 2) {
+                var dist = Math.sqrt(Math.pow(e.originalEvent.touches[0].clientX - e.originalEvent.touches[1].clientX, 2) + Math.pow(e.originalEvent.touches[0].clientY - e.originalEvent.touches[1].clientY, 2));
+                view.setZoom(view.pinchZoomParameters.initialFov * view.pinchZoomParameters.initialDistance / dist);
+
                 return;
-
-            } else if (e.type === "touchmove" && e.originalEvent.touches.length == 1 && !isTouchZoom) {
-                var x1 = e.originalEvent.touches[0].clientX;
-                var y1 = e.originalEvent.touches[0].clientY;
-                view.requestRedraw(true);
-                updateLocation(view, view.width / 2, view.height / 2, true);
-
-            } else if (e.type === "touchmove" && e.originalEvent.touches.length >= 2) {
-
-                isTouchZoom = true;
-                var x1 = e.originalEvent.touches[0].clientX;
-                var y1 = e.originalEvent.touches[0].clientY;
-                var x2 = e.originalEvent.touches[1].clientX;
-                var y2 = e.originalEvent.touches[1].clientY;
-                var xDelta = Math.abs(x1 - x2);
-                var yDelta = Math.abs(y1 - y2);
-                var distance = Math.sqrt(xDelta * xDelta + yDelta * yDelta);
-
-                step = 0.5;
-
-                if (lastTouchDistance < distance) {
-                    view.aladin.increaseZoom(step);
-                } else if (lastTouchDistance > distance) {
-                    view.aladin.decreaseZoom(step);
-                }
-
-                lastTouchDistance = distance;
-                view.requestRedraw(true);
-                updateLocation(view, view.width / 2, view.height / 2, true);
-                return;
-
-            } else {
-                var xymouse = view.imageCanvas.relMouseCoords(e);
-                updateLocation(view, xymouse.x, xymouse.y);
             }
 
+            var xymouse = view.imageCanvas.relMouseCoords(e);
             if (!view.dragging) {
+                // update location box
+                updateLocation(view, xymouse.x, xymouse.y);
+                // call listener of 'mouseMove' event
+                var onMouseMoveFunction = view.aladin.callbacksByEventName['mouseMove'];
+                if (typeof onMouseMoveFunction === 'function') {
+                    var pos = view.aladin.pix2world(xymouse.x, xymouse.y);
+                    if (pos !== undefined) {
+                        onMouseMoveFunction({
+                            ra: pos[0],
+                            dec: pos[1],
+                            x: xymouse.x,
+                            y: xymouse.y
+                        });
+                    }
+                    // send null ra and dec when we go out of the "sky"
+                    else if (lastMouseMovePos != null) {
+                        onMouseMoveFunction({
+                            ra: null,
+                            dec: null,
+                            x: xymouse.x,
+                            y: xymouse.y
+                        });
+                    }
+                    lastMouseMovePos = pos;
+                }
+
 
                 if (!view.dragging && !view.mode == View.SELECT) {
                     // objects under the mouse ?
-                    var closest = view.closestObjects(xymouse.x, xymouse.y, 25);
+                    var closest = view.closestObjects(xymouse.x, xymouse.y, 20);
                     if (closest) {
                         view.setCursor('pointer');
-                        if (view.aladin.objHoveredFunction && closest != lastHoveredObject) {
-                            var ret = view.aladin.objHoveredFunction(closest);
+                        var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
+                        if (typeof objHoveredFunction === 'function' && closest[0] != lastHoveredObject) {
+                            var ret = objHoveredFunction(closest[0]);
                         }
-
-                        if ((closest instanceof Footprint || closest instanceof cds.Source) && closest != lastHoveredObject) {
-                            if (lastHoveredObject != null) {
-                                lastHoveredObject.hoverStop();
-                            }
-                            closest.hoverStart();
-                        }
-
-                        lastHoveredObject = closest;
+                        lastHoveredObject = closest[0];
 
                     } else {
-
-                        if (lastHoveredObject instanceof Footprint || lastHoveredObject instanceof cds.Source) {
-                            lastHoveredObject.hoverStop();
-                            lastHoveredObject = null;
-                        }
-
                         view.setCursor('default');
-
-                        if (view.aladin.objHoveredFunction && lastHoveredObject) {
+                        var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
+                        if (typeof objHoveredFunction === 'function' && lastHoveredObject) {
                             lastHoveredObject = null;
                             // call callback function to notify we left the hovered object
-                            var ret = view.aladin.objHoveredFunction(null);
+                            var ret = objHoveredFunction(null);
                         }
                     }
                 }
-
                 if (e.type === "mousemove") {
                     return;
                 }
+            }
+
+            if (!view.dragging) {
+                return;
             }
 
             var xoffset, yoffset;
@@ -10904,7 +12155,7 @@ View = (function() {
             } else if (view.viewCenter.lon > 360) {
                 view.viewCenter.lon = view.viewCenter.lon % 360;
             }
-
+            view.realDragging = true;
             view.requestRedraw();
         }); //// endof mousemove ////
 
@@ -10917,8 +12168,13 @@ View = (function() {
             event.preventDefault();
             event.stopPropagation();
             var level = view.zoomLevel;
-            var delta = event.deltaY;
 
+            var delta = event.deltaY;
+            // this seems to happen in context of Jupyter notebook --> we have to invert the direction of scroll
+            // hope this won't trigger some side effects ...
+            if (event.hasOwnProperty('originalEvent')) {
+                delta = -event.originalEvent.deltaY;
+            }
             if (delta > 0) {
                 level += 1;
             } else {
@@ -10927,6 +12183,26 @@ View = (function() {
             view.setZoomLevel(level);
 
             return false;
+        });
+
+        $(view.reticleCanvas).on('mouseup', function(event) {
+            view.setCursor('default');
+            var xymouse = view.imageCanvas.relMouseCoords(event);
+            updateLocation(view, xymouse.x, xymouse.y);
+            // call listener of 'mouseMove' event
+            var onMouseMoveFunction = view.aladin.callbacksByEventName['mouseMove'];
+            if (typeof onMouseMoveFunction === 'function') {
+                var pos = view.aladin.pix2world(xymouse.x, xymouse.y);
+                if (pos !== undefined) {
+                    onMouseMoveFunction({
+                        ra: pos[0],
+                        dec: pos[1],
+                        x: xymouse.x,
+                        y: xymouse.y
+                    });
+                }
+            }
+            return true;
         });
 
     };
@@ -10941,6 +12217,43 @@ View = (function() {
         view.stats = stats;
 
         createListeners(view);
+
+        view.executeCallbacksThrottled = Utils.throttle(
+            function() {
+                var pos = view.aladin.pix2world(view.width / 2, view.height / 2);
+                var fov = view.fov;
+                if (pos === undefined || fov === undefined) {
+                    return;
+                }
+
+                var ra = pos[0];
+                var dec = pos[1];
+                // trigger callback only if position has changed !
+                if (ra !== this.ra || dec !== this.dec) {
+                    var posChangedFn = view.aladin.callbacksByEventName['positionChanged'];
+                    (typeof posChangedFn === 'function') && posChangedFn({
+                        ra: ra,
+                        dec: dec,
+                        dragging: true
+                    });
+
+                    // finally, save ra and dec value
+                    this.ra = ra;
+                    this.dec = dec;
+                }
+
+                // trigger callback only if FoV (zoom) has changed !
+                if (fov !== this.old_fov) {
+                    var fovChangedFn = view.aladin.callbacksByEventName['zoomChanged'];
+                    (typeof fovChangedFn === 'function') && fovChangedFn(fov);
+
+                    // finally, save fov value
+                    this.old_fov = fov;
+                }
+
+            },
+            View.CALLBACKS_THROTTLE_TIME_MS);
+
 
         view.displayHpxGrid = false;
         view.displaySurvey = true;
@@ -10965,10 +12278,6 @@ View = (function() {
         } catch (err) {}
         if (lonlat) {
             view.location.update(lonlat.ra, lonlat.dec, view.cooFrame, isViewCenterPosition);
-
-            if (isViewCenterPosition === undefined) {
-                isViewCenterPosition = false;
-            }
         }
     }
 
@@ -11038,7 +12347,9 @@ View = (function() {
 
         var imageCtx = this.imageCtx;
         //////// 1. Draw images ////////
-
+        if (imageCtx.start2D) {
+            imageCtx.start2D();
+        }
         //// clear canvas ////
         // TODO : do not need to clear if fov small enough ?
         imageCtx.clearRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
@@ -11047,31 +12358,33 @@ View = (function() {
         var bkgdColor = this.getBackgroundColor();
         // fill with background of the same color than the first color map value (lowest intensity)
         if (this.projectionMethod == ProjectionEnum.SIN) {
-            if (this.fov > 80) {
+            if (this.fov >= 60) {
                 imageCtx.fillStyle = bkgdColor;
                 imageCtx.beginPath();
-                imageCtx.arc(this.cx, this.cy, this.cx * this.zoomFactor, 0, 2 * Math.PI, true);
+                var maxCxCy = this.cx > this.cy ? this.cx : this.cy;
+                imageCtx.arc(this.cx, this.cy, maxCxCy * this.zoomFactor, 0, 2 * Math.PI, true);
                 imageCtx.fill();
             }
             // pour eviter les losanges blancs qui apparaissent quand les tuiles sont en attente de chargement
-            else if (this.fov < 60) {
+            else {
                 imageCtx.fillStyle = bkgdColor;
                 imageCtx.fillRect(0, 0, this.imageCanvas.width, this.imageCanvas.height);
-            } else { // 60 <= fov <= 80
+            }
+        } else if (this.projectionMethod == ProjectionEnum.AITOFF) {
+            if (imageCtx.ellipse) {
                 imageCtx.fillStyle = bkgdColor;
                 imageCtx.beginPath();
-                imageCtx.arc(this.cx, this.cy, this.cx * this.zoomFactor, 0, 2 * Math.PI, true);
+                imageCtx.ellipse(this.cx, this.cy, 2.828 * this.cx * this.zoomFactor, this.cx * this.zoomFactor * 1.414, 0, 0, 2 * Math.PI);
                 imageCtx.fill();
             }
         }
-
-
-        // TODO : check if we really need to make that test every time
-        if (!this.projection) {
-            this.projection = new Projection(this.viewCenter.lon, this.viewCenter.lat);
-        } else {
-            this.projection.setCenter(this.viewCenter.lon, this.viewCenter.lat);
+        if (imageCtx.finish2D) {
+            imageCtx.finish2D();
         }
+
+
+        this.projection.setCenter(this.viewCenter.lon, this.viewCenter.lat);
+        // do we have to redo that every time? Probably not
         this.projection.setProjection(this.projectionMethod);
 
 
@@ -11134,8 +12447,9 @@ View = (function() {
                 }
                 this.overlayImageSurvey.redrawHighres(imageCtx, cornersXYViewMapHighres, norderOverlay);
             }
-*/
-        imageCtx.globalAlpha = 1.0;
+            */
+
+            imageCtx.globalAlpha = 1.0;
 
         }
 
@@ -11191,16 +12505,18 @@ View = (function() {
                 cat.draw(catalogCtx, this.projection, this.cooFrame, this.width, this.height, this.largestDim, this.zoomFactor);
             }
         }
+        // draw popup catalog
+        if (this.catalogForPopup.isShowing && this.catalogForPopup.sources.length > 0) {
+            if (!catalogCanvasCleared) {
+                catalogCtx.clearRect(0, 0, this.width, this.height);
+                catalogCanvasCleared = true;
+            }
+            this.catalogForPopup.draw(catalogCtx, this.projection, this.cooFrame, this.width, this.height, this.largestDim, this.zoomFactor);
+        }
 
         ////// 3. Draw overlays////////
         var overlayCtx = this.catalogCtx;
-        //        console.log("overlayCtx");
-        //        console.log(overlayCtx);
-        //        console.log("before this.overlays");
-        //        console.log(this.overlays);
-        //if (this.overlays && this.overlays.length>0 && (! this.dragging  || View.DRAW_SOURCES_WHILE_DRAGGING)) {
-        if (this.overlays && this.overlays.length > 0) {
-            //			console.log(this.overlays);
+        if (this.overlays && this.overlays.length > 0 && (!this.dragging || View.DRAW_SOURCES_WHILE_DRAGGING)) {
             if (!catalogCanvasCleared) {
                 catalogCtx.clearRect(0, 0, this.width, this.height);
                 catalogCanvasCleared = true;
@@ -11266,6 +12582,18 @@ View = (function() {
             this.mustRedrawReticle = false;
         }
 
+        ////// 5. Draw all-sky ring /////
+        if (this.projectionMethod == ProjectionEnum.SIN && this.fov >= 60 && this.aladin.options['showAllskyRing'] === true) {
+            imageCtx.strokeStyle = this.aladin.options['allskyRingColor'];
+            var ringWidth = this.aladin.options['allskyRingWidth'];
+            imageCtx.lineWidth = ringWidth;
+            imageCtx.beginPath();
+            var maxCxCy = this.cx > this.cy ? this.cx : this.cy;
+            imageCtx.arc(this.cx, this.cy, (maxCxCy - (ringWidth / 2.0) + 1) * this.zoomFactor, 0, 2 * Math.PI, true);
+            imageCtx.stroke();
+        }
+
+
         // draw selection box
         if (this.mode == View.SELECT && this.dragging) {
             reticleCtx.fillStyle = "rgba(100, 240, 110, 0.25)";
@@ -11286,6 +12614,10 @@ View = (function() {
         if (!this.dragging) {
             this.updateObjectsLookup();
         }
+
+        // execute 'positionChanged' and 'zoomChanged' callbacks
+        this.executeCallbacksThrottled();
+
     };
 
     View.prototype.forceRedraw = function() {
@@ -11321,16 +12653,20 @@ View = (function() {
             var xy = AladinUtils.viewToXy(this.cx, this.cy, this.width, this.height, this.largestDim, this.zoomFactor);
             var radec = this.projection.unproject(xy.x, xy.y);
             var lonlat = [];
-            if (frameSurvey && frameSurvey != this.cooFrame) {
-                if (frameSurvey == CooFrameEnum.J2000) {
+            if (frameSurvey && frameSurvey.system != this.cooFrame.system) {
+                if (frameSurvey.system == CooFrameEnum.SYSTEMS.J2000) {
                     lonlat = CooConversion.GalacticToJ2000([radec.ra, radec.dec]);
-                } else if (frameSurvey == CooFrameEnum.GAL) {
+                } else if (frameSurvey.system == CooFrameEnum.SYSTEMS.GAL) {
                     lonlat = CooConversion.J2000ToGalactic([radec.ra, radec.dec]);
                 }
             } else {
                 lonlat = [radec.ra, radec.dec];
             }
-            spatialVector.set(lonlat[0], lonlat[1]);
+            if (this.imageSurvey && this.imageSurvey.longitudeReversed === true) {
+                spatialVector.set(lonlat[0], lonlat[1]);
+            } else {
+                spatialVector.set(lonlat[0], lonlat[1]);
+            }
             var radius = this.fov * 0.5 * this.ratio;
             // we need to extend the radius
             if (this.fov > 60) {
@@ -11382,16 +12718,20 @@ View = (function() {
             var xy = AladinUtils.viewToXy(this.cx, this.cy, this.width, this.height, this.largestDim, this.zoomFactor);
             var radec = this.projection.unproject(xy.x, xy.y);
             var lonlat = [];
-            if (frameSurvey && frameSurvey != this.cooFrame) {
-                if (frameSurvey == CooFrameEnum.J2000) {
+            if (frameSurvey && frameSurvey.system != this.cooFrame.system) {
+                if (frameSurvey.system == CooFrameEnum.SYSTEMS.J2000) {
                     lonlat = CooConversion.GalacticToJ2000([radec.ra, radec.dec]);
-                } else if (frameSurvey == CooFrameEnum.GAL) {
+                } else if (frameSurvey.system == CooFrameEnum.SYSTEMS.GAL) {
                     lonlat = CooConversion.J2000ToGalactic([radec.ra, radec.dec]);
                 }
             } else {
                 lonlat = [radec.ra, radec.dec];
             }
-            spatialVector.set(lonlat[0], lonlat[1]);
+            if (this.imageSurvey && this.imageSurvey.longitudeReversed === true) {
+                spatialVector.set(lonlat[0], lonlat[1]);
+            } else {
+                spatialVector.set(lonlat[0], lonlat[1]);
+            }
             var radius = this.fov * 0.5 * this.ratio;
             // we need to extend the radius
             if (this.fov > 60) {
@@ -11426,12 +12766,12 @@ View = (function() {
                 spVec.setXYZ(corners[k].x, corners[k].y, corners[k].z);
 
                 // need for frame transformation ?
-                if (frameSurvey && frameSurvey != this.cooFrame) {
-                    if (frameSurvey == CooFrameEnum.J2000) {
+                if (frameSurvey && frameSurvey.system != this.cooFrame.system) {
+                    if (frameSurvey.system == CooFrameEnum.SYSTEMS.J2000) {
                         var radec = CooConversion.J2000ToGalactic([spVec.ra(), spVec.dec()]);
                         lon = radec[0];
                         lat = radec[1];
-                    } else if (frameSurvey == CooFrameEnum.GAL) {
+                    } else if (frameSurvey.system == CooFrameEnum.SYSTEMS.GAL) {
                         var radec = CooConversion.GalacticToJ2000([spVec.ra(), spVec.dec()]);
                         lon = radec[0];
                         lat = radec[1];
@@ -11518,12 +12858,12 @@ View = (function() {
             spVec.setXYZ(corners[k].x, corners[k].y, corners[k].z);
 
             // need for frame transformation ?
-            if (this.imageSurvey && this.imageSurvey.cooFrame != this.cooFrame) {
-                if (this.imageSurvey.cooFrame == CooFrameEnum.J2000) {
+            if (this.imageSurvey && this.imageSurvey.cooFrame.system != this.cooFrame.system) {
+                if (this.imageSurvey.cooFrame.system == CooFrameEnum.SYSTEMS.J2000) {
                     var radec = CooConversion.J2000ToGalactic([spVec.ra(), spVec.dec()]);
                     lon = radec[0];
                     lat = radec[1];
-                } else if (this.imageSurvey.cooFrame == CooFrameEnum.GAL) {
+                } else if (this.imageSurvey.cooFrame.system == CooFrameEnum.SYSTEMS.GAL) {
                     var radec = CooConversion.GalacticToJ2000([spVec.ra(), spVec.dec()]);
                     lon = radec[0];
                     lat = radec[1];
@@ -11736,11 +13076,20 @@ View = (function() {
             newImageSurvey = imageSurvey;
         }
 
-        // buffer reset
-        this.tileBuffer = new TileBuffer();
+        // do not touch the tileBuffer if we load the exact same HiPS (in that case, should we stop here??)    
+        if (newImageSurvey && this.imageSurvey && newImageSurvey.hasOwnProperty('id') && this.imageSurvey.hasOwnProperty('id') && newImageSurvey.id == this.imageSurvey.id) {
+            // do nothing
+        } else {
+            // buffer reset
+            this.tileBuffer = new TileBuffer();
+        }
+
+        this.downloader.emptyQueue();
 
         newImageSurvey.isReady = false;
         this.imageSurvey = newImageSurvey;
+
+        this.projection.reverseLongitude(this.imageSurvey.longitudeReversed);
 
         var self = this;
         newImageSurvey.init(this, function() {
@@ -11766,25 +13115,21 @@ View = (function() {
     };
 
     View.prototype.changeFrame = function(cooFrame) {
+        var oldCooFrame = this.cooFrame;
         this.cooFrame = cooFrame;
         // recompute viewCenter
-        if (this.cooFrame == CooFrameEnum.GAL) {
+        if (this.cooFrame.system == CooFrameEnum.SYSTEMS.GAL && this.cooFrame.system != oldCooFrame.system) {
             var lb = CooConversion.J2000ToGalactic([this.viewCenter.lon, this.viewCenter.lat]);
             this.viewCenter.lon = lb[0];
             this.viewCenter.lat = lb[1];
-        } else if (this.cooFrame == CooFrameEnum.J2000) {
+        } else if (this.cooFrame.system == CooFrameEnum.SYSTEMS.J2000 && this.cooFrame.system != oldCooFrame.system) {
             var radec = CooConversion.GalacticToJ2000([this.viewCenter.lon, this.viewCenter.lat]);
             this.viewCenter.lon = radec[0];
             this.viewCenter.lat = radec[1];
         }
 
-        window.dispatchEvent(new CustomEvent("coordinateFrameChanged", {
-            detail: {
-                frame: cooFrame,
-            }
-        }));
+        this.location.update(this.viewCenter.lon, this.viewCenter.lat, this.cooFrame, true);
 
-        this.location.update(this.viewCenter.lon, this.viewCenter.lat, this.cooFrame);
         this.requestRedraw();
     };
 
@@ -11821,10 +13166,10 @@ View = (function() {
         if (isNaN(ra) || isNaN(dec)) {
             return;
         }
-        if (this.cooFrame == CooFrameEnum.J2000) {
+        if (this.cooFrame.system == CooFrameEnum.SYSTEMS.J2000) {
             this.viewCenter.lon = ra;
             this.viewCenter.lat = dec;
-        } else if (this.cooFrame == CooFrameEnum.GAL) {
+        } else if (this.cooFrame.system == CooFrameEnum.SYSTEMS.GAL) {
             var lb = CooConversion.J2000ToGalactic([ra, dec]);
             this.viewCenter.lon = lb[0];
             this.viewCenter.lat = lb[1];
@@ -11852,7 +13197,7 @@ View = (function() {
         }
     };
     View.prototype.layerNameExists = function(name) {
-        var c = this.catalogs;
+        var c = this.allOverlayLayers;
         for (var k = 0; k < c.length; k++) {
             if (name == c[k].name) {
                 return true;
@@ -11864,10 +13209,13 @@ View = (function() {
     View.prototype.removeLayers = function() {
         this.catalogs = [];
         this.overlays = [];
+        this.mocs = [];
+        this.allOverlayLayers = [];
         this.requestRedraw();
     };
 
     View.prototype.addCatalog = function(catalog) {
+        this.allOverlayLayers.push(catalog);
         this.catalogs.push(catalog);
         if (catalog.type == 'catalog') {
             catalog.setView(this);
@@ -11877,11 +13225,13 @@ View = (function() {
     };
     View.prototype.addOverlay = function(overlay) {
         this.overlays.push(overlay);
+        this.allOverlayLayers.push(overlay);
         overlay.setView(this);
     };
 
     View.prototype.addMOC = function(moc) {
         this.mocs.push(moc);
+        this.allOverlayLayers.push(moc);
         moc.setView(this);
     };
 
@@ -11973,12 +13323,14 @@ View = (function() {
                     if (!s.isShowing || !s.x || !s.y) {
                         continue;
                     }
+
                     x = s.x;
                     y = s.y;
-                    if (!this.objLookup[x]) {
+
+                    if (typeof this.objLookup[x] === 'undefined') {
                         this.objLookup[x] = [];
                     }
-                    if (!this.objLookup[x][y]) {
+                    if (typeof this.objLookup[x][y] === 'undefined') {
                         this.objLookup[x][y] = [];
                     }
                     this.objLookup[x][y].push(s);
@@ -11990,6 +13342,7 @@ View = (function() {
     // return closest object within a radius of maxRadius pixels. maxRadius is an integer
     View.prototype.closestObjects = function(x, y, maxRadius) {
 
+        // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
         var overlay;
         var canvas = this.catalogCanvas;
         var ctx = canvas.getContext("2d");
@@ -11998,6 +13351,8 @@ View = (function() {
             for (var k = 0; k < this.overlays.length; k++) {
                 overlay = this.overlays[k];
                 for (var i = 0; i < overlay.overlays.length; i++) {
+
+                    // test polygons first
                     var footprint = overlay.overlays[i];
                     var pointXY = [];
                     for (var j = 0; j < footprint.polygons.length; j++) {
@@ -12010,7 +13365,7 @@ View = (function() {
                             this.width, this.height,
                             this.largestDim,
                             this.zoomFactor);
-                        if (xy == undefined) {
+                        if (!xy) {
                             continue;
                         }
                         pointXY.push({
@@ -12018,7 +13373,6 @@ View = (function() {
                             y: xy.vy
                         });
                     }
-
                     for (var l = 0; l < pointXY.length - 1; l++) {
 
                         ctx.beginPath(); // new segment
@@ -12026,90 +13380,53 @@ View = (function() {
                         ctx.lineTo(pointXY[l + 1].x, pointXY[l + 1].y); // end point is next
                         if (ctx.isPointInStroke(x, y)) { // x,y is on line?
                             closest = footprint;
-                            return closest;
+                            return [closest];
                         }
                     }
+                }
 
+                // test Circles
+                for (var i = 0; i < overlay.overlay_items.length; i++) {
+                    if (overlay.overlay_items[i] instanceof Circle) {
+                        overlay.overlay_items[i].draw(ctx, this.projection, this.cooFrame, this.width, this.height, this.largestDim, this.zoomFactor, true);
+
+                        if (ctx.isPointInStroke(x, y)) {
+                            closest = overlay.overlay_items[i];
+                            return [closest];
+                        }
+                    }
                 }
             }
         }
+
+
 
 
         if (!this.objLookup) {
             return null;
         }
-
-        var abs = Math.abs;
-        var closest, dist, objLookupDx, objLookupDxDy, d;
+        var closest, dist;
         for (var r = 0; r <= maxRadius; r++) {
             closest = dist = null;
-            for (var dx = -r; dx <= r; dx++) {
-
-                objLookupDx = this.objLookup[x + dx];
-                if (!objLookupDx) {
+            for (var dx = -maxRadius; dx <= maxRadius; dx++) {
+                if (!this.objLookup[x + dx]) {
                     continue;
                 }
-
-                if (r > 0) {
-                    if (abs(dx) == r) {
-
-                        for (var dy = -r; dy <= r; dy++) {
-                            objLookupDxDy = objLookupDx[y + dy];
-                            if (objLookupDxDy) {
-                                if (!closest) {
-                                    closest = objLookupDxDy;
-                                } else {
-                                    d = dx * dx + dy * dy;
-                                    if (d < dist) {
-                                        dist = d;
-                                        closest = objLookupDxDy;
-                                    }
-                                }
-                            }
+                for (var dy = -maxRadius; dy <= maxRadius; dy++) {
+                    if (this.objLookup[x + dx][y + dy]) {
+                        var d = dx * dx + dy * dy;
+                        if (!closest) {
+                            closest = this.objLookup[x + dx][y + dy];
+                            dist = d;
+                        } else if (d < dist) {
+                            dist = d;
+                            closest = this.objLookup[x + dx][y + dy];
                         }
-
-                    } else {
-
-                        dy = -r;
-                        objLookupDxDy = objLookupDx[y + dy];
-                        if (objLookupDxDy) {
-                            if (!closest) {
-                                closest = objLookupDxDy;
-                            } else {
-                                d = dx * dx + dy * dy;
-                                if (d < dist) {
-                                    dist = d;
-                                    closest = objLookupDxDy;
-                                }
-                            }
-                        }
-
-                        dy = r;
-                        objLookupDxDy = objLookupDx[y + dy];
-                        if (objLookupDxDy) {
-                            if (!closest) {
-                                closest = objLookupDxDy;
-                            } else {
-                                d = dx * dx + dy * dy;
-                                if (d < dist) {
-                                    dist = d;
-                                    closest = objLookupDxDy;
-                                }
-                            }
-                        }
-                    }
-
-                } else {
-
-                    objLookupDxDy = objLookupDx[y];
-                    if (objLookupDxDy) {
-                        return (objLookupDxDy.length) ? objLookupDxDy[0] : null;
                     }
                 }
             }
-
             if (closest) {
-                return (closest.length) ? closest[0] : null;
+                return closest;
             }
         }
         return null;
@@ -12158,8 +13475,6 @@ Aladin = (function() {
         }
 
 
-        HealpixCache.init();
-
         var self = this;
 
         // if not options was set, try to retrieve them from the query string
@@ -12205,13 +13520,12 @@ Aladin = (function() {
 
 
         var cooFrame = CooFrameEnum.fromString(options.cooFrame, CooFrameEnum.J2000);
-        // div where we write the position
-        var frameInJ2000 = cooFrame == CooFrameEnum.J2000;
-
+        // locationDiv is the div where we write the position
         var locationDiv = $('<div class="aladin-location">' +
-                (options.showFrame ? '<select class="aladin-frameChoice"><option value="' + CooFrameEnum.J2000 + '" ' +
-                    (frameInJ2000 ? 'selected="selected"' : '') + '>J2000</option><option value="' + CooFrameEnum.GAL + '" ' +
-                    (!frameInJ2000 ? 'selected="selected"' : '') + '>GAL</option></select>' : '') +
+                (options.showFrame ? '<select class="aladin-frameChoice"><option value="' + CooFrameEnum.J2000.label + '" ' +
+                    (cooFrame == CooFrameEnum.J2000 ? 'selected="selected"' : '') + '>J2000</option><option value="' + CooFrameEnum.J2000d.label + '" ' +
+                    (cooFrame == CooFrameEnum.J2000d ? 'selected="selected"' : '') + '>J2000d</option><option value="' + CooFrameEnum.GAL.label + '" ' +
+                    (cooFrame == CooFrameEnum.GAL ? 'selected="selected"' : '') + '>GAL</option></select>' : '') +
                 '<span class="aladin-location-text"></span></div>')
             .appendTo(aladinDiv);
         // div where FoV value is written
@@ -12230,7 +13544,21 @@ Aladin = (function() {
         }
         this.fullScreenBtn = $(aladinDiv).find('.aladin-fullscreenControl')
         this.fullScreenBtn.click(function() {
-            self.toggleFullscreen();
+            self.toggleFullscreen(self.options.realFullscreen);
+        });
+        // react to fullscreenchange event to restore initial width/height (if user pressed ESC to go back from full screen)
+        $(document).on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', function(e) {
+            var fullscreenElt = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (fullscreenElt === null || fullscreenElt === undefined) {
+                self.fullScreenBtn.removeClass('aladin-restore');
+                self.fullScreenBtn.addClass('aladin-maximize');
+                self.fullScreenBtn.attr('title', 'Full screen');
+                $(self.aladinDiv).removeClass('aladin-fullscreen');
+
+                var fullScreenToggledFn = self.callbacksByEventName['fullScreenToggled'];
+                var isInFullscreen = self.fullScreenBtn.hasClass('aladin-restore');
+                (typeof fullScreenToggledFn === 'function') && fullScreenToggledFn(isInFullscreen);
+            }
         });
 
 
@@ -12274,7 +13602,8 @@ Aladin = (function() {
                         data.push(HpxImageSurvey.SURVEYS[k]);
                     }
                 }
-                HpxImageSurvey.SURVEYS = data;
+                //Disabled to allow HST archive to set their on hips list
+                //HpxImageSurvey.SURVEYS = data;
                 self.view.setUnknownSurveyIfNeeded();
             },
             error: function() {}
@@ -12337,16 +13666,26 @@ Aladin = (function() {
             });
         }
 
+        // simbad pointer tool
+        if (options.showSimbadPointerControl) {
+            var d = $('<div class="aladin-simbadPointerControl-container" title="SIMBAD pointer"><div class="aladin-simbadPointerControl"></div></div>');
+            d.appendTo(aladinDiv);
+
+            d.click(function() {
+                self.view.setMode(View.TOOL_SIMBAD_POINTER);
+            });
+        }
+
         // share control panel
         if (options.showShareControl) {
-            var d = $('<div class="aladin-shareControl-container" title="Share current view"><div class="aladin-shareControl"></div></div>');
+            var d = $('<div class="aladin-shareControl-container" title="Get link for current view"><div class="aladin-shareControl"></div></div>');
             d.appendTo(aladinDiv);
 
             var shareBox =
                 $('<div class="aladin-box aladin-shareBox">' +
                     '<a class="aladin-closeBtn">&times;</a>' +
                     '<div style="clear: both;"></div>' +
-                    '<b>Share</b>' +
+                    'Link to previewer: <span class="info"></span>' +
                     '<input type="text" class="aladin-shareInput" />' +
                     '</div>');
             shareBox.appendTo(aladinDiv);
@@ -12357,6 +13696,9 @@ Aladin = (function() {
             d.click(function() {
                 self.hideBoxes();
                 shareBox.show();
+                var url = self.getShareURL();
+                shareBox.find('.aladin-shareInput').val(url).select();
+                document.execCommand('copy');
 
                 return false;
             });
@@ -12424,15 +13766,16 @@ Aladin = (function() {
         // go to full screen ?
         if (options.fullScreen) {
             window.setTimeout(function() {
-                self.toggleFullscreen();
+                self.toggleFullscreen(self.options.realFullscreen);
             }, 1000);
         }
 
 
+        this.callbacksByEventName = {}; // we store the callback functions (on 'zoomChanged', 'positionChanged', ...) here
     };
 
     /**** CONSTANTS ****/
-    Aladin.VERSION = "2019-03-07"; // will be filled by the build.sh script
+    Aladin.VERSION = "2019-05-07"; // will be filled by the build.sh script
 
     Aladin.JSONP_PROXY = "https://alasky.unistra.fr/cgi/JSONProxy";
     //Aladin.JSONP_PROXY = "https://alaskybis.unistra.fr/cgi/JSONProxy";
@@ -12449,6 +13792,7 @@ Aladin = (function() {
         showFullscreenControl: true,
         showLayersControl: true,
         showGotoControl: true,
+        showSimbadPointerControl: false,
         showShareControl: false,
         showCatalog: true, // TODO: still used ??
         showFrame: true,
@@ -12457,17 +13801,61 @@ Aladin = (function() {
         reticleColor: "rgb(178, 50, 178)",
         reticleSize: 22,
         log: true,
-        allowFullZoomout: false
+        allowFullZoomout: false,
+        realFullscreen: false,
+        showAllskyRing: false,
+        allskyRingColor: '#c8c8ff',
+        allskyRingWidth: 8,
+        pixelateCanvas: true
     };
 
 
-    Aladin.prototype.toggleFullscreen = function() {
+    // realFullscreen: AL div expands not only to the size of its parent, but takes the whole available screen estate 
+    Aladin.prototype.toggleFullscreen = function(realFullscreen) {
+        realFullscreen = Boolean(realFullscreen);
+
         this.fullScreenBtn.toggleClass('aladin-maximize aladin-restore');
         var isInFullscreen = this.fullScreenBtn.hasClass('aladin-restore');
         this.fullScreenBtn.attr('title', isInFullscreen ? 'Restore original size' : 'Full screen');
         $(this.aladinDiv).toggleClass('aladin-fullscreen');
 
+        if (realFullscreen) {
+            // go to "real" full screen mode
+            if (isInFullscreen) {
+                var d = this.aladinDiv;
+
+                if (d.requestFullscreen) {
+                    d.requestFullscreen();
+                } else if (d.webkitRequestFullscreen) {
+                    d.webkitRequestFullscreen();
+                } else if (d.mozRequestFullScreen) { // notice the difference in capitalization for Mozilla functions ...
+                    d.mozRequestFullScreen();
+                } else if (d.msRequestFullscreen) {
+                    d.msRequestFullscreen();
+                }
+            }
+            // exit from "real" full screen mode
+            else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
+        }
+
         this.view.fixLayoutDimensions();
+
+        // force call to zoomChanged callback
+        var fovChangedFn = this.callbacksByEventName['zoomChanged'];
+        (typeof fovChangedFn === 'function') && fovChangedFn(this.view.fov);
+
+        var fullScreenToggledFn = this.callbacksByEventName['fullScreenToggled'];
+        (typeof fullScreenToggledFn === 'function') && fullScreenToggledFn(isInFullscreen);
     };
 
     Aladin.prototype.updateSurveysDropdownList = function(surveys) {
@@ -12533,6 +13921,42 @@ Aladin = (function() {
         this.view.setZoom(fovDegrees);
     };
 
+    // @API
+    // (experimental) try to adjust the FoV to the given object name. Does nothing if object is not known from Simbad
+    Aladin.prototype.adjustFovForObject = function(objectName) {
+        var self = this;
+        this.getFovForObject(objectName, function(fovDegrees) {
+            self.setFoV(fovDegrees);
+        });
+    };
+
+
+    Aladin.prototype.getFovForObject = function(objectName, callback) {
+        var query = "SELECT galdim_majaxis, V FROM basic JOIN ident ON oid=ident.oidref JOIN allfluxes ON oid=allfluxes.oidref WHERE id='" + objectName + "'";
+        var url = '//simbad.u-strasbg.fr/simbad/sim-tap/sync?query=' + encodeURIComponent(query) + '&request=doQuery&lang=adql&format=json&phase=run';
+
+        var ajax = Utils.getAjaxObject(url, 'GET', 'json', false)
+        ajax.done(function(result) {
+            var defaultFov = 4 / 60; // 4 arcmin
+            var fov = defaultFov;
+
+            if ('data' in result && result.data.length > 0) {
+                var galdimMajAxis = Utils.isNumber(result.data[0][0]) ? result.data[0][0] / 60.0 : null; // result gives galdim in arcmin
+                var magV = Utils.isNumber(result.data[0][1]) ? result.data[0][1] : null;
+
+                if (galdimMajAxis !== null) {
+                    fov = 2 * galdimMajAxis;
+                } else if (magV !== null) {
+                    if (magV < 10) {
+                        fov = 2 * Math.pow(2.0, (6 - magV / 2.0)) / 60;
+                    }
+                }
+            }
+
+            (typeof callback === 'function') && callback(fov);
+        });
+    };
+
     Aladin.prototype.setFrame = function(frameName) {
         if (!frameName) {
             return;
@@ -12543,8 +13967,13 @@ Aladin = (function() {
         }
 
         this.view.changeFrame(newFrame);
+
+        var frameChangedFunction = this.view.aladin.callbacksByEventName['cooFrameChanged'];
+        if (typeof frameChangedFunction === 'function') {
+            frameChangedFunction(newFrame.label);
+        }
         // màj select box
-        $(this.aladinDiv).find('.aladin-frameChoice').val(newFrame);
+        $(this.aladinDiv).find('.aladin-frameChoice').val(newFrame.label);
     };
 
     Aladin.prototype.setProjection = function(projectionName) {
@@ -12562,9 +13991,29 @@ Aladin = (function() {
         }
     };
 
-    // point view to a given object (resolved by Sesame) or position
-    // TODO: should we use function
-    Aladin.prototype.gotoObject = function(targetName, errorCallback) {
+    /** point view to a given object (resolved by Sesame) or position
+     * @api
+     *
+     * @param: target; object name or position
+     * @callbackOptions: (optional) the object with key 'success' and/or 'error' containing the success and error callback functions.
+     *
+     */
+    Aladin.prototype.gotoObject = function(targetName, callbackOptions) {
+        var successCallback = errorCallback = undefined;
+        if (typeof callbackOptions === 'object') {
+            if (callbackOptions.hasOwnProperty('success')) {
+                successCallback = callbackOptions.success;
+            }
+            if (callbackOptions.hasOwnProperty('error')) {
+                errorCallback = callbackOptions.error;
+            }
+        }
+        // this is for compatibility reason with the previous method signature which was function(targetName, errorCallback)
+        else if (typeof callbackOptions === 'function') {
+            errorCallback = callbackOptions;
+        }
+
+
         var isObjectName = /[a-zA-Z]/.test(targetName);
 
         // try to parse as a position
@@ -12577,6 +14026,8 @@ Aladin = (function() {
                 lonlat = CooConversion.GalacticToJ2000(lonlat);
             }
             this.view.pointTo(lonlat[0], lonlat[1]);
+
+            (typeof successCallback === 'function') && successCallback(this.getRaDec());
         }
         // ask resolution by Sesame
         else {
@@ -12586,24 +14037,15 @@ Aladin = (function() {
                     var ra = data.Target.Resolver.jradeg;
                     var dec = data.Target.Resolver.jdedeg;
                     self.view.pointTo(ra, dec);
-                    /*
-	                           if (data.sesame.error) {
-	                                if (console) console.log(data.sesame.error);
-	                           }
-	                           else {
-	                               var radec = data.sesame.decimalPosition.split(" ");
-	                               self.view.pointTo(parseFloat(radec[0]), parseFloat(radec[1]));
-	                           }
-	                           */
+
+                    (typeof successCallback === 'function') && successCallback(self.getRaDec());
                 },
-                function(data) {
+                function(data) { // errror callback
                     if (console) {
                         console.log("Could not resolve object name " + targetName);
                         console.log(data);
                     }
-                    if (errorCallback) {
-                        errorCallback();
-                    }
+                    (typeof errorCallback === 'function') && errorCallback();
                 });
         }
     };
@@ -12645,8 +14087,12 @@ Aladin = (function() {
         }
 
         // compute current position
-        var curRa = params['raStart'] + (params['raEnd'] - params['raStart']) * (now - params['start']) / (params['end'] - params['start']);
-        var curDec = params['decStart'] + (params['decEnd'] - params['decStart']) * (now - params['start']) / (params['end'] - params['start']);
+        var fraction = (now - params['start']) / (params['end'] - params['start']);
+        var curPos = intermediatePoint(params['raStart'], params['decStart'], params['raEnd'], params['decEnd'], fraction);
+        curRa = curPos[0];
+        curDec = curPos[1];
+        //var curRa =  params['raStart'] + (params['raEnd'] - params['raStart']) * (now-params['start']) / (params['end'] - params['start']);
+        //var curDec = params['decStart'] + (params['decEnd'] - params['decStart']) * (now-params['start']) / (params['end'] - params['start']);
 
         aladin.gotoRaDec(curRa, curDec);
 
@@ -12669,7 +14115,6 @@ Aladin = (function() {
         duration = duration || 5;
 
         this.animationParams = null;
-        doAnimation(this);
 
         var animationParams = {};
         animationParams['start'] = new Date().getTime();
@@ -12686,13 +14131,113 @@ Aladin = (function() {
         doAnimation(this);
     };
 
+    var doZoomAnimation = function(aladin) {
+        var params = aladin.zoomAnimationParams;
+        if (params == null) {
+            return;
+        }
+        var now = new Date().getTime();
+        // this is the zoom animation end: set the view to the end fov, and call complete callback 
+        if (now > params['end']) {
+            aladin.setFoV(params['fovEnd']);
+
+            if (params['complete']) {
+                params['complete']();
+            }
+
+            return;
+        }
+
+        // compute current position
+        var fraction = (now - params['start']) / (params['end'] - params['start']);
+        var curFov = params['fovStart'] + (params['fovEnd'] - params['fovStart']) * Math.sqrt(fraction);
+
+        aladin.setFoV(curFov);
+
+        setTimeout(function() {
+            doZoomAnimation(aladin);
+        }, 50);
+
+    };
+    /*
+     * zoom smoothly from the current FoV to the given new fov to the given ra, dec
+     * 
+     * the total duration (in seconds) of the animation can be given (otherwise set to 5 seconds by default)
+     * 
+     * complete: a function to call once the animation has completed
+     * 
+     * @API
+     * 
+     */
+    Aladin.prototype.zoomToFoV = function(fov, duration, complete) {
+        duration = duration || 5;
+
+        this.zoomAnimationParams = null;
+
+        var zoomAnimationParams = {};
+        zoomAnimationParams['start'] = new Date().getTime();
+        zoomAnimationParams['end'] = new Date().getTime() + 1000 * duration;
+        var fovArray = this.getFov();
+        zoomAnimationParams['fovStart'] = Math.max(fovArray[0], fovArray[1]);
+        zoomAnimationParams['fovEnd'] = fov;
+        zoomAnimationParams['complete'] = complete;
+
+        console.log(zoomAnimationParams);
+
+        this.zoomAnimationParams = zoomAnimationParams;
+        doZoomAnimation(this);
+    };
+
+
+
+    /**
+     *  Compute intermediate point between points (lng1, lat1) and (lng2, lat2)
+     *  at distance fraction times the total distance (fraction between 0 and 1)
+     *
+     *  Return intermediate points in degrees
+     *
+     */
+    function intermediatePoint(lng1, lat1, lng2, lat2, fraction) {
+        function degToRad(d) {
+            return d * Math.PI / 180;
+        }
+
+        function radToDeg(r) {
+            return r * 180 / Math.PI;
+        }
+        var lat1 = degToRad(lat1);
+        var lng1 = degToRad(lng1);
+        var lat2 = degToRad(lat2);
+        var lng2 = degToRad(lng2);
+        var d = 2 * Math.asin(
+            Math.sqrt(Math.pow((Math.sin((lat1 - lat2) / 2)),
+                    2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.pow(Math.sin((lng1 - lng2) / 2), 2)));
+        var A = Math.sin((1 - fraction) * d) / Math.sin(d);
+        var B = Math.sin(fraction * d) / Math.sin(d);
+        var x = A * Math.cos(lat1) * Math.cos(lng1) + B *
+            Math.cos(lat2) * Math.cos(lng2);
+        var y = A * Math.cos(lat1) * Math.sin(lng1) + B *
+            Math.cos(lat2) * Math.sin(lng2);
+        var z = A * Math.sin(lat1) + B * Math.sin(lat2);
+        var lon = Math.atan2(y, x);
+        var lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) +
+            Math.pow(y, 2)));
+
+        return [radToDeg(lon), radToDeg(lat)];
+    };
+
+
+
+
     /**
      * get current [ra, dec] position of the center of the view
-     *
+     * 
      * @API
      */
     Aladin.prototype.getRaDec = function() {
-        if (this.view.cooFrame == CooFrameEnum.J2000) {
+        if (this.view.cooFrame.system == CooFrameEnum.SYSTEMS.J2000) {
             return [this.view.viewCenter.lon, this.view.viewCenter.lat];
         } else {
             var radec = CooConversion.GalacticToJ2000([this.view.viewCenter.lon, this.view.viewCenter.lat]);
@@ -12820,19 +14365,17 @@ Aladin = (function() {
         return new Overlay(options);
     };
 
-    // API
-    Aladin.prototype.createFootprintsFromSTCS = function(stcs, shapeId) {
-        var polygons = Overlay.parseSTCS(stcs);
-        var fps = [];
-        for (var k = 0, len = polygons.length; k < len; k++) {
-            var footprint = new Footprint(polygons[k]);
-            if (arguments.length == 2) {
-                footprint.setShapeId(shapeId);
-            }
-            fps.push(footprint);
-        }
-        return fps;
+    // @oldAPI
+    Aladin.prototype.createFootprintsFromSTCS = function(stcs) {
+        return A.footprintsFromSTCS(stcs);
     };
+
+    // API
+    A.footprintsFromSTCS = function(stcs) {
+        var footprints = Overlay.parseSTCS(stcs);
+
+        return footprints;
+    }
 
     // API
     A.MOCFromURL = function(url, options, successCallback) {
@@ -12916,7 +14459,8 @@ Aladin = (function() {
         if (!('name' in options)) {
             options['name'] = 'VizieR:' + vizCatId;
         }
-        var url = URLBuilder.buildVizieRCSURL(vizCatId, target, radius);
+        var url = URLBuilder.buildVizieRCSURL(vizCatId, target, radius, options);
+
         return A.catalogFromURL(url, options, successCallback, false);
     };
 
@@ -12931,17 +14475,16 @@ Aladin = (function() {
         return A.catalogFromURL(url, options, successCallback, false);
     };
 
-
+    Aladin.AVAILABLE_CALLBACKS = ['select', 'objectClicked', 'objectHovered', 'footprintClicked', 'footprintHovered', 'positionChanged', 'zoomChanged', 'click', 'mouseMove', 'fullScreenToggled', 'cooFrameChanged'];
     // API
+    //
+    // setting callbacks
     Aladin.prototype.on = function(what, myFunction) {
-        if (what === 'select') {
-            this.selectFunction = myFunction;
-        } else if (what == 'objectClicked') {
-            this.objClickedFunction = myFunction;
-        } else if (what == 'objectHovered') {
-            this.objHoveredFunction = myFunction;
+        if (Aladin.AVAILABLE_CALLBACKS.indexOf(what) < 0) {
+            return;
         }
 
+        this.callbacksByEventName[what] = myFunction;
     };
 
     Aladin.prototype.select = function() {
@@ -12953,9 +14496,8 @@ Aladin = (function() {
             this.view.setMode(View.SELECT);
         } else if (what === 'selectend') {
             this.view.setMode(View.PAN);
-            if (this.selectFunction) {
-                this.selectFunction(params);
-            }
+            var callbackFn = this.callbacksByEventName['select'];
+            (typeof callbackFn === 'function') && callbackFn(params);
         }
     };
 
@@ -12998,21 +14540,39 @@ Aladin = (function() {
         cmSelect.val(self.getBaseImageLayer().getColorMap().mapName);
 
 
-        // loop over catalogs
-        var cats = this.view.catalogs;
+        // loop over all overlay layers
+        var layers = this.view.allOverlayLayers;
         var str = '<ul>';
-        for (var k = cats.length - 1; k >= 0; k--) {
-            var name = cats[k].name;
+        for (var k = layers.length - 1; k >= 0; k--) {
+            var layer = layers[k];
+            var name = layer.name;
             var checked = '';
-            if (cats[k].isShowing) {
+            if (layer.isShowing) {
                 checked = 'checked="checked"';
             }
-            var nbSources = cats[k].getSources().length;
-            var title = nbSources + ' source' + (nbSources > 1 ? 's' : '');
-            var color = cats[k].color;
-            var rgbColor = $('<div></div>').css('color', color).css('color'); // trick to retrieve the color as 'rgb(,,)'
+
+            var tooltipText = '';
+            var iconSvg = '';
+            if (layer.type == 'catalog' || layer.type == 'progressivecat') {
+                var nbSources = layer.getSources().length;
+                tooltipText = nbSources + ' source' + (nbSources > 1 ? 's' : '');
+
+                iconSvg = AladinUtils.SVG_ICONS.CATALOG;
+            } else if (layer.type == 'moc') {
+                tooltipText = 'Coverage: ' + (100 * layer.skyFraction()).toFixed(3) + ' % of sky';
+
+                iconSvg = AladinUtils.SVG_ICONS.MOC;
+            } else if (layer.type == 'overlay') {
+                iconSvg = AladinUtils.SVG_ICONS.OVERLAY;
+            }
+
+            var rgbColor = $('<div></div>').css('color', layer.color).css('color'); // trick to retrieve the color as 'rgb(,,)' - does not work for named colors :(
             var labelColor = Color.getLabelColorForBackground(rgbColor);
-            str += '<li><div class="aladin-layerIcon" style="background: ' + color + ';"></div><input type="checkbox" ' + checked + ' id="aladin_lite_' + name + '"></input><label for="aladin_lite_' + name + '" class="aladin-layer-label" style="background: ' + color + '; color:' + labelColor + ';" title="' + title + '">' + name + '</label></li>';
+
+            // retrieve SVG icon, and apply the layer color
+            var svgBase64 = window.btoa(iconSvg.replace(/FILLCOLOR/g, layer.color));
+            str += '<li><div class="aladin-stack-icon" style=\'background-image: url("data:image/svg+xml;base64,' + svgBase64 + '");\'></div>';
+            str += '<input type="checkbox" ' + checked + ' id="aladin_lite_' + name + '"></input><label for="aladin_lite_' + name + '" class="aladin-layer-label" style="background: ' + layer.color + '; color:' + labelColor + ';" title="' + tooltipText + '">' + name + '</label></li>';
         }
         str += '</ul>';
         layerBox.append(str);
@@ -13110,12 +14670,12 @@ Aladin = (function() {
 
         // handler to hide/show overlays
         $(this.aladinDiv).find('.aladin-layerBox ul input').change(function() {
-            var catName = ($(this).attr('id').substr(12));
-            var cat = self.layerByName(catName);
+            var layerName = ($(this).attr('id').substr(12));
+            var layer = self.layerByName(layerName);
             if ($(this).is(':checked')) {
-                cat.show();
+                layer.show();
             } else {
-                cat.hide();
+                layer.hide();
             }
         });
 
@@ -13125,8 +14685,8 @@ Aladin = (function() {
     };
 
     Aladin.prototype.layerByName = function(name) {
-        var c = this.view.catalogs;
-        for (var k = 0; k < this.view.catalogs.length; k++) {
+        var c = this.view.allOverlayLayers;
+        for (var k = 0; k < c.length; k++) {
             if (name == c[k].name) {
                 return c[k];
             }
@@ -13136,21 +14696,60 @@ Aladin = (function() {
 
     // TODO : integrate somehow into API ?
     Aladin.prototype.exportAsPNG = function(imgFormat) {
-        window.open(this.getViewDataURL(), "Aladin Lite snapshot");
+        var w = window.open();
+        w.document.write('<img src="' + this.getViewDataURL() + '">');
+        w.document.title = 'Aladin Lite snapshot';
     };
 
     /**
      * Return the current view as a data URL (base64-formatted string)
      * Parameters:
-     * - imgFormat (optional): 'image/png' or 'image/jpeg'
+     * - options (optional): object with attributs
+     *     * format (optional): 'image/png' or 'image/jpeg'
+     *     * width: width in pixels of the image to output
+     *     * height: height in pixels of the image to output
      *
      * @API
      */
-    Aladin.prototype.getViewDataURL = function(imgFormat) {
-        return this.view.getCanvasDataURL(imgFormat);
+    Aladin.prototype.getViewDataURL = function(options) {
+        var options = options || {};
+        // support for old API signature
+        if (typeof options !== 'object') {
+            var imgFormat = options;
+            options = {
+                format: imgFormat
+            };
+        }
+
+        return this.view.getCanvasDataURL(options.format, options.width, options.height);
     }
-    Aladin.prototype.getViewCanvas = function(imgFormat) {
-        return this.view.getCanvas(imgFormat);
+
+    /**
+     * Return the current view WCS as a key-value dictionary
+     * Can be useful in coordination with getViewDataURL
+     *
+     * @API
+     */
+    Aladin.prototype.getViewWCS = function(options) {
+        var raDec = this.getRaDec();
+        var fov = this.getFov();
+        // TODO: support for other projection methods than SIN
+        return {
+            NAXIS: 2,
+            NAXIS1: this.view.width,
+            NAXIS2: this.view.height,
+            RADECSYS: 'ICRS',
+            CRPIX1: this.view.width / 2,
+            CRPIX2: this.view.height / 2,
+            CRVAL1: raDec[0],
+            CRVAL2: raDec[1],
+            CTYPE1: 'RA---SIN',
+            CTYPE2: 'DEC--SIN',
+            CD1_1: fov[0] / this.view.width,
+            CD1_2: 0.0,
+            CD2_1: 0.0,
+            CD2_2: fov[1] / this.view.height
+        }
     }
 
     /** restrict FOV range
@@ -13158,7 +14757,7 @@ Aladin = (function() {
      * @param minFOV in degrees when zoom in at max
      * @param maxFOV in degreen when zoom out at max
      */
-    Aladin.prototype.setFOVRange = function(minFOV, maxFOV) {
+    Aladin.prototype.setFovRange = Aladin.prototype.setFOVRange = function(minFOV, maxFOV) {
         if (minFOV > maxFOV) {
             var tmp = minFOV;
             minFOV = maxFOV;
@@ -13179,14 +14778,24 @@ Aladin = (function() {
      * 
      * @param x
      * @param y
-     *
-     * @return a [ra, dec] array with world coordinates in degrees
-     *
+     * 
+     * @return a [ra, dec] array with world coordinates in degrees. Returns undefined is something went wrong
+     * 
      */
     Aladin.prototype.pix2world = function(x, y) {
+        // this might happen at early stage of initialization
+        if (!this.view) {
+            return undefined;
+        }
+
         var xy = AladinUtils.viewToXy(x, y, this.view.width, this.view.height, this.view.largestDim, this.view.zoomFactor);
 
-        var radec = this.view.projection.unproject(xy.x, xy.y);
+        var radec;
+        try {
+            radec = this.view.projection.unproject(xy.x, xy.y);
+        } catch (e) {
+            return undefined;
+        }
 
         var res;
         if (this.view.cooFrame == CooFrameEnum.GAL) {
@@ -13210,6 +14819,11 @@ Aladin = (function() {
      *   
      */
     Aladin.prototype.world2pix = function(ra, dec) {
+        // this might happen at early stage of initialization
+        if (!this.view) {
+            return;
+        }
+
         var xy;
         if (this.view.cooFrame == CooFrameEnum.GAL) {
             var lonlat = CooConversion.J2000ToGalactic([ra, dec]);
@@ -13363,6 +14977,45 @@ A.catalogHiPS = function(rootURL, options) {
 
 // @API
 /*
+ * return a Box GUI element to insert content
+ */
+Aladin.prototype.box = function(options) {
+    var box = new Box(options);
+    box.$parentDiv.appendTo(this.aladinDiv);
+
+    return box;
+};
+
+// @API
+/*
+ * show popup at ra, dec position with given title and content
+ */
+Aladin.prototype.showPopup = function(ra, dec, title, content) {
+    this.view.catalogForPopup.removeAll();
+    var marker = A.marker(ra, dec, {
+        popupTitle: title,
+        popupDesc: content,
+        useMarkerDefaultIcon: false
+    });
+    this.view.catalogForPopup.addSources(marker);
+    this.view.catalogForPopup.show();
+
+    this.view.popup.setTitle(title);
+    this.view.popup.setText(content);
+    this.view.popup.setSource(marker);
+    this.view.popup.show();
+};
+
+// @API
+/*
+ * hide popup
+ */
+Aladin.prototype.hidePopup = function() {
+    this.view.popup.hide();
+};
+
+// @API
+/*
  * return a URL allowing to share the current view
  */
 Aladin.prototype.getShareURL = function() {
@@ -13371,8 +15024,9 @@ Aladin.prototype.getShareURL = function() {
     coo.prec = 7;
     coo.lon = radec[0];
     coo.lat = radec[1];
+
     return 'http://aladin.unistra.fr/AladinLite/?target=' + encodeURIComponent(coo.format('s')) +
-        '&fov=' + this.getFov()[0].toFixed(2) + '&survey=' + encodeURIComponent(this.getBaseImageLayer().id);
+        '&fov=' + this.getFov()[0].toFixed(2) + '&survey=' + encodeURIComponent(this.getBaseImageLayer().id || this.getBaseImageLayer().rootUrl);
 };
 
 // @API
@@ -13656,5 +15310,5 @@ var drawSourceWithProperMotion = function(source, canvasCtx, viewParams) {
             }
         }
     } catch (e) {}
-
 };
+// TODO: callback function onAladinLiteReady

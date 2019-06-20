@@ -523,7 +523,7 @@
 		Help on Interoperability Information (SAMP)
 	</text>
 	<text key="sampConstants_sendingViaSamp">
-		Sending @@ via SAMP
+		Sending ====== via SAMP
 	</text>
 
 	<!-- webConstants -->
