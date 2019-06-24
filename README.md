@@ -4,30 +4,23 @@ Welcome to the ESASky Jupyter notebook widget page.
 
 # Requirements
 
-<<<<<<< HEAD
-Jupyter and node.js
+`Jupyter` and `node.js`
 
-Jupyter comes together with anaconda. 
+`Jupyter` comes together with anaconda. 
 
-For node.js:
-
+For `node.js`:
 If you use conda, you can get it with:
 
+```bash
 conda install -c conda-forge nodejs
+```
 
 If you use Homebrew on Mac OS X:
-
-brew install node
-
-You can also download Node.js from the Node.js website https://nodejs.org/ and install it directly.
-
-=======
-Jupyter and node. Jupyter comes together with anaconda. 
-To install node run the following command:
 ```bash
-$ pip install npm
+brew install node
 ```
->>>>>>> f7b231642fe519024f96969c0b57a914ede9bdb2
+You can also download `Node.js` from the Node.js website https://nodejs.org/ and install it directly.
+
 # Installation
 
 For a development installation (requires npm),
@@ -35,10 +28,7 @@ For a development installation (requires npm),
 $ git clone https://github.com/esdc-esac-esa-int/pyesasky
 $ cd pyesasky
 $ sh install.sh
-<<<<<<< HEAD
-=======
 ```
->>>>>>> f7b231642fe519024f96969c0b57a914ede9bdb2
 
 # Running pyESASky samples:
 ```bash
