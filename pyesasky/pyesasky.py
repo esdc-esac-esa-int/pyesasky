@@ -38,7 +38,10 @@ class ESASkyWidget(widgets.DOMWidget):
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
-
+    
+    def send(self,content):
+        content['origin'] = 'pyesasky'
+        super().send(content)
     def getCenter(self,cooFrame = 'J2000'):
         if cooFrame not in ['J2000','GALACTIC']:
             print('Coordinate frame must be J2000 or GALACTIC')
