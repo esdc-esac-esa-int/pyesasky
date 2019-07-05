@@ -14,7 +14,9 @@ from .metadataType import MetadataType
 from .HiPS import HiPS
 import csv
 import json
-
+import os.path
+import tornado.web
+import tornado.httpserver
 __all__ = ['ESASkyWidget']
     
 class ESASkyWidget(widgets.DOMWidget):
@@ -276,14 +278,20 @@ class ESASkyWidget(widgets.DOMWidget):
             config.read_string(text)
             return config
 
+    def addLocalHiPS(self, hipsURL):
+        if not hasattr(self, 'tornadoServer'):
+            self.startTornado()
+        url = hipsURL+"(.*)"
+        self.tornadoServer.add_handlers(r"localhost",[(str(url),self.FileHandler,dict(baseUrl=hipsURL))])
+    
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
             config = self._readProperties(hipsURL)
             if not hipsURL.startswith('http'):
-                if hipsURL.startswith('/'):
-                    hipsURL = 'file:/' + hipsURL 
-                else:
-                    hipsURL = 'file://' + hipsURL 
+                self.addLocalHiPS(hipsURL)
+                port= self.httpServerPort
+                hipsURL = 'http://localhost:' + str(port) + hipsURL 
+           
             maxNorder = config.get('Dummy section','hips_order')
             imgFormat = config.get('Dummy section','hips_tile_format').split()
             cooFrame = config.get('Dummy section','hips_frame')
@@ -583,4 +591,47 @@ class ESASkyWidget(widgets.DOMWidget):
                     line_count += 1
             print(f'Processed {line_count} lines.')
             self.overlayCatalogueWithDetails(catalogue)
+  
+    def startTornado(self):
+        class DummyHandler(tornado.web.RequestHandler):
+            pass
 
+        app = tornado.web.Application([
+            tornado.web.url(r"dummy", DummyHandler),
+        ])
+        #pool = ThreadPoolExecutor(max_workers=2)
+        #loop = tornado.ioloop.IOLoop()
+        server = tornado.httpserver.HTTPServer(app)
+        portStart = 8900
+        portEnd = 8910
+        for port in range(portStart,portEnd+1):
+            try:
+                server.listen(port)
+            except OSError as os_error:
+                if port is portEnd:
+                    raise(os_error)
+            else:
+                break
+        #fut = pool.submit(loop.start)
+
+        self.httpserver = server
+        self.tornadoServer = app
+        self.httpServerPort = port
+
+    class FileHandler(tornado.web.RequestHandler):
+        def initialize(self, baseUrl):
+            self.baseUrl = baseUrl
+        
+        def set_default_headers(self):
+            self.set_header("Access-Control-Allow-Origin", "*")
+        
+        def get(self, path):
+            host=self.request.host
+            origin = host.split(':')[0]
+            if not origin == 'localhost':
+                raise tornado.web.HTTPError(status_code=403)
+            file_location = os.path.join(self.baseUrl, path)
+            if not os.path.isfile(file_location):
+                raise tornado.web.HTTPError(status_code=404)
+            with open(file_location, "rb") as source_file:
+                self.write(source_file.read())
