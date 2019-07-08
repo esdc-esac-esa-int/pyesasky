@@ -65,7 +65,7 @@ from pyesasky.pyesasky import MetadataDescriptor
 from pyesasky.pyesasky import MetadataType
 ```
 
-# Pyesaky in Jupyter lab
+# pyesasky in Jupyter lab
 
 In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
 
