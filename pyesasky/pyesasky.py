@@ -42,7 +42,7 @@ class ESASkyWidget(widgets.DOMWidget):
     def __init__(self):
         super().__init__()
         self.messageTimeOut=10.0 #s
-        self.msgId = count()
+        self.msgId = 0
         self.guiReady = False
         self.guiReadyCallSent = False
         
@@ -51,19 +51,23 @@ class ESASkyWidget(widgets.DOMWidget):
         while True:
                 content = dict(event='initTest')
                 self.send(content)
+                time.sleep(1)
                 val = self.loopMessageQueue()
+                print(val)
                 if val is not None:
                     self.guiReady = True
                     return val
-                time.sleep(0.5)
 
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
 
     def send(self,content):
+        if not (self.guiReady or self.guiReadyCallSent):
+            self.waitGuiReady()
         content['origin'] = 'pyesasky'
-        content['msgId'] = next(self.msgId)
+        self.msgId += 1
+        content['msgId'] = self.msgId
         super().send(content)
 
     def _sendAvaitCallback(self,content):
@@ -84,7 +88,7 @@ class ESASkyWidget(widgets.DOMWidget):
             try:
                 msg = item[3][1][6]
                 msg = json.loads(str(msg))
-                if msg['data']['content']['msgId']:
+                if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
                     self.comm.kernel.msg_queue.task_done()
                     return msg['data']['content']['values']
