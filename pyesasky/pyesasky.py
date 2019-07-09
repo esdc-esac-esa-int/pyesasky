@@ -326,10 +326,12 @@ class ESASkyWidget(widgets.DOMWidget):
         drive, tail = os.path.splitdrive(hipsURL)
         if drive:
             #Windows
-            url = tail.replace("\\","/") + "(.*)"
+            url = tail.replace("\\","/") 
         else:
-            url = hipsURL+"(.*)"
-        self.tornadoServer.add_handlers(r"localhost",[(str(url),self.FileHandler,dict(baseUrl=hipsURL))])
+            url = hipsURL
+        patternUrl = url + "(.*)"
+        self.tornadoServer.add_handlers(r"localhost",[(str(patternUrl),self.FileHandler,dict(baseUrl=hipsURL))])
+        return url
 
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
@@ -337,9 +339,9 @@ class ESASkyWidget(widgets.DOMWidget):
                 hipsURL += '/'
             config = self._readProperties(hipsURL)
             if not hipsURL.startswith('http'):
-                self.addLocalHiPS(hipsURL)
+                url = self.addLocalHiPS(hipsURL)
                 port= self.httpServerPort
-                hipsURL = 'http://localhost:' + str(port) + hipsURL 
+                hipsURL = 'http://localhost:' + str(port) + url 
 
             maxNorder = config.get('Dummy section','hips_order')
             imgFormat = config.get('Dummy section','hips_tile_format').split()
