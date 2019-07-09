@@ -323,11 +323,18 @@ class ESASkyWidget(widgets.DOMWidget):
     def addLocalHiPS(self, hipsURL):
         if not hasattr(self, 'tornadoServer'):
             self.startTornado()
-        url = hipsURL+"(.*)"
+        drive, tail = os.path.splitdrive(hipsURL)
+        if drive:
+            #Windows
+            url = tail.replace("\\","/") + "(.*)"
+        else:
+            url = hipsURL+"(.*)"
         self.tornadoServer.add_handlers(r"localhost",[(str(url),self.FileHandler,dict(baseUrl=hipsURL))])
 
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
+            if not hipsURL.endswith("/"):
+                hipsURL += '/'
             config = self._readProperties(hipsURL)
             if not hipsURL.startswith('http'):
                 self.addLocalHiPS(hipsURL)
@@ -672,7 +679,7 @@ class ESASkyWidget(widgets.DOMWidget):
             origin = host.split(':')[0]
             if not origin == 'localhost':
                 raise tornado.web.HTTPError(status_code=403)
-            file_location = os.path.join(self.baseUrl, path)
+            file_location = os.path.abspath(os.path.join(self.baseUrl, path))
             if not os.path.isfile(file_location):
                 raise tornado.web.HTTPError(status_code=404)
             with open(file_location, "rb") as source_file:
