@@ -53,7 +53,6 @@ class ESASkyWidget(widgets.DOMWidget):
                 self.send(content)
                 time.sleep(1)
                 val = self.loopMessageQueue()
-                print(val)
                 if val is not None:
                     self.guiReady = True
                     return val
@@ -76,7 +75,10 @@ class ESASkyWidget(widgets.DOMWidget):
         while time.time()-startTime<self.messageTimeOut:
             val = self.loopMessageQueue()
             if val is not None:
-                return val
+                if val == "No return value":
+                    return None
+                else:
+                    return val
             time.sleep(0.1)
         print("Request timed out")
         return None
@@ -88,11 +90,18 @@ class ESASkyWidget(widgets.DOMWidget):
             try:
                 msg = item[3][1][6]
                 msg = json.loads(str(msg))
+
                 if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
                     self.comm.kernel.msg_queue.task_done()
-                    return msg['data']['content']['values']
+                    try:
+                        msg['data']['content']['extras']
+                        print(msg['data']['content']['extras']['message'])
+                        return "No return value"
+                    except:
+                        return msg['data']['content']['values']
             except:
+                    
                     pass
 
     def getCenter(self,cooFrame = 'J2000'):
@@ -207,6 +216,8 @@ class ESASkyWidget(widgets.DOMWidget):
                         targetname=targetname
         )
         self.send(content)
+        #Add small sleeper to wait for sinbad to react
+        time.sleep(1)
         
     def setFoV(self, fovDeg):
         self._fovDeg = fovDeg
@@ -285,12 +296,6 @@ class ESASkyWidget(widgets.DOMWidget):
                         )
         self.send(content)
     
-    # def getAvailableHiPS(self, wavelength):
-    #     content = dict(
-    #                     event='getAvailableHiPS',
-    #                     )
-    #     print(self.send(content))
-        
     def clearFootprintsOverlay(self, overlayName):
         content = dict(
                         event='clearFootprintsOverlay',
