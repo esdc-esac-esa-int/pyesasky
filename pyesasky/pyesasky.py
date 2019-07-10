@@ -17,16 +17,7 @@ import json
 import os.path
 import tornado.web
 import tornado.httpserver
-
-#New stuff
 import time
-import logging
-import sys
-import asyncio
-from tornado.queues import PriorityQueue, QueueEmpty
-from tornado import gen
-from zmq import POLLIN
-from itertools import count
 
 __all__ = ['ESASkyWidget']
     
@@ -149,6 +140,12 @@ class ESASkyWidget(widgets.DOMWidget):
         return self._sendAvaitCallback(content)
 
     def getCataloguesCount(self):
+        content = dict(
+                event = 'getCataloguesCount'
+        )
+        return self._sendAvaitCallback(content)
+    
+    def getPublicationsCount(self):
         content = dict(
                 event = 'getCataloguesCount'
         )
