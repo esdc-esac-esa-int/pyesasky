@@ -32,14 +32,16 @@ class ESASkyWidget(widgets.DOMWidget):
     
     def __init__(self):
         super().__init__()
-        self.messageTimeOut=10.0 #s
+        self.messageTimeOut=20.0 #s
+        self.initTimeOut=30.0
         self.msgId = 0
         self.guiReady = False
         self.guiReadyCallSent = False
         
     def waitGuiReady(self):
         self.guiReadyCallSent = True
-        while True:
+        startTime = time.time()
+        while time.time()-startTime<self.initTimeOut:
                 content = dict(event='initTest')
                 self.send(content)
                 time.sleep(1)
@@ -47,6 +49,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 if val is not None:
                     self.guiReady = True
                     return val
+        raise(TimeoutError("Widget doesn't seem to have initialised properly"))
 
     @default('layout')
     def _default_layout(self):
@@ -71,8 +74,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 else:
                     return val
             time.sleep(0.1)
-        print("Request timed out")
-        return None
+        raise(TimeoutError("Request timed out"))
 
     def loopMessageQueue(self):
         for stream in self.comm.kernel.shell_streams:
