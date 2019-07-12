@@ -14,6 +14,10 @@ from .metadataType import MetadataType
 from .HiPS import HiPS
 import csv
 import json
+import os.path
+import tornado.web
+import tornado.httpserver
+import time
 
 __all__ = ['ESASkyWidget']
     
@@ -26,16 +30,72 @@ class ESASkyWidget(widgets.DOMWidget):
     _view_module_version = Unicode('1.0.1').tag(sync=True)
     _model_module_version = Unicode('1.0.1').tag(sync=True)
     
-    _targetname = Unicode('Mkr432').tag(sync=True)
-    _fovDeg = Float(60).tag(sync=True)
-    _colorPalette = Unicode('NATIVE').tag(sync=True)
-    callback = Dict().tag(sync=True)
-    _messageSync = Unicode('No message sent').tag(sync=True)
-    serverWaitMessage = 'Waiting for server response'
-    
+    def __init__(self):
+        super().__init__()
+        self.messageTimeOut=20.0 #s
+        self.initTimeOut=30.0
+        self.msgId = 0
+        self.guiReady = False
+        self.guiReadyCallSent = False
+        
+    def waitGuiReady(self):
+        self.guiReadyCallSent = True
+        startTime = time.time()
+        while time.time()-startTime<self.initTimeOut:
+                content = dict(event='initTest')
+                self.send(content)
+                time.sleep(1)
+                val = self.loopMessageQueue()
+                if val is not None:
+                    self.guiReady = True
+                    return val
+        raise(TimeoutError("Widget doesn't seem to have initialised properly"))
+
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
+
+    def send(self,content):
+        if not (self.guiReady or self.guiReadyCallSent):
+            self.waitGuiReady()
+        content['origin'] = 'pyesasky'
+        self.msgId += 1
+        content['msgId'] = self.msgId
+        super().send(content)
+
+    def _sendAvaitCallback(self,content):
+        self.send(content)
+        startTime = time.time()
+        while time.time()-startTime<self.messageTimeOut:
+            val = self.loopMessageQueue()
+            if val is not None:
+                if val == "No return value":
+                    return None
+                else:
+                    return val
+            time.sleep(0.1)
+        raise(TimeoutError("Request timed out"))
+
+    def loopMessageQueue(self):
+        for stream in self.comm.kernel.shell_streams:
+            stream.flush()
+        for item in self.comm.kernel.msg_queue._queue:
+            try:
+                msg = item[3][1][6]
+                msg = json.loads(str(msg))
+
+                if int(msg['data']['content']['msgId']) == self.msgId:
+                    self.comm.kernel.msg_queue._queue.remove(item)
+                    self.comm.kernel.msg_queue.task_done()
+                    try:
+                        msg['data']['content']['extras']
+                        print(msg['data']['content']['extras']['message'])
+                        return "No return value"
+                    except:
+                        return msg['data']['content']['values']
+            except:
+                    
+                    pass
 
     def getCenter(self,cooFrame = 'J2000'):
         if cooFrame not in ['J2000','GALACTIC']:
@@ -43,78 +103,67 @@ class ESASkyWidget(widgets.DOMWidget):
             return
         content = dict(
                         event='getCenter',
-                        cooFrame=cooFrame
+                        content = dict(cooFrame=cooFrame)
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
 
     def getAvailableHiPSAPI(self, wavelength=""):
         content = dict(
                         event='getAvailableHiPS',
-                        wavelength=wavelength
+                        content = dict(wavelength=wavelength)
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
 
     def plotObservations(self, missionId):
         content = dict(
                 event = 'plotObservations',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
 
     def plotCatalogues(self, missionId):
         content = dict(
                 event = 'plotCatalogues',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
 
     def plotSpectra(self, missionId):
         content = dict(
                 event = 'plotSpectra',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
     
     def getObservationsCount(self):
         content = dict(
                 event = 'getObservationsCount'
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
 
     def getCataloguesCount(self):
         content = dict(
                 event = 'getCataloguesCount'
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
+    
+    def getPublicationsCount(self):
+        content = dict(
+                event = 'getCataloguesCount'
+        )
+        return self._sendAvaitCallback(content)
 
     def getSpectraCount(self):
         content = dict(
                 event = 'getSpectraCount'
         )
-        self._sendAvaitCallback(content)
-
-    def getPublicationsCount(self):
-        content = dict(
-                event = 'getPublicationsCount'
-        )
-        self._sendAvaitCallback(content)
-
-    def _sendAvaitCallback(self,content):
-        if hasattr(self, '_callbackOutputLink'):
-            self._callbackOutputLink.unlink()
-        out = widgets.Output()
-        label = widgets.Label()
-        out.append_display_data(label)
-        out
-        self._messageSync = self.serverWaitMessage
-        self._callbackOutputLink = widgets.jsdlink((self,'_messageSync'),(label,'value'))
-        self.send(content)
+        return self._sendAvaitCallback(content)
 
     def getResultPanelData(self):
         content = dict(
                 event = 'getResultPanelData'
         )
-        self._sendAvaitCallback(content)
+        return self._sendAvaitCallback(content)
         
     def getAvailableHiPS(self, wavelength=""):
         response = requests.get('http://sky.esa.int/esasky-tap/hips-sources')  
@@ -146,33 +195,34 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def setGoToRADec(self, ra, dec):
         content = dict(
-                       event='goToRADec',
-                       ra=ra,
-                       dec=dec
-                )
+                       event='goToRaDec',
+                       content = dict(
+                            ra=ra,
+                            dec=dec
+                       )
+                    )
         self.send(content)
 
-    def goToTargetName(self, targetname):
-        self._targetname = targetname 
+    def goToTargetName(self, targetName):
         content = dict(
                         event='goToTargetName',
-                        targetname=targetname
+                        content = dict(targetName=targetName)
         )
         self.send(content)
+        #Add small sleeper to wait for sinbad to react
+        time.sleep(1)
         
     def setFoV(self, fovDeg):
-        self._fovDeg = fovDeg
         content = dict(
-                        event='setFoV',
-                        fovDeg=fovDeg
+                        event='setFov',
+                        content = dict(fov=fovDeg)
         )
         self.send(content)
         
     def setHiPSColorPalette(self, colorPalette):
-        self._colorPalette = colorPalette
         content = dict(
                         event='setHiPSColorPalette',
-                        colorPalette=colorPalette
+                        content = dict(colorPalette=colorPalette)
         )
         self.send(content)
         
@@ -191,9 +241,11 @@ class ESASkyWidget(widgets.DOMWidget):
     def addJwst(self, instrument, detector, showAllInstruments):
         content = dict(
                         event='addJwst',
-                        instrument=instrument,
-                        detector=detector,
-                        showAllInstruments=showAllInstruments
+                        content = dict(
+                            instrument=instrument,
+                            detector=detector,
+                            showAllInstruments=showAllInstruments
+                        )
                         )
         self.send(content)
 
@@ -207,12 +259,13 @@ class ESASkyWidget(widgets.DOMWidget):
         
         content = dict(
                        event='addJwstWithCoordinates',
-                       instrument=instrument,
-                       detector=detector,
-                       showAllInstruments=showAllInstruments,
-                       ra=ra,
-                       dec=dec,
-                       rotation=rotation
+                       content = dict(
+                            instrument=instrument,
+                            detector=detector,
+                            showAllInstruments=showAllInstruments,
+                            ra=ra,
+                            dec=dec,
+                            rotation=rotation)
                        )
         self.send(content)
 
@@ -226,34 +279,28 @@ class ESASkyWidget(widgets.DOMWidget):
     def clearCatalogue(self, catalogueName):
         content = dict(
                         event='clearCatalogue',
-                       content=catalogueName
+                        content = dict(overlayName=catalogueName)
                         )
         self.send(content)
 
-    def removeCatalogue(self, catalogueName):
+    def deleteCatalogue(self, catalogueName):
         content = dict(
-                        event='removeCatalogue',
-                       content=catalogueName
+                        event='deleteCatalogue',
+                        content = dict(overlayName=catalogueName)
                         )
         self.send(content)
     
-    # def getAvailableHiPS(self, wavelength):
-    #     content = dict(
-    #                     event='getAvailableHiPS',
-    #                     )
-    #     print(self.send(content))
-        
     def clearFootprintsOverlay(self, overlayName):
         content = dict(
                         event='clearFootprintsOverlay',
-                       content=overlayName
+                        content = dict(overlayName=overlayName)
                         )
         self.send(content)
 
-    def removeFootprintsOverlay(self, overlayName):
+    def deleteFootprintsOverlay(self, overlayName):
         content = dict(
-                        event='removeFootprintsOverlay',
-                       content=overlayName
+                        event='deleteFootprintsOverlay',
+                        content = dict(overlayName=overlayName)
                         )
         self.send(content)
 
@@ -276,14 +323,29 @@ class ESASkyWidget(widgets.DOMWidget):
             config.read_string(text)
             return config
 
+    def addLocalHiPS(self, hipsURL):
+        if not hasattr(self, 'tornadoServer'):
+            self.startTornado()
+        drive, tail = os.path.splitdrive(hipsURL)
+        if drive:
+            #Windows
+            url = tail.replace("\\","/") 
+        else:
+            url = hipsURL
+        patternUrl = url + "(.*)"
+        self.tornadoServer.add_handlers(r"localhost",[(str(patternUrl),self.FileHandler,dict(baseUrl=hipsURL))])
+        return url
+
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
+            if not hipsURL.endswith("/"):
+                hipsURL += '/'
             config = self._readProperties(hipsURL)
             if not hipsURL.startswith('http'):
-                if hipsURL.startswith('/'):
-                    hipsURL = 'file:/' + hipsURL 
-                else:
-                    hipsURL = 'file://' + hipsURL 
+                url = self.addLocalHiPS(hipsURL)
+                port= self.httpServerPort
+                hipsURL = 'http://localhost:' + str(port) + url 
+
             maxNorder = config.get('Dummy section','hips_order')
             imgFormat = config.get('Dummy section','hips_tile_format').split()
             cooFrame = config.get('Dummy section','hips_frame')
@@ -295,35 +357,35 @@ class ESASkyWidget(widgets.DOMWidget):
             print('hipsURL '+hipsURL)
             print('imgFormat '+imgFormat[0])
             content = dict(
-                        event='changeHiPSWithParams',
-                        content=userHiPS.toDict()
+                        event='changeHipsWithParams',
+                        content = dict(userHiPS.toDict())
                         )
             self.send(content)
         else:
             content = dict(
-                        event='changeHiPS',
-                        content=hipsName
+                        event='changeHips',
+                        content = dict(hipsName=hipsName)
                         )
-            self._sendAvaitCallback(content)
+            return self._sendAvaitCallback(content)
 
     def overlayFootprints(self, footprintSet):
         content = dict(
                         event='overlayFootprints',
-                       content=footprintSet.toDict()
+                        content = dict(footprintSet.toDict())
                         )
         self.send(content)
 
     def overlayFootprintsWithDetails(self, footprintSet):
         content = dict(
                         event='overlayFootprintsWithDetails',
-                       content=footprintSet.toDict()
+                        content = dict(footprintSet.toDict())
                         )
         self.send(content)
 
     def overlayCatalogueWithDetails(self, userCatalogue):
         content = dict(
                         event='overlayCatalogueWithDetails',
-                       content=userCatalogue.toDict()
+                        content = dict(userCatalogue.toDict())
                         )
         self.send(content)
 
@@ -584,3 +646,46 @@ class ESASkyWidget(widgets.DOMWidget):
             print(f'Processed {line_count} lines.')
             self.overlayCatalogueWithDetails(catalogue)
 
+    def startTornado(self):
+        class DummyHandler(tornado.web.RequestHandler):
+            pass
+
+        app = tornado.web.Application([
+            tornado.web.url(r"dummy", DummyHandler),
+        ])
+        #pool = ThreadPoolExecutor(max_workers=2)
+        #loop = tornado.ioloop.IOLoop()
+        server = tornado.httpserver.HTTPServer(app)
+        portStart = 8900
+        portEnd = 8910
+        for port in range(portStart,portEnd+1):
+            try:
+                server.listen(port)
+            except OSError as os_error:
+                if port is portEnd:
+                    raise(os_error)
+            else:
+                break
+        #fut = pool.submit(loop.start)
+
+        self.httpserver = server
+        self.tornadoServer = app
+        self.httpServerPort = port
+
+    class FileHandler(tornado.web.RequestHandler):
+        def initialize(self, baseUrl):
+            self.baseUrl = baseUrl
+        
+        def set_default_headers(self):
+            self.set_header("Access-Control-Allow-Origin", "*")
+        
+        def get(self, path):
+            host=self.request.host
+            origin = host.split(':')[0]
+            if not origin == 'localhost':
+                raise tornado.web.HTTPError(status_code=403)
+            file_location = os.path.abspath(os.path.join(self.baseUrl, path))
+            if not os.path.isfile(file_location):
+                raise tornado.web.HTTPError(status_code=404)
+            with open(file_location, "rb") as source_file:
+                self.write(source_file.read())
