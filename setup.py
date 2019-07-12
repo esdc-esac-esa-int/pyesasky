@@ -101,7 +101,7 @@ setup_args = dict(
     platforms               = 'Linux, Mac OS X, Windows',
     keywords                = ['ipython','jupyter','widgets'],
     classifiers             = [
-        'Development Status :: 1.0.1-beta',
+        'Development Status :: 1.0.2-beta',
         'Framework :: IPython',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
