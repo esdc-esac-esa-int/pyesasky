@@ -343,7 +343,7 @@
 		Ayuda sobre informaci&#243;n de interoperabilidad (SAMP)
 	</text>
 	<text key="sampConstants_sendingViaSamp">
-		Enviando ====== v&#237;a SAMP
+		Enviando @@ v&#237;a SAMP
 	</text>
 
 	<!-- webConstants -->
