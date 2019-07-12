@@ -28,9 +28,8 @@ class HiPS:
 
 
     def toDict(self):
-        
         content = dict(
-            HiPS=dict(
+            hips = dict(
                 name=self._name,
                 id=self._id,
                 url=self._url,

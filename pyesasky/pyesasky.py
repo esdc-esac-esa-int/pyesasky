@@ -103,35 +103,35 @@ class ESASkyWidget(widgets.DOMWidget):
             return
         content = dict(
                         event='getCenter',
-                        cooFrame=cooFrame
+                        content = dict(cooFrame=cooFrame)
         )
         return self._sendAvaitCallback(content)
 
     def getAvailableHiPSAPI(self, wavelength=""):
         content = dict(
                         event='getAvailableHiPS',
-                        wavelength=wavelength
+                        content = dict(wavelength=wavelength)
         )
         return self._sendAvaitCallback(content)
 
     def plotObservations(self, missionId):
         content = dict(
                 event = 'plotObservations',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
         return self._sendAvaitCallback(content)
 
     def plotCatalogues(self, missionId):
         content = dict(
                 event = 'plotCatalogues',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
         return self._sendAvaitCallback(content)
 
     def plotSpectra(self, missionId):
         content = dict(
                 event = 'plotSpectra',
-                missionId=missionId
+                content = dict(missionId=missionId)
         )
         return self._sendAvaitCallback(content)
     
@@ -158,13 +158,6 @@ class ESASkyWidget(widgets.DOMWidget):
                 event = 'getSpectraCount'
         )
         return self._sendAvaitCallback(content)
-
-    def getPublicationsCount(self):
-        content = dict(
-                event = 'getPublicationsCount'
-        )
-        return self._sendAvaitCallback(content)
-
 
     def getResultPanelData(self):
         content = dict(
@@ -202,35 +195,34 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def setGoToRADec(self, ra, dec):
         content = dict(
-                       event='goToRADec',
-                       ra=ra,
-                       dec=dec
-                )
+                       event='goToRaDec',
+                       content = dict(
+                            ra=ra,
+                            dec=dec
+                       )
+                    )
         self.send(content)
 
-    def goToTargetName(self, targetname):
-        self._targetname = targetname 
+    def goToTargetName(self, targetName):
         content = dict(
                         event='goToTargetName',
-                        targetname=targetname
+                        content = dict(targetName=targetName)
         )
         self.send(content)
         #Add small sleeper to wait for sinbad to react
         time.sleep(1)
         
     def setFoV(self, fovDeg):
-        self._fovDeg = fovDeg
         content = dict(
-                        event='setFoV',
-                        fovDeg=fovDeg
+                        event='setFov',
+                        content = dict(fov=fovDeg)
         )
         self.send(content)
         
     def setHiPSColorPalette(self, colorPalette):
-        self._colorPalette = colorPalette
         content = dict(
                         event='setHiPSColorPalette',
-                        colorPalette=colorPalette
+                        content = dict(colorPalette=colorPalette)
         )
         self.send(content)
         
@@ -249,9 +241,11 @@ class ESASkyWidget(widgets.DOMWidget):
     def addJwst(self, instrument, detector, showAllInstruments):
         content = dict(
                         event='addJwst',
-                        instrument=instrument,
-                        detector=detector,
-                        showAllInstruments=showAllInstruments
+                        content = dict(
+                            instrument=instrument,
+                            detector=detector,
+                            showAllInstruments=showAllInstruments
+                        )
                         )
         self.send(content)
 
@@ -265,12 +259,13 @@ class ESASkyWidget(widgets.DOMWidget):
         
         content = dict(
                        event='addJwstWithCoordinates',
-                       instrument=instrument,
-                       detector=detector,
-                       showAllInstruments=showAllInstruments,
-                       ra=ra,
-                       dec=dec,
-                       rotation=rotation
+                       content = dict(
+                            instrument=instrument,
+                            detector=detector,
+                            showAllInstruments=showAllInstruments,
+                            ra=ra,
+                            dec=dec,
+                            rotation=rotation)
                        )
         self.send(content)
 
@@ -284,28 +279,28 @@ class ESASkyWidget(widgets.DOMWidget):
     def clearCatalogue(self, catalogueName):
         content = dict(
                         event='clearCatalogue',
-                       content=catalogueName
+                        content = dict(overlayName=catalogueName)
                         )
         self.send(content)
 
-    def removeCatalogue(self, catalogueName):
+    def deleteCatalogue(self, catalogueName):
         content = dict(
-                        event='removeCatalogue',
-                       content=catalogueName
+                        event='deleteCatalogue',
+                        content = dict(overlayName=catalogueName)
                         )
         self.send(content)
     
     def clearFootprintsOverlay(self, overlayName):
         content = dict(
                         event='clearFootprintsOverlay',
-                       content=overlayName
+                        content = dict(overlayName=overlayName)
                         )
         self.send(content)
 
-    def removeFootprintsOverlay(self, overlayName):
+    def deleteFootprintsOverlay(self, overlayName):
         content = dict(
-                        event='removeFootprintsOverlay',
-                       content=overlayName
+                        event='deleteFootprintsOverlay',
+                        content = dict(overlayName=overlayName)
                         )
         self.send(content)
 
@@ -362,35 +357,35 @@ class ESASkyWidget(widgets.DOMWidget):
             print('hipsURL '+hipsURL)
             print('imgFormat '+imgFormat[0])
             content = dict(
-                        event='changeHiPSWithParams',
-                        content=userHiPS.toDict()
+                        event='changeHipsWithParams',
+                        content = dict(userHiPS.toDict())
                         )
             self.send(content)
         else:
             content = dict(
-                        event='changeHiPS',
-                        content=hipsName
+                        event='changeHips',
+                        content = dict(hipsName=hipsName)
                         )
             return self._sendAvaitCallback(content)
 
     def overlayFootprints(self, footprintSet):
         content = dict(
                         event='overlayFootprints',
-                       content=footprintSet.toDict()
+                        content = dict(footprintSet.toDict())
                         )
         self.send(content)
 
     def overlayFootprintsWithDetails(self, footprintSet):
         content = dict(
                         event='overlayFootprintsWithDetails',
-                       content=footprintSet.toDict()
+                        content = dict(footprintSet.toDict())
                         )
         self.send(content)
 
     def overlayCatalogueWithDetails(self, userCatalogue):
         content = dict(
                         event='overlayCatalogueWithDetails',
-                       content=userCatalogue.toDict()
+                        content = dict(userCatalogue.toDict())
                         )
         self.send(content)
 
