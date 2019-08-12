@@ -31,8 +31,8 @@
 		"watch:nbextension": "webpack --watch"
 	},
 	"dependencies": {
-		"@jupyter-widgets/base": "^1.0.1",
-		"@jupyterlab/coreutils": "^2.2.1"
+		"@jupyter-widgets/base": "^1.0.1|| ^2.0.0",
+		"@jupyterlab/coreutils": "^3.0.0"
 	},
 	"devDependencies": {
 		"json-loader": "^0.5.7",
