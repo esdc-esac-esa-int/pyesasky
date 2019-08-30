@@ -97,6 +97,13 @@ class ESASkyWidget(widgets.DOMWidget):
                     
                     pass
 
+    def showCoordinateGrid(self,show = True):
+        content = dict( 
+                        event='showCoordinateGrid',
+                        content = dict(show=show)
+        )
+        self.send(content)
+
     def getCenter(self,cooFrame = 'J2000'):
         if cooFrame not in ['J2000','GALACTIC']:
             print('Coordinate frame must be J2000 or GALACTIC')
