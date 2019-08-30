@@ -228,7 +228,7 @@ class ESASkyWidget(widgets.DOMWidget):
         
     def setHiPSColorPalette(self, colorPalette):
         content = dict(
-                        event='setHiPSColorPalette',
+                        event='setHipsColorPalette',
                         content = dict(colorPalette=colorPalette)
         )
         self.send(content)
