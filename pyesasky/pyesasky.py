@@ -330,6 +330,38 @@ class ESASkyWidget(widgets.DOMWidget):
             config.read_string(text)
             return config
 
+    def openSkyPanel(self):
+        content = dict(
+                    event = 'openSkyPanel'
+                    )
+        self.send(content)   
+
+    def closeSkyPanel(self):
+        content = dict(
+                    event = 'closeSkyPanel'
+                    )
+        self.send(content)     
+
+    def getNumberOfSkyRows(self):
+        content = dict(
+                    event = 'getNumberOfSkyRows'
+                    )
+        return self._sendAvaitCallback(content)   
+
+    def removeHiPSOnIndex(self, index):
+        content = dict(
+                    event = 'removeHipsOnIndex',
+                    content = dict(index = index)
+                    )
+        self._sendAvaitCallback(content)   
+    
+    def setHiPSSliderValue(self, value):
+        content = dict(
+                    event = 'setHipsSliderValue',
+                    content = dict(value = value)
+                    )
+        self.send(content)    
+
     def addLocalHiPS(self, hipsURL):
         if not hasattr(self, 'tornadoServer'):
             self.startTornado()
@@ -345,24 +377,7 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def setHiPS(self, hipsName, hipsURL='default'):
         if hipsURL != 'default':
-            if not hipsURL.endswith("/"):
-                hipsURL += '/'
-            config = self._readProperties(hipsURL)
-            if not hipsURL.startswith('http'):
-                url = self.addLocalHiPS(hipsURL)
-                port= self.httpServerPort
-                hipsURL = 'http://localhost:' + str(port) + url 
-
-            maxNorder = config.get('Dummy section','hips_order')
-            imgFormat = config.get('Dummy section','hips_tile_format').split()
-            cooFrame = config.get('Dummy section','hips_frame')
-            if cooFrame == 'equatorial':
-                cooFrame = 'J2000'
-            else:
-                cooFrame = 'Galactic'
-            userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
-            print('hipsURL '+hipsURL)
-            print('imgFormat '+imgFormat[0])
+            userHiPS = self.parseHiPSURL(hipsName, hipsURL)
             content = dict(
                         event='changeHipsWithParams',
                         content = dict(userHiPS.toDict())
@@ -374,6 +389,42 @@ class ESASkyWidget(widgets.DOMWidget):
                         content = dict(hipsName=hipsName)
                         )
             return self._sendAvaitCallback(content)
+    
+    def addHiPS(self, hipsName, hipsURL='default'):
+        if hipsURL != 'default':
+            userHiPS = self.parseHiPSURL(hipsName, hipsURL)
+            content = dict(
+                        event='addHipsWithParams',
+                        content = dict(userHiPS.toDict())
+                        )
+            self.send(content)
+        else:
+            content = dict(
+                        event='addHips',
+                        content = dict(hipsName = hipsName)
+                        )
+            return self._sendAvaitCallback(content)
+
+    def parseHiPSURL(self, hipsName, hipsURL):
+        if not hipsURL.endswith("/"):
+            hipsURL += '/'
+        config = self._readProperties(hipsURL)
+        if not hipsURL.startswith('http'):
+            url = self.addLocalHiPS(hipsURL)
+            port= self.httpServerPort
+            hipsURL = 'http://localhost:' + str(port) + url 
+
+        maxNorder = config.get('Dummy section','hips_order')
+        imgFormat = config.get('Dummy section','hips_tile_format').split()
+        cooFrame = config.get('Dummy section','hips_frame')
+        if cooFrame == 'equatorial':
+            cooFrame = 'J2000'
+        else:
+            cooFrame = 'Galactic'
+        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
+        print('hipsURL '+ hipsURL)
+        print('imgFormat '+imgFormat[0])
+        return userHiPS
 
     def overlayFootprints(self, footprintSet):
         content = dict(
