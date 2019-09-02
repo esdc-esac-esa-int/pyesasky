@@ -48,11 +48,19 @@
 	<text key="header_help">
 		Help
 	</text>
+	<text key="header_gridFull">
+		Toggle showing coordinate grid on top of the sky
+	</text>
+	<text key="header_gridDropdown">
+		Coordinate grid
+	</text>
 
 	<text key="ESASky_Description">
 		ESASky is an application that allows you to visualise
 		and download public astronomical data from space-based missions.
 	</text>
+	
+	
 
 	<!-- SsoCountRequestCallback -->
 	<text key="SsoCountRequestCallback_objectNotAvailableInEsaSky">
@@ -499,6 +507,9 @@
 	</text>
 	<text key="ctrlToolBarPresenter_retrievingPublicationTargetList">
 		Retrieving Target List
+	</text>
+	<text key="ctrlToolBarPresenter_loadingAuthorSources">
+		Searching for sources in $AUTHOR$ publications
 	</text>
 
 	<!-- playerPanel -->
@@ -2367,7 +2378,7 @@
 		Resizing Data Panel
 	</text>
 	<text key="PreviewDialog_loading_postcard">
-		Loading postcard
+		Loading preview
 	</text>
 	<text key="dataPanelPager_of">
 		of
@@ -2525,6 +2536,11 @@
 	<text key="STAR">
 		Star
 	</text>
-	
+	<text key="Preview_postcardLoadFailed">
+		Failed to load preview from archive
+	</text>
+	<text key="headerPresenter_helpLink">
+		https://www.cosmos.esa.int/web/esdc/esasky-how-to
+	</text>
 	
 </Internationalization>

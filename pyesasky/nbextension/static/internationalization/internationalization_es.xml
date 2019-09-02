@@ -320,6 +320,9 @@
 	<text key="ctrlToolBarPresenter_authorSources">
 		Objetos relacionados con el autor:
 	</text>
+	<text key="ctrlToolBarPresenter_loadingAuthorSources">
+		Buscando fuentes en las publicaciones de $AUTHOR$
+	</text>
 
 	<!-- playerPanel -->
 	<text key="playerPanel_next">
@@ -3072,6 +3075,12 @@
 	</text>
 	<text key="STAR">
 		Estrella
+	</text>
+	<text key="Preview_postcardLoadFailed">
+		No se pudo cargar la imagen de previsualización desde el archivo
+	</text>
+	<text key="headerPresenter_helpLink">
+		https://www.cosmos.esa.int/web/esdc/introduccion-a-esasky
 	</text>
 </Internationalization>
 

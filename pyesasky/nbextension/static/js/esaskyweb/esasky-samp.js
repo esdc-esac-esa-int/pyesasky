@@ -12,7 +12,7 @@
 // Because if we initialize these objects in the GWT code, later on the "instanceof Object" 
 // calls in the samp.js methods return false (something to do with initializing javascript in GWT???) 
 
-var baseUrl = window.location.href.toString().replace(new RegExp("[^/]*$"), "");
+var baseUrl = window.location.href.toString().replace(new RegExp("[^/]*$"), "").replace("https", "http").replace("8443", "8080");
 
 var sampClientDetails = function() {
 	this.id;
@@ -71,6 +71,7 @@ var sampEsaSkySubscriptions = function() {
 	this["samp.hub.event.register"] = {};
 	this["samp.hub.event.metadata"] = {};
 	this["samp.hub.event.subscriptions"] = {};
+	this["table.load.votable"] = {};	
 	// this["table.highlight.row"] = {};
 	// this["table.select.rowList"] = {};
 };
@@ -79,7 +80,7 @@ var sampEsaSkyMetadata = function() {
 	this["samp.name"] = "ESASky";
 	this["samp.description"] = "ESASky";
 	this["samp.icon.url"] = baseUrl + "images/favicon.png";
-	this["author.name"] = "ESAC Science Data Center (ESDC)";
+	this["author.name"] = "Science Archives Team";
 	this["author.affiliation"] = "European Space Agency";
 };
 

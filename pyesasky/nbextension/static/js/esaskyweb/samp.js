@@ -1,5 +1,5 @@
 var samp = (function() {
-	var WEBSAMP_PORT = 21012;
+	var WEBSAMP_PORT = 21013;
 	var WEBSAMP_PATH = "/";
 	var WEBSAMP_PREFIX = "samp.webhub.";
 	var WEBSAMP_CLIENT_PREFIX = "";
