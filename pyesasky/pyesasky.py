@@ -87,15 +87,20 @@ class ESASkyWidget(widgets.DOMWidget):
                 if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
                     self.comm.kernel.msg_queue.task_done()
-                    try:
-                        msg['data']['content']['extras']
-                        print(msg['data']['content']['extras']['message'])
+                    if 'extras' in msg['data']['content'].keys():
+                        if 'message' in msg['data']['content']['extras'].keys():
+                            print(msg['data']['content']['extras']['message'])
+
+                    if 'values' in msg['data']['content'].keys():
+                        data = msg['data']['content']['values']
+                        if len(data.values()) == 1:
+                            return list(data.values())[0]
+                        else:
+                            return msg['data']['content']['values']
+                    else:
                         return "No return value"
-                    except:
-                        return msg['data']['content']['values']
             except:
-                    
-                    pass
+                pass
 
     def showCoordinateGrid(self,show = True):
         content = dict( 
