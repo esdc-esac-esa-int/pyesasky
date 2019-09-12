@@ -27,9 +27,10 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.1.0').tag(sync=True)
-    _model_module_version = Unicode('1.1.0').tag(sync=True)
+    _view_module_version = Unicode('1.1.1').tag(sync=True)
+    _model_module_version = Unicode('1.1.1').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
+    view_height = Unicode('800px').tag(sync=True)
     
     def __init__(self):
         super().__init__()
@@ -76,6 +77,12 @@ class ESASkyWidget(widgets.DOMWidget):
                     return val
             time.sleep(0.1)
         raise(TimeoutError("Request timed out"))
+
+    def setViewHeight(self, height):
+        height = str(height)
+        if not height.endswith('px'):
+            height = height + 'px'
+        self.view_height = height
 
     def loopMessageQueue(self):
         for stream in self.comm.kernel.shell_streams:
