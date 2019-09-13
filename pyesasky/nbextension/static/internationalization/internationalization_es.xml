@@ -2278,7 +2278,7 @@
 		ordenadas por $orderBy$
 	</text>
 		<text key="publicationSourceLimitDescription">
-		Mostrando las primeras $sourceLimit$ fuentes por número de publicaciones
+		Mostrando las primeras $sourceLimit$ fuentes por $orderBy$
 	</text>
 	<text key="sourceLimitNumImages">
 		Mostrando las $sourceLimit$ fuentes con m&#225;s

@@ -1664,7 +1664,7 @@
 		$orderBy$
 	</text>
 	<text key="publicationSourceLimitDescription">
-		Showing top $sourceLimit$ sources based on number of publications
+		Showing the first $sourceLimit$ sources based on $orderBy$
 	</text>
 	<text key="sourceLimitNumImages">
 		Showing the $sourceLimit$ most observed sources (Number
@@ -2541,6 +2541,81 @@
 	</text>
 	<text key="headerPresenter_helpLink">
 		https://www.cosmos.esa.int/web/esdc/esasky-how-to
+	</text>
+	<text key="selectSkyPanel_addSky">
+		Add sky
+	</text>
+	<text key="publicationPanel_title">
+		Publications
+	</text>
+	<text key="publicationPanel_helpText">
+		
+	</text>
+	<text key="publicationPanel_removeAndClose">
+		Remove publications and close panel
+	</text>
+	<text key="publicationPanel_refreshTooltip">
+		Get sources with related publications for the current view
+	</text>
+	<text key="publicationPanel_updateOnMove">
+		Update on move
+	</text>
+	<text key="publicationPanel_updateOnMoveTooltip">
+		Update the result every time the position is changed
+	</text>
+	<text key="publicationPanel_maxFovWarning">
+		Must be closer than $MAX_FOV$°
+	</text>
+	<text key="publicationPanel_sourceLimitWarning">
+		Warning: A high source limit may degrade performance
+	</text>
+	<text key="publicationPanel_truncationSettings">
+		Truncation settings
+	</text>
+	<text key="publicationPanel_orderByTooltip">
+		Truncation based on value
+	</text>
+	<text key="publicationPanel_truncationValuePublicationMost">
+		Publications (Most)
+	</text>
+	<text key="publicationPanel_truncationValuePublicationLeast">
+		Publications (Least)
+	</text>
+	<text key="publicationPanel_truncationValueSourceNameAZ">
+		Source name (A-Z)
+	</text>
+	<text key="publicationPanel_truncationValueSourceNameZA">
+		Source name (Z-A)
+	</text>
+	<text key="publicationPanel_truncationValueRaHigh">
+		RA (High)
+	</text>
+	<text key="publicationPanel_truncationValueRaLow">
+		RA (Low)
+	</text>
+	<text key="publicationPanel_truncationValueDecHigh">
+		Dec (High)
+	</text>
+	<text key="publicationPanel_truncationValueDecLow">
+		Dec (Low)
+	</text>
+	<text key="publicationPanel_updating">
+		Updating...
+	</text>
+	<text key="publicationPanel_statusTextNoPublications">
+		No publications in this area
+	</text>
+	<text key="publicationPanel_statusTextNumSources">
+		$NUM_SOURCES$ sources with related publications
+	</text>
+	<text key="publicationPanel_statusTextTruncated">
+		[Truncated]
+	</text>
+	<text key="publicationPanel_statusTextFailed">
+		Failed to retreive publications
+	</text>
+	<text key="popupHeader_minimize">
+		Hide panel
 	</text>
 	
 </Internationalization>
