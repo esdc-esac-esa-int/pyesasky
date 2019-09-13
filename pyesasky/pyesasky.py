@@ -361,9 +361,9 @@ class ESASkyWidget(widgets.DOMWidget):
                     )
         return self._sendAvaitCallback(content)   
 
-    def removeHiPSOnIndex(self, index):
+    def removeHiPS(self, index = -1):
         content = dict(
-                    event = 'removeHipsOnIndex',
+                    event = 'removeHips',
                     content = dict(index = index)
                     )
         self._sendAvaitCallback(content)   
