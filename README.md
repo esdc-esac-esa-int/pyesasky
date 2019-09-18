@@ -1,14 +1,33 @@
-# pyesasky (beta 1.0.1)
+# pyESASky
 
-Welcome to the ESASky Jupyter notebook widget page. 
+Welcome to the ESASky Jupyter widget page. 
 
 # Requirements
 
-`Jupyter` and `node.js`
+`Jupyter`
 
 `Jupyter` comes together with anaconda. 
 
-For `node.js`:
+# Installation
+
+```bash
+$ pip install pyesasky
+```
+
+# pyesasky in Jupyter lab
+
+```bash
+$ jupyter labextension install pyesasky
+```
+
+In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
+
+```bash
+$ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+```
+
+NOTE that this requires `node.js` to be installed. 
+
 If you use conda, you can get it with:
 
 ```bash
@@ -21,22 +40,12 @@ brew install node
 ```
 You can also download `Node.js` from the Node.js website https://nodejs.org/ and install it directly.
 
-# Installation
-
-For a development installation (requires npm),
-```bash
-$ git clone https://github.com/esdc-esac-esa-int/pyesasky
-$ cd pyesasky
-$ sh install.sh
-```
 
 # Running pyESASky samples:
-```bash
-$ cd samples
-$ jupyter notebook
-```
 
-For the basic functionnalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
+Multiple sample notebooks of the functionality in pyESASky can be found in https://github.com/esdc-esac-esa-int/pyesasky/tree/master/samples
+
+For the basic functionalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
 
 # Run pyesasky
 
@@ -65,24 +74,11 @@ from pyesasky.pyesasky import MetadataDescriptor
 from pyesasky.pyesasky import MetadataType
 ```
 
-# pyesasky in Jupyter lab
+# Source code installation
 
-In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
-
+For a development installation (requires npm),
 ```bash
-$ jupyter labextension install @jupyter-widgets/jupyterlab-manager
-```
-
-NOTE that this requires `node.js` to be installed. 
-
-# Uninstall
-
-```bash
-$ sh uninstall.sh
-```
-
-In case the uninstall is complaining about a missing `rimraf` command, try that first and then rerun the uninstall procedure:
-
-```bash
-$ npm install webpack-dev-server rimraf webpack -g
+$ git clone https://github.com/esdc-esac-esa-int/pyesasky
+$ cd pyesasky
+$ sh install.sh
 ```
