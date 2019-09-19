@@ -88,12 +88,18 @@ cmdclass['jsdeps'] = combine_commands(
 )
 
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+
 setup_args = dict(
     name                    = name,
     description             = 'ESASky Python wrapper',
     version                 = version,  
     scripts                 = glob(pjoin('scripts', '*')),
     cmdclass                = cmdclass,
+    long_description        = long_description,
+    long_description_content_type = "text/markdown",  
     packages                = find_packages(),
     author                  = 'Fabrizio Giordano from ESDC (ESA/ESAC)',
     author_email            = 'fgiordano@sciops.esa.int',
@@ -102,7 +108,7 @@ setup_args = dict(
     platforms               = 'Linux, Mac OS X, Windows',
     keywords                = ['ipython','jupyter','widgets'],
     classifiers             = [
-        'Development Status :: 1.1.1-beta',
+        'Development Status :: 5 - Production/Stable',
         'Framework :: IPython',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
