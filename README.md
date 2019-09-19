@@ -4,8 +4,6 @@ Welcome to the ESASky Jupyter widget page.
 
 # Requirements
 
-`Jupyter`
-
 `Jupyter` comes together with anaconda. 
 
 # Installation
@@ -52,26 +50,26 @@ For the basic functionalities, open the pyESASky-Basic.ipynb. To check how to ov
 In general, it is possible to instantiate pyESASky by running the folowing code in your Jupyter Notebook.
 
 ```python
-from pyesasky.pyesasky import ESASkyWidget
+from pyesasky import ESASkyWidget
 esasky = ESASkyWidget()
 esasky
 ```
 To be able to use catalogue features, the following additional classes must be imported:
 
 ```python
-from pyesasky.pyesasky import Catalogue
-from pyesasky.pyesasky import CatalogueDescriptor
-from pyesasky.pyesasky import MetadataDescriptor
-from pyesasky.pyesasky import MetadataType
+from pyesasky import Catalogue
+from pyesasky import CatalogueDescriptor
+from pyesasky import MetadataDescriptor
+from pyesasky import MetadataType
 ```
 
 To be able to use footprints features, the following additional classes must be imported:
 
 ```python
-from pyesasky.pyesasky import FootprintSet
-from pyesasky.pyesasky import FootprintSetDescriptor
-from pyesasky.pyesasky import MetadataDescriptor
-from pyesasky.pyesasky import MetadataType
+from pyesasky import FootprintSet
+from pyesasky import FootprintSetDescriptor
+from pyesasky import MetadataDescriptor
+from pyesasky import MetadataType
 ```
 
 # Source code installation
