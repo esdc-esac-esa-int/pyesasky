@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+samples/
+dist/
+build/
+*.py
+*.sh
+labextension/
+docs/
+pyesasky/nbextension/static/
+pyesasky.egg*
+jupyter.d/*

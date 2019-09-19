@@ -1,3 +1,7 @@
 node_modules/
 __pycache__/
 samples/.ipynb_checkpoints/
+dist/
+build/
+labextension/
+pyesasky/labextension
