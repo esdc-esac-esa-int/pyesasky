@@ -56,6 +56,7 @@ data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky/js/api', pjoin(nb_path, 'js', 'api'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/filesaver', pjoin(nb_path, 'js', 'filesaver'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/esaskyweb', pjoin(nb_path, 'js', 'esaskyweb'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb', pjoin(nb_path, 'esaskyweb'), '*.png'),
     
     ('share/jupyter/nbextensions/pyesasky/images', pjoin(nb_path, 'images'), '*.gif*'),
     ('share/jupyter/nbextensions/pyesasky/images', pjoin(nb_path, 'images'), '*.png*'),
