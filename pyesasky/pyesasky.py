@@ -679,6 +679,24 @@ class ESASkyWidget(widgets.DOMWidget):
             print(f'Processed {line_count} lines.')
             self.overlayCatalogueWithDetails(catalogue)
 
+    def checkExtTapAvailability(self, tapService):
+        """Returns the 1 if any data is availabe otherwise 0"""
+
+        content = dict(
+                event = 'extTapCount',
+                content = dict(missionId=tapService)
+        )
+        return self._sendAvaitCallback(content)
+
+    def getExtTapData(self, tapService):
+        """Calls the external tap and try to recieve data in the current view"""
+
+        content = dict(
+                event = 'extTap',
+                content = dict(missionId=tapService)
+        )
+        return self._sendAvaitCallback(content)
+
     def _readProperties(self, url):
         config = configparser.RawConfigParser(strict=False)
         if not url.startswith('http'):
