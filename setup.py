@@ -75,7 +75,7 @@ data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/dark/images', pjoin(nb_path, 'js', 'esaskyweb','gwt','dark','images'), '*.jpg*'),
     
     
-    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
+    #('share/jupyter/lab/extensions', lab_path, '*.tgz'),
     ('etc/jupyter/nbconfig/notebook.d' , os.path.join(HERE, 'jupyter.d', 'notebook.d'), 'pyesaky.json'),
     ('etc/jupyter/jupyter_notebook_config.d' , os.path.join(HERE, 'jupyter.d', 'jupyter_notebook_config.d'), 'pyesaky.json')]
 
@@ -101,8 +101,8 @@ setup_args = dict(
     long_description        = long_description,
     long_description_content_type = "text/markdown",  
     packages                = find_packages(),
-    author                  = 'Fabrizio Giordano from ESDC (ESA/ESAC)',
-    author_email            = 'fgiordano@sciops.esa.int',
+    author                  = 'Fabrizio Giordano <fgiordano@sciops.esa.int>, Mattias Wångblad <mattias@winterway.eu>',
+    #author_email            = 'fgiordano@sciops.esa.int',
     url                     = 'https://github.com/esdc-esac-esa-int/pyesasky',
     license                 = 'GNU Lesser General Public License',
     platforms               = 'Linux, Mac OS X, Windows',

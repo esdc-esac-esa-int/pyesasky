@@ -1,6 +1,6 @@
 {
 	"name": "pyesasky",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "ESASky Python wrapper",
 	"keywords": [
 		"jupyter",
@@ -31,6 +31,7 @@
 		"watch:nbextension": "webpack --watch"
 	},
 	"dependencies": {
+		"@jupyter-widgets/jupyterlab-manager": "^1.0.2",
 		"@jupyter-widgets/base": "^1.2.2 || ^2.0.1",
 		"@jupyterlab/coreutils": "^3.0.0",
 		"package.json": "^2.0.1"
@@ -47,6 +48,21 @@
 		"webpack": "^3.4.1"
 	},
 	"jupyterlab": {
-		"extension": "lib/plugin"
+		"extension": "lib/plugin",
+		"discovery": {
+			"kernel": [
+				{
+					"kernel_spec": {
+						"language": "^python"
+					},
+					"base": {
+						"name": "pyesasky"
+					},
+					"managers": [
+						"pip"
+					]
+				}
+			]
+		}
 	}
 }
