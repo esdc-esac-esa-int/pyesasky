@@ -1,9 +1,15 @@
 from ._version import version_info, __version__ # noqa
+from .pyesasky import ESASkyWidget # noqa
 from .catalogue import Catalogue # noqa
+from .catalogueDescriptor import CatalogueDescriptor # noqa
+from .cooFrame import CooFrame # noqa
 from .footprintSet import FootprintSet # noqa
+from .footprintSetDescriptor import FootprintSetDescriptor # noqa
+from .HiPS import HiPS # noqa
+from .imgFormat import ImgFormat # noqa
+from .jupyter_server import load_jupyter_server_extension # noqa
 from .metadataDescriptor import MetadataDescriptor # noqa
 from .metadataType import MetadataType # noqa
-from .jupyter_server import load_jupyter_server_extension # noqa
 
 
 # Jupyter Extension points
