@@ -7240,6 +7240,10 @@ CooGrid = (function() {
                		vxy = AladinUtils.radecToViewXy(dim1, dim2, projection, CooFrameEnum.J2000, width, height, largestDim, zoomFactor);
     			}
             	if (!vxy) {
+            		if(hasMoved){
+            			ctx.stroke();
+            			hasMoved = false;
+            		}
                     continue;
             	}else if (!hasMoved){
 		            ctx.moveTo(vxy.vx, vxy.vy);
@@ -12396,6 +12400,9 @@ View = (function() {
         }
         if (cm.mapName == 'native' || cm.mapName == 'grayscale') {
             return cm.reversed ? white : black;
+        }
+        if(cm.mapName == 'planck') {
+        	return black;
         }
 
         var idx = cm.reversed ? 255 : 0;

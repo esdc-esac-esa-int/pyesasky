@@ -62,16 +62,6 @@
 	
 	
 
-	<!-- SsoCountRequestCallback -->
-	<text key="SsoCountRequestCallback_objectNotAvailableInEsaSky">
-		Sorry, but the object you are looking for is not
-		available in ESASky at the moment. We are currently processing Solar
-		System Objects. Please try again in the upcoming days
-	</text>
-	<text key="SsoCountRequestCallback_targetCurrentlyUnavailable">
-		Target currently unavailable
-	</text>
-
 	<!-- JsonRequestCallback -->
 	<text key="JsonRequestCallback_retrievingMOC">
 		Retrieving MOC
@@ -146,7 +136,7 @@
 		input formats.
 	</text>
 	<text key="searchPanel_targetNotFound">
-		Target not found.
+		Not found
 	</text>
 	<text key="searchPanel_ssoTargetNotFound">
 		Solar System Object not found.
@@ -236,6 +226,9 @@
 	<text key="treeMap_SSO">
 		Solar System Object Observations
 	</text>
+	<text key="treeMap_EXT_TAP">
+		External TAP Services
+	</text>
 	<text key="treeMap_loading_ASTRO_IMAGING">
 		Loading Observations
 	</text>
@@ -244,6 +237,9 @@
 	</text>
 	<text key="treeMap_loading_ASTRO_SPECTRA">
 		Loading Spectra
+	</text>
+	<text key="treeMap_loading_EXT_TAP">
+		Loading External Taps
 	</text>
 	<text key="treeMap_loading_SSO">
 		Loading Solar System Objects
@@ -259,6 +255,9 @@
 	</text>
 	<text key="treeMap_noData_SSO">
 		No SSO Observations Found
+	</text>
+	<text key="treeMap_noData_EXT_TAP">
+		No External TAP Data Found
 	</text>
 	<text key="treeMap_nameOfSelectedLabel">
 		SSO: $SSONAME$ ($SSOTYPE$)
@@ -555,6 +554,9 @@
 	</text>
 	<text key="webConstants_exploreData">
 		Explore data for $TARGET$
+	</text>
+	<text key="webConstants_exploreExtTaps">
+		Explore data from External Tap services in this region
 	</text>
 	<text key="webConstants_trackSSO">
 		Track solar system objects through the search box
@@ -1663,9 +1665,6 @@
 		Showing the first $sourceLimit$ sources ordered by
 		$orderBy$
 	</text>
-	<text key="publicationSourceLimitDescription">
-		Showing the first $sourceLimit$ sources based on $orderBy$
-	</text>
 	<text key="sourceLimitNumImages">
 		Showing the $sourceLimit$ most observed sources (Number
 		of Images)
@@ -2374,6 +2373,13 @@
 		&gt;
 		Full documentation of this feature.
 		&lt;/a&gt; </text>
+		<text key="treeMapContainer_help_EXT_TAP">
+		In ESASky you can now explore data from external TAP Services
+		which conforms with IVOA obsCore standards.
+		Services which have any data in the current region will appear
+		in the tree map. Pressing any service will start loading the data into
+		the datapanel and visualise footprints on the sky.
+		</text>
 	<text key="ResizingDataPanel">
 		Resizing Data Panel
 	</text>
@@ -2549,7 +2555,7 @@
 		Publications
 	</text>
 	<text key="publicationPanel_helpText">
-		
+		Shown are the sources in the field-of-view that have associated publications according to SIMBAD. Clicking on each icon will open a table listing the publications for that object, including basic information (title, authors, publication date) and a link to the paper in ADS. There is also the possibility to load the full list of objects studied in a given publication for further exploration with ESASky. &lt;br&gt; &lt;br&gt; By default, ESASky is showing at most 3 000 sources with related publications at the same time, but this number can be changed in the settings.  
 	</text>
 	<text key="publicationPanel_removeAndClose">
 		Remove publications and close panel
@@ -2563,41 +2569,17 @@
 	<text key="publicationPanel_updateOnMoveTooltip">
 		Update the result every time the position is changed
 	</text>
-	<text key="publicationPanel_maxFovWarning">
-		Must be closer than $MAX_FOV$°
-	</text>
 	<text key="publicationPanel_sourceLimitWarning">
-		Warning: A high source limit may degrade performance
-	</text>
-	<text key="publicationPanel_truncationSettings">
-		Truncation settings
-	</text>
-	<text key="publicationPanel_orderByTooltip">
-		Truncation based on value
+		Warning: A high result limit may degrade performance
 	</text>
 	<text key="publicationPanel_truncationValuePublicationMost">
-		Publications (Most)
+		highest
 	</text>
 	<text key="publicationPanel_truncationValuePublicationLeast">
-		Publications (Least)
+		lowest
 	</text>
-	<text key="publicationPanel_truncationValueSourceNameAZ">
-		Source name (A-Z)
-	</text>
-	<text key="publicationPanel_truncationValueSourceNameZA">
-		Source name (Z-A)
-	</text>
-	<text key="publicationPanel_truncationValueRaHigh">
-		RA (High)
-	</text>
-	<text key="publicationPanel_truncationValueRaLow">
-		RA (Low)
-	</text>
-	<text key="publicationPanel_truncationValueDecHigh">
-		Dec (High)
-	</text>
-	<text key="publicationPanel_truncationValueDecLow">
-		Dec (Low)
+	<text key="publicationPanel_truncationValuePublicationNumberOfPublications">
+		number of publications
 	</text>
 	<text key="publicationPanel_updating">
 		Updating...
@@ -2614,8 +2596,60 @@
 	<text key="publicationPanel_statusTextFailed">
 		Failed to retreive publications
 	</text>
+	<text key="publicationPanel_advanced">
+		Settings
+	</text>
+	<text key="publicationPanel_getTheFirst">
+		Result limited to the first
+	</text>
+	<text key="publicationPanel_sourcesBasedOn">
+		sources with the 
+	</text>
+	<text key="publicationPanel_resetTooltip">
+		Reset source limit
+	</text>
+	<text key="publicationSourceLimitDescription">
+		Result limited to the first $sourceLimit$ sources with the $mostOrLeast$ number of publications
+	</text>
+	<text key="publicationPanel_truncationValueTooltip">
+		Select whether to prioritize sources with either high or low numbers of publications. (This only applies when the result is truncated)
+	</text>
 	<text key="popupHeader_minimize">
 		Hide panel
 	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsMessage">
+		There are no cross matches for the object you are looking for. Searched in $MISSIONS$
+	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsTitle">
+		No cross matches for target
+	</text>
+	<text key="searchPanel_showMoreAuthors">
+		Show more authors
+	</text>
+	<text key="searchPanel_showMoreTooltip">
+		Show the first $COUNT$ author matches
+	</text>
+	<text key="searchPanel_showMoreSso">
+		Show more SSOs
+	</text>
+	<text key="searchPanel_showMoreTooltip">
+		Show all the sso matches
+	</text>
+	<text key="searchPanel_author">
+		Author
+	</text>
+	<text key="searchPanel_target">
+		Target
+	</text>
+	<text key="searchPanel_showMoreBibcodes">
+		Show more bibcodes
+	</text>
+	<text key="searchPanel_showMoreBibcodeTooltip">
+		Show the first $COUNT$ bibcode matches
+	</text>
+	<text key="searchPanel_bibcode">
+		Bibcode
+	</text>
+	
 	
 </Internationalization>
