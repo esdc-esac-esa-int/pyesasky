@@ -200,6 +200,14 @@ class ESASkyWidget(widgets.DOMWidget):
                 event = 'getResultPanelData'
         )
         return self._sendAvaitCallback(content)
+
+    def closeResultPanelTab(self, index = -1):
+        """Close the tab on index or current open if no argument"""
+        content = dict(
+                event = 'closeResultPanelTab',
+                content = dict(index=index)
+        )
+        return self._sendToFrontEnd(content)
         
     def getAvailableHiPS(self, wavelength=""):
         """Returns available HiPS in ESASky
@@ -684,7 +692,7 @@ class ESASkyWidget(widgets.DOMWidget):
 
         content = dict(
                 event = 'extTapCount',
-                content = dict(missionId=tapService)
+                content = dict(tapService=tapService)
         )
         return self._sendAvaitCallback(content)
 
@@ -693,7 +701,21 @@ class ESASkyWidget(widgets.DOMWidget):
 
         content = dict(
                 event = 'extTap',
-                content = dict(missionId=tapService)
+                content = dict(tapService=tapService)
+        )
+        return self._sendAvaitCallback(content)
+   
+    def getExtTapDataWithDetails(self, tapServiceName, tapUrl, tapTable, adql):
+        """Calls the external tap and try to recieve data in the current view"""
+
+        content = dict(
+                event = 'newExtTapService',
+                content = dict(
+                    name = tapServiceName,
+                    tapUrl = tapUrl,
+                    tapTable = tapTable,
+                    adql = adql
+                    )
         )
         return self._sendAvaitCallback(content)
 
