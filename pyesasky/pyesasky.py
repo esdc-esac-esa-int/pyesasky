@@ -39,6 +39,15 @@ class ESASkyWidget(widgets.DOMWidget):
         self.msgId = 0
         self.guiReady = False
         self.guiReadyCallSent = False
+        time.sleep(0.2)
+        for stream in self.comm.kernel.shell_streams:
+            stream.flush()
+        for item in self.comm.kernel.msg_queue._queue:
+            if "comm_close" in str(item[3][1][3]) and self.comm.comm_id in str(item[3][1][6]):
+                raise ConnectionError("Communication could not be established with widget. \n" \
+                + "Possible errors could be that installed version of PyESASky differs in python " \
+                + "and Jupyter lab. \nMake sure to upgrade to the latest version of both \n" \
+                + "pip install --upgrade pyesasky \njupyter labextension install pyesasky@latest") 
         
     def _waitGuiReady(self):
         self.guiReadyCallSent = True
