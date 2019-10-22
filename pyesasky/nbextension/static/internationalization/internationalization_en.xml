@@ -2,6 +2,9 @@
 <!DOCTYPE Internationalization>
 <Internationalization langCode="en">
 
+	<text key="headerPresenter_languageNameAbbreviation">
+		En
+	</text>
 	<text key="header_learnMore">
 		Learn more about ESASky!
 	</text>
@@ -1467,7 +1470,7 @@
 		Show target in sky
 	</text>
 	<text key="targetWidget_targetNotFoundInSimbad">
-		Target not found in Simbad
+		Target not found in SIMBAD
 	</text>
 
 	<!-- welcomeDialog -->
@@ -1591,7 +1594,7 @@
 
 	<!-- multiTargetTooltip -->
 	<text key="MultiTargetTooltip_nearestSimbadId">
-		Nearest Simbad main Id
+		Nearest SIMBAD main id
 	</text>
 
 	<!-- planningDetectorCenterTooltip -->
@@ -2649,6 +2652,35 @@
 	</text>
 	<text key="searchPanel_bibcode">
 		Bibcode
+	</text>
+	<text key="searchPanel_inputByBibcode">
+		By bibcode
+	</text>
+	<text key="searchPanel_inputByAuthor">
+		By author
+	</text>
+	<text key="PublicationsByAuthorCallback_helpTitle">
+		Publications by author
+	</text>
+	<text key="PublicationsByAuthorCallback_helpDescription">
+		Publications associated to this author name in SIMBAD plus
+		access to sources for each of the publications.
+		&lt;br&gt;
+		&lt;b&gt;
+		SIMBAD only contains publications with associated targets (as mapped by CDS)
+		&lt;/b&gt;
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		Full documentation of this feature.
+		&lt;/a&gt; 
+	</text>
+	<text key="MultiTargetTooltip_noNearbySimbadIdFound">
+		No nearby SIMBAD id found
+	</text>
+	<text key="MultiTargetTooltip_resolvingNearbyTargets">
+		Resolving nearby targets
 	</text>
 	
 	

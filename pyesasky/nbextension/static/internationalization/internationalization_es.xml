@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Internationalization>
 <Internationalization langCode="es">
+	
+	<text key="headerPresenter_languageNameAbbreviation">
+		Es
+	</text>
 
 	<!-- JsonRequestCallback -->
 	<text key="JsonRequestCallback_retrievingMOC">
@@ -1783,13 +1787,19 @@
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PGCC2">
 		PGCC contiene 13,118 fuentes gal&#225;cticas y 54
-		fuentes localizadas en las Nubes de Magallanes, todas
-		ellas identificadas como fuentes fr&#237;as en los
-		datos de Planck (fuentes m&#225;s fr&#237;as que su
+		fuentes
+		localizadas en las Nubes de Magallanes, todas
+		ellas identificadas como
+		fuentes fr&#237;as en los
+		datos de Planck (fuentes m&#225;s fr&#237;as
+		que su
 		entorno). Las fuentes se extraen de los mapas de 353,
-		545 y 857 GHz y del mapa de IRIS a 3 THz. Una
-		detecci&#243;n requiere una SNR>4 en todas las bandas
-		de Planck y un distancia angular m&#237;nima de 5 minutos
+		545 y 857
+		GHz y del mapa de IRIS a 3 THz. Una
+		detecci&#243;n requiere una SNR>4
+		en todas las bandas
+		de Planck y un distancia angular m&#237;nima de 5
+		minutos
 		de arco entre detecciones.
 
 		&lt;a
@@ -2262,7 +2272,8 @@
 	</text>
 	<text key="sourceLimitDescription">
 		Mostrando las primeras $sourceLimit$ fuentes,
-		ordenadas por $orderBy$
+		ordenadas
+		por $orderBy$
 	</text>
 	<text key="sourceLimitNumImages">
 		Mostrando las $sourceLimit$ fuentes con m&#225;s
@@ -3060,7 +3071,8 @@
 		Estrella
 	</text>
 	<text key="Preview_postcardLoadFailed">
-		No se pudo cargar la imagen de previsualización desde el archivo
+		No se pudo cargar la imagen de previsualización desde el
+		archivo
 	</text>
 	<text key="headerPresenter_helpLink">
 		https://www.cosmos.esa.int/web/esdc/introduccion-a-esasky
@@ -3106,10 +3118,20 @@
 		Ajustes
 	</text>
 	<text key="publicationPanel_helpText">
-		Se muestran las fuentes del campo de visi&#243;n con publicaciones asociadas en SIMBAD. Pinchando en cada icono se abre una tabla con la lista de publicaciones para ese objeto, incluyendo informaci&#243;n b&#225;sica (t&#237;tulo, autores, fecha de publicaci&#243;n) y un enlace al art&#237;culo en ADS. Tambi&#233;n es posible cargar la lista completa de objetos estudiados en un art&#237;culo determinado para inspeccionarlos con ESASky. Por defecto se muestran un m&#225;ximo de 3000 fuentes con publicaciones asociadas, pero este l&#237;mite puede modificarse en los ajustes de la funcionalidad.
+		Se muestran las fuentes del campo de visi&#243;n con
+		publicaciones asociadas en SIMBAD. Pinchando en cada icono se abre una
+		tabla con la lista de publicaciones para ese objeto, incluyendo
+		informaci&#243;n b&#225;sica (t&#237;tulo, autores, fecha de
+		publicaci&#243;n) y un enlace al art&#237;culo en ADS. Tambi&#233;n es
+		posible cargar la lista completa de objetos estudiados en un
+		art&#237;culo determinado para inspeccionarlos con ESASky. Por defecto
+		se muestran un m&#225;ximo de 3000 fuentes con publicaciones
+		asociadas, pero este l&#237;mite puede modificarse en los ajustes de
+		la funcionalidad.
 	</text>
 	<text key="publicationPanel_sourceLimitWarning">
-		Atenci&#243;n: Un l&#237;mite alto en el n&#250;mero de fuentes puede empeorar la ejecuci&#243;n
+		Atenci&#243;n: Un l&#237;mite alto en el n&#250;mero de
+		fuentes puede empeorar la ejecuci&#243;n
 	</text>
 	<text key="publicationPanel_truncationValuePublicationMost">
 		mayor
@@ -3117,7 +3139,8 @@
 	<text key="publicationPanel_truncationValuePublicationLeast">
 		menor
 	</text>
-	<text key="publicationPanel_truncationValuePublicationNumberOfPublications">
+	<text
+		key="publicationPanel_truncationValuePublicationNumberOfPublications">
 		n&#250;mero de publicaciones
 	</text>
 	<text key="publicationPanel_getTheFirst">
@@ -3130,19 +3153,57 @@
 		Restablecer l&#237;mite en el n&#250;mero de fuentes
 	</text>
 	<text key="publicationSourceLimitDescription">
-		Resultado limitado a las primeras $sourceLimit$ fuentes con el $mostOrLeast$ n&#250;mero de publicaciones
+		Resultado limitado a las primeras $sourceLimit$ fuentes
+		con el $mostOrLeast$ n&#250;mero de publicaciones
 	</text>
 	<text key="publicationPanel_truncationValueTooltip">
-		Prioriza fuentes con el mayor o menor n&#250;mero de publicaciones (s&#243;lo aplicable cuando el resultado est&#225; truncado).
+		Prioriza fuentes con el mayor o menor n&#250;mero de
+		publicaciones (s&#243;lo aplicable cuando el resultado est&#225;
+		truncado).
 	</text>
 	<text key="popupHeader_minimize">
 		Ocultar panel
 	</text>
 	<text key="header_gridFull">
-		Muestra/oculta la cuadrícula de coordenadas sobre el cielo
+		Muestra/oculta la cuadrícula de coordenadas sobre el
+		cielo
 	</text>
 	<text key="header_gridDropdown">
 		Cuadrícula de coordenadas
 	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsMessage">
+		No hay correspondencias para el objeto que est&#225; buscando.Buscado en
+		$MISSIONS$
+	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsTitle">
+		No hay correspondencias para el objeto
+	</text>
+	<text key="searchPanel_showMoreAuthors">
+		Mostrar m&#225;s autores
+	</text>
+	<text key="searchPanel_showMoreTooltip">
+		Mostrar los primeros $COUNT$ autores
+	</text>
+	<text key="searchPanel_author">
+		Autor
+	</text>
+	<text key="searchPanel_showMoreBibcodes">
+		Mostrar m&#225;s c&#243;digos bibcode
+	</text>
+	<text key="searchPanel_showMoreBibcodeTooltip">
+		Mostrar las correspondencias con los primeros $COUNT$ c&#243;digos bibcode
+	</text>
+	<text key="searchPanel_bibcode">
+		C&#243;digo bibcode
+	</text>
+		<text key="searchPanel_inputByBibcode">
+		Por c&#243;digo bibcode
+	</text>
+	<text key="searchPanel_inputByAuthor">
+		Por autor
+	</text>
+	
+
+
 </Internationalization>
 
