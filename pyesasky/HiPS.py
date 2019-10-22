@@ -8,7 +8,6 @@ class HiPS:
 
     def __init__(self, name, url, cooframe, maxNorder, imgFormat):
         self._name = name
-        self._id = name
         self._url = url
         self._cooframe = cooframe
         self._maxNorder = maxNorder
@@ -31,7 +30,6 @@ class HiPS:
         content = dict(
             hips = dict(
                 name=self._name,
-                id=self._id,
                 url=self._url,
                 cooframe=self._cooframe,
                 maxnorder=self._maxNorder,
