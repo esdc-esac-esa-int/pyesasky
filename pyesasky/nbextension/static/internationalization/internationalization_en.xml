@@ -57,11 +57,6 @@
 	<text key="header_gridDropdown">
 		Coordinate grid
 	</text>
-
-	<text key="ESASky_Description">
-		ESASky is an application that allows you to visualise
-		and download public astronomical data from space-based missions.
-	</text>
 	
 	
 
@@ -242,7 +237,7 @@
 		Loading Spectra
 	</text>
 	<text key="treeMap_loading_EXT_TAP">
-		Loading External Taps
+		Loading data from external TAP services
 	</text>
 	<text key="treeMap_loading_SSO">
 		Loading Solar System Objects
@@ -602,9 +597,6 @@
 	<text key="resultsPresenter_noDataFound">
 		No data found
 	</text>
-	<text key="commonObservationTablePanel_showingGlobalSkyCoverage">
-		Showing global sky coverage for the mission. Zoom in and refresh the table to get the actual footprints of the individual observations.
-	</text>
 	<text key="resultsPresenter_computingDataCrossMatch">
 		Computing data cross-match for $SSOTEXT$
 	</text>
@@ -669,8 +661,8 @@
 		The observations include all public imaging products
 		present in the SUZAKU archive at DARTS.
 		Detailed information on the SUZAKU mission and its products can be found at
-		&lt;a href="//www.astro.isas.jaxa.jp/suzaku/" target="_blank"&gt;
-		www.astro.isas.jaxa.jp/suzaku/&lt;/a&gt;.
+		&lt;a href="//www.darts.isas.jaxa.jp/astro/suzaku/" target="_blank"&gt;
+		www.darts.isas.jaxa.jp/astro/suzaku/&lt;/a&gt;.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
 		href="//www.cosmos.esa.int/web/esdc/esasky-observations#SUZAKU-OBS"
@@ -929,6 +921,24 @@
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
+		The AKARI IRC Point Source Catalogue Version 1.0 provides positions 
+		and fluxes of 870,973 sources (844,649 sources in 9 micron band and 
+		194,551 sources in 18 micron band) in the Mid-Infrared wavelengths.
+		&lt;br&gt;&lt;br&gt;
+		
+		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron 
+		band twice or more during the 16 months of the cryogenic mission phase. 
+		The Point Source Catalogue is the primary catalogue from the AKARI IRC 
+		survey. The catalogue is designed to have a uniform detection limit over 
+		the entire sky, based on the uniform source detection limit per scan observation. 
+		Redundant observations are used to increase the reliability of the detection.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#Akari"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; </text>
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AllWise">
 		The AllWISE Source Catalog provides astrometry and mid-infrared
@@ -1152,7 +1162,7 @@
 		More information
 		&lt;/a&gt; </text>
 	<text
-		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ">
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ2">
 		The Planck SZ catalogue is a nearly all-sky list of SZ detections
 		obtained from the Planck data, derived from the HFI frequency channel
 		maps after masking and filling the bright point sources (SNR>10) from
@@ -1477,11 +1487,6 @@
 	<text key="WelcomeDialog_title">
 		Welcome to ESASky!
 	</text>
-	<text key="WelcomeDialog_description">
-		ESASky is an application that allows you to visualise
-		and download public
-		astronomical data from space-based missions.
-	</text>
 	<text key="WelcomeDialog_checkbox">
 		Don't show this dialog again
 	</text>
@@ -1664,6 +1669,9 @@
 	<text key="error">
 		error
 	</text>
+	<text key="sourceLimitDescription_EXTTAP">
+		Showing the first $sourceLimit$ results. Zoom in to get all data in a smaller region.
+	</text>
 	<text key="sourceLimitDescription">
 		Showing the first $sourceLimit$ sources ordered by
 		$orderBy$
@@ -1688,12 +1696,12 @@
 		Exposure (ksec)
 	</text>
 	<text key="3XMM_EPIC_ep_8_flux">
-		Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="3XMM_EPIC_ep_8_flux_err">
-		Flux error&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux error&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="observation_id">
 		Observation ID
@@ -1705,52 +1713,52 @@
 		Date observed
 	</text>
 	<text key="XMM_OM_uvw1_ab_flux">
-		UVW1 Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		UVW1 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_uvw2_ab_flux">
-		UVW2 Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		UVW2 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_uvm2_ab_flux">
-		UVM2 Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		UVM2 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_u_ab_flux">
-		U Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		U Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_v_ab_flux">
-		V Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		V Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_b_ab_flux">
-		B Flux&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		B Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b0">
-		Flux (0.2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b0_err">
-		Flux error (0.2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux error (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b4">
-		Flux (2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b4_err">
-		Flux error (2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux error (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b5">
-		Flux (0.2-2kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b5_err">
-		Flux error (0.2-2kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux error (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="pm_ra">
 		Proper Motion in RA&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
@@ -1855,10 +1863,10 @@
 		Cat. Reliability
 	</text>
 	<text key="Gaia_DR1_ra_error">
-		RA error (mas)
+		RA error &lt;i&gt;(mas)&lt;/i&gt;
 	</text>
 	<text key="Gaia_DR1_dec_error">
-		Dec error (mas)
+		Dec error &lt;i&gt;(mas)&lt;/i&gt;
 	</text>
 	<text key="PSZ_redshift">
 		Redshift
@@ -2032,28 +2040,28 @@
 		Date
 	</text>
 	<text key="CHANDRA_flux_b">
-		Flux ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_lower_flux_b">
-		Lower Flux ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Lower Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_upper_flux_b">
-		Upper Flux ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Upper Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_flux_w">
-		Flux (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flux &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_lower_flux_w">
-		Lower Flux HCR (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Lower Flux HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_upper_flux_w">
-		Upper Flux HCR (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Upper Flux HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_snr">
 		Signal to Noise Ratio
@@ -2341,48 +2349,6 @@
 		&gt;
 		Full documentation of this feature.
 		&lt;/a&gt; </text>
-	<text key="treeMapContainer_help_SSO">
-		In ESASky, you can now search for any planet, satellite
-		or comet observed by HST, Herschel and XMM-Newton (targeted or
-		serendipitous images).
-		Type the name or ID number of the object in the search box and a selection
-		of suggested targets will be given.
-		&lt;br&gt;&lt;br&gt;
-		Choose the t
-		and the solar system icon will be activated with the number of
-		available imaging observations and the treemap will open.
-		&lt;br&gt;&lt;br&gt;
-		Select the mission and all available imaging
-		observations will load in the data panel and the footprints will be
-		drawn on the sky.
-		Additionally, the orbit of the solar system object for the entire duration of the
-		mission will be plotted.
-		&lt;br&gt;&lt;br&gt;
-		For this feature, the
-		ESASky team has created a pipeline that takes the ephemeris
-		information of each SSO with respect to the position of each
-		spacecraft using software by the IMCCE (Institute of Celestial
-		Mechanica and Ephemeris Calculations, Paris) and performs a crossmatch
-		on the SSO orbits against the entire mission archives to find
-		observations in which the SSO fell within the imaging instrument's
-		field of view during the time the images were being taken.
-		&lt;br&gt;&lt;br&gt;
-		Asteroids and other solar system objects will be
-		added in the next minor version of ESASky, and imaging observations
-		from other missions will also be added soon.
-		&lt;br&gt;&lt;br&gt;
-		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-interface#SSO"
-		target="_blank"
-		&gt;
-		Full documentation of this feature.
-		&lt;/a&gt; </text>
-		<text key="treeMapContainer_help_EXT_TAP">
-		In ESASky you can now explore data from external TAP Services
-		which conforms with IVOA obsCore standards.
-		Services which have any data in the current region will appear
-		in the tree map. Pressing any service will start loading the data into
-		the datapanel and visualise footprints on the sky.
-		</text>
 	<text key="ResizingDataPanel">
 		Resizing Data Panel
 	</text>
@@ -2492,25 +2458,25 @@
 		Name
 	</text>
 	<text key="RAStart">
-		RA Start (J2000)
+		RA Start &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DecStart">
-		Dec Start (J2000)
+		Dec Start &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="RAEnd">
-		RA End (J2000)
+		RA End &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DecEnd">
-		Dec End (J2000)
+		Dec End &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DeltaPosDeg">
-		Delta Pos. (Deg)
+		Delta Pos. &lt;i&gt;(Deg)&lt;/i&gt;
 	</text>
 	<text key="SSOVMag">
-		V. (Mag)
+		V. &lt;i&gt;(Mag)&lt;/i&gt;
 	</text>
 	<text key="SSODistanceAU">
-		Distance (AU)
+		Distance &lt;i&gt;(AU)&lt;/i&gt;
 	</text>
 	<text key="tableGroup_Observation">
 		Observation
@@ -2557,9 +2523,6 @@
 	<text key="publicationPanel_title">
 		Publications
 	</text>
-	<text key="publicationPanel_helpText">
-		Shown are the sources in the field-of-view that have associated publications according to SIMBAD. Clicking on each icon will open a table listing the publications for that object, including basic information (title, authors, publication date) and a link to the paper in ADS. There is also the possibility to load the full list of objects studied in a given publication for further exploration with ESASky. &lt;br&gt; &lt;br&gt; By default, ESASky is showing at most 3 000 sources with related publications at the same time, but this number can be changed in the settings.  
-	</text>
 	<text key="publicationPanel_removeAndClose">
 		Remove publications and close panel
 	</text>
@@ -2581,9 +2544,6 @@
 	<text key="publicationPanel_truncationValuePublicationLeast">
 		lowest
 	</text>
-	<text key="publicationPanel_truncationValuePublicationNumberOfPublications">
-		number of publications
-	</text>
 	<text key="publicationPanel_updating">
 		Updating...
 	</text>
@@ -2597,16 +2557,10 @@
 		[Truncated]
 	</text>
 	<text key="publicationPanel_statusTextFailed">
-		Failed to retreive publications
+		Failed to retrieve publications
 	</text>
 	<text key="publicationPanel_advanced">
 		Settings
-	</text>
-	<text key="publicationPanel_getTheFirst">
-		Result limited to the first
-	</text>
-	<text key="publicationPanel_sourcesBasedOn">
-		sources with the 
 	</text>
 	<text key="publicationPanel_resetTooltip">
 		Reset source limit
@@ -2629,13 +2583,13 @@
 	<text key="searchPanel_showMoreAuthors">
 		Show more authors
 	</text>
-	<text key="searchPanel_showMoreTooltip">
+	<text key="searchPanel_showMoreAuthorsTooltip">
 		Show the first $COUNT$ author matches
 	</text>
 	<text key="searchPanel_showMoreSso">
 		Show more SSOs
 	</text>
-	<text key="searchPanel_showMoreTooltip">
+	<text key="searchPanel_showMoreSsoTooltip">
 		Show all the sso matches
 	</text>
 	<text key="searchPanel_author">
@@ -2683,5 +2637,226 @@
 		Resolving nearby targets
 	</text>
 	
+	<text key="datalinkDownload_loading">
+		Loading datalink
+	</text>
+	<text key="datalink_loadFailed">
+		Failed to load datalink
+	</text>
+	<text key="abstractTablePanel_download">
+		Download
+	</text>
+	<text key="WelcomeDialog_description">
+		ESASky is an application that allows you to visualise
+		and download public astronomical data.
+	</text>
+	<text key="commonObservationTablePanel_showingGlobalSkyCoverage">
+		Showing global sky coverage for the dataset. Zoom in and refresh the table to get the actual footprints of the individual observations.
+	</text>
+		<text key="treeMapContainer_help_SSO">
+		In ESASky, you can now search for any planet, satellite
+		or comet observed by HST, Herschel and XMM-Newton (targeted or
+		serendipitous images).
+		Type the name or ID number of the object in the search box and a selection
+		of suggested targets will be given.
+		&lt;br&gt;&lt;br&gt;
+		Choose the t
+		and the solar system icon will be activated with the number of
+		available imaging observations and the treemap will open.
+		&lt;br&gt;&lt;br&gt;
+		Select the mission and all available imaging
+		observations will load in the data panel and the footprints will be
+		drawn on the sky.
+		Additionally, the orbit of the solar system object for the entire duration of the
+		mission will be plotted.
+		&lt;br&gt;&lt;br&gt;
+		For this feature, the
+		ESASky team has created a pipeline that takes the ephemeris
+		information of each SSO with respect to the position of each
+		spacecraft using software by the IMCCE (Institute of Celestial
+		Mechanica and Ephemeris Calculations, Paris) and performs a crossmatch
+		on the SSO orbits against the entire mission archives to find
+		observations in which the SSO fell within the imaging instrument's
+		field of view during the time the images were being taken.
+		&lt;br&gt;&lt;br&gt;
+		Asteroids and other solar system objects will be
+		added in the next minor version of ESASky, and imaging observations
+		from other missions will also be added soon.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-interface#SSO"
+		target="_blank"
+		&gt;
+		Full documentation of this feature.
+		&lt;/a&gt; </text>
+		<text key="treeMapContainer_help_EXT_TAP">
+		In ESASky you can now explore data from external data Services
+		which conforms with Virtual Observatory (IVOA) standards.
+		
+		Services which have any data in the current region will appear
+		in the tree map. Clicking on any service will show the available 
+		dataproduct types in the visible region (Images, Spectra etc). Clicking
+		on a prdouct type will show the available collections these product exist in.
+		
+		Clicking on the collection/facility will load the data into the data panel and display
+		the corresponding footprints in the sky. For FoV larger than 10° a map of observation coverage (MOC)
+		 of the available regions will be shown instead.
+		</text>
+		
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_LAMOST">
+		The Large Sky Area Multi-Object Fiber Spectroscopic Telescope (LAMOST) is a Chinese national scientific research facility operated by the National Astronomical Observatories, Chinese Academy of Sciences. It is a special reflecting Schmidt telescope with 4000 fibers in a field of view of 20 degrees. The LAMOST survey, initiated in 2012, provides flux- and wavelength-calibrated, sky-subtracted spectra in the wavelength range of 3690-9100 angstrom with a resolution of 1800 at the 5500 angstrom.for many types of astronomical objects.
+		&lt;br&gt;&lt;br&gt;
+		The fifth LAMOST data release (LAMOST DR5) includes observations until July 2017. The General Catalog contains 9,026,365 targets, of which 8,183,160 are stars, 152,863 galaxies, 52,453 QSO, and 637,889 unknown objects. There are 5,808,985 objects with g-band SNR larger than 10, 7,701,235 objects with i-band SNR larger than 10, and 5,734,239 objects with both g-band SNR larger than 10 and i-band SNR larger than 10.
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#LAMOST"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
+		The AKARI IRC Point Source Catalogue Version 1.0 provides positions 
+		and fluxes of 870,973 sources (844,649 sources in 9 micron band and 
+		194,551 sources in 18 micron band) in the Mid-Infrared wavelengths.
+		&lt;br&gt;&lt;br&gt;
+		
+		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron 
+		band twice or more during the 16 months of the cryogenic mission phase. 
+		The Point Source Catalogue is the primary catalogue from the AKARI IRC 
+		survey. The catalogue is designed to have a uniform detection limit over 
+		the entire sky, based on the uniform source detection limit per scan observation. 
+		Redundant observations are used to increase the reliability of the detection.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#Akari"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; </text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_AKARI">
+		ESASky serves all pointed observations taken with the InfraRed Camera (IRC) of this mission, which are directly downloaded from DARTS. The IRC consisted of three independent camera systems, NIR, MIR-S and MIR-L, which observed the wavelength bands of 1.7-5.5 μm, 5.8-14.1 μm, and 12.4-26.5 μm, respectively. Each camera system had three filters available. NIR and MIR-S covered the same field of view (FoV), while MIR-L had a different one, which did not overlap with the NIR/MIR-S FoV. A brief description of the instrument and data products is given in 
+		&lt;a
+		href="//repository.exst.jaxa.jp/dspace/bitstream/a-is/906920/1/AA1830017000.pdf"
+		target="_blank"&gt;
+		this document. 
+		&lt;/a&gt; 
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#AKARI-OBS"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Spitzer">
+		The Spitzer Science Center and the Infrared Processing and Analysis Center have produced as part of the Cryogenic Release 3 the SEIP Source List. This list contains photometry for 42 million stars and galaxies for the Infrared Array Camera (IRAC) at 3.6, 4.5, 5.8 adn 8 microns and for the 24 micron band of the Multiband Imaging Photometer (MIPS). The Spitzer SEIP Source List has been produced combining data across multiple Astronomical Observation Request (AOR) archival data that allows the extraction of fainter sources using a uniform processing pipeline taking advantage of the best and final calibration of the cryogenic imaging data.
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#Spitzer"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_Spitzer">
+		Spitzer Enhanced Imaging Products (SEIP), Cryogenic Release version 3.0. These are combined images ("Super Mosaics") for data from Spitzer's cryogenic mission, including all four bands (3.6, 4.5, 5.8, 8 microns) of the Infraed Array Camera (IRAC), and the 24 micron band of the Multiband Imaging Photometer for Spitzer ("MIPS").
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#Spitzer"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>
+	<text key="endTime">
+		End Time
+	</text>
+	<text key="LAMOST_obj_type">
+		Object Type
+	</text>
+	<text key="LAMOST_class">
+		Class
+	</text>
+	<text key="LAMOST_subclass">
+		Subclass
+	</text>
+	<text key="LAMOST_z">
+		Z
+	</text>
+	<text key="LAMOST_z_err">
+		Z Error
+	</text>
+	<text key="LAMOST_snr_u">
+		SNR U
+	</text>
+	<text key="LAMOST_snr_g">
+		SNR G
+	</text>
+	<text key="LAMOST_snr_r">
+		SNR R
+	</text>
+	<text key="LAMOST_snr_i">
+		SNR I
+	</text>
+	<text key="LAMOST_snr_z">
+		SNR Z
+	</text>
+	<text key="LAMOST_effective_temperature">
+		Effective Temperature &lt;i&gt;(K)&lt;/i&gt;
+	</text>
+	<text key="LAMOST_surface_gravity">
+		Surface Gravity
+	</text>
+	<text key="LAMOST_metallicity">
+		Metallicity
+	</text>
+	<text key="LAMOST_radial_velocity">
+		Radial Velocity &lt;i&gt;(km/s)&lt;/i&gt;
+	</text>
+	<text key="LAMOST_mag">
+		magnitude
+	</text>
+	<text key="AKARI_IRC_flux_s9w">
+		Flux S9W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_s9w_err">
+		Flux S9W Error &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_l18w">
+		Flux L18W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_l18w_err">
+		Flux L18W Error &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flag_s9w">
+		Flag S9W
+	</text>
+	<text key="AKARI_IRC_flag_l18w">
+		Flag L18W
+	</text>
+	<text key="AKARI_IRC_extended_s9w_flag">
+		Extended S9W Flag
+	</text>
+	<text key="AKARI_IRC_extended_l18w_flag">
+		Extended L18W Flag
+	</text>
+	<text key="AKARI_IRC_num_sw09_events">
+		Number of SW09 Events
+	</text>
+	<text key="AKARI_IRC_num_l18w_events">
+		Number of L18W Events
+	</text>
+	<text key="AKARI_IRC_orderBy_flux_s9w">
+		Flux S9W
+	</text>
+	<text key="publicationPanel_helpText">
+		Shown are the sources in the field-of-view that have associated publications according to SIMBAD. Clicking on each icon will open a table listing the publications for that object, including basic information (title, authors, publication date) and a link to the paper in ADS. There is also the possibility to load the full list of objects studied in a given publication for further exploration with ESASky. &lt;br&gt; &lt;br&gt; By default, ESASky is showing at most 3 000 sources with related publications at the same time, but this number can be changed in the settings.  
+		
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>
 	
 </Internationalization>

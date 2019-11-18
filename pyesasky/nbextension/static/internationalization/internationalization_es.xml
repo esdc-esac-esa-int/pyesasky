@@ -143,6 +143,9 @@
 	<text key="treeMap_SSO">
 		Observaciones de objetos del Sistema Solar (OSS)
 	</text>
+	<text key="treeMap_EXT_TAP">
+ 		Servicios TAP externos
+ 	</text>
 	<text key="treeMap_loading_ASTRO_IMAGING">
 		Cargando observaciones...
 	</text>
@@ -155,6 +158,9 @@
 	<text key="treeMap_loading_SSO">
 		Cargando observaciones del Sistema Solar...
 	</text>
+	<text key="treeMap_loading_EXT_TAP">
+		Cargando datos de servicios TAP externos...
+	</text>
 	<text key="treeMap_noData_ASTRO_IMAGING">
 		No se encontraron observaciones.
 	</text>
@@ -166,6 +172,9 @@
 	</text>
 	<text key="treeMap_noData_SSO">
 		No se encontraron observaciones del Sistema Solar.
+	</text>
+	<text key="treeMap_noData_EXT_TAP">
+		No se encontraron datos de servicios TAP externos
 	</text>
 	<text key="treeMap_nameOfSelectedLabel">
 		OSS: $SSONAME$ ($SSOTYPE$)
@@ -360,6 +369,9 @@
 	<text key="webConstants_exploreRandomTarget">
 		Investigue un objeto aleatorio
 	</text>
+	<text key="webConstants_exploreExtTaps">
+		Inspeccione datos de servicios TAP externos en esta región
+	</text>
 
 	<!-- displayUtils -->
 	<text key="displayUtils_connectivityProblems">
@@ -427,8 +439,7 @@
 	</text>
 	<text key="WelcomeDialog_description">
 		ESASky es una aplicaci&#243;n que le permite visualizar
-		y descargar datos astron&#243;micos p&#250;blicos de misiones
-		espaciales.
+		y descargar datos astron&#243;micos p&#250;blicos.
 	</text>
 	<text key="WelcomeDialog_closeButton">
 		Cerrar
@@ -567,7 +578,7 @@
 		Significancia
 	</text>
 	<text key="INTEGRAL_Exposure">
-		Exposici&#243;n (ksec)
+		Exposici&#243;n &lt;i&gt;(ksec)&lt;/i&gt;
 	</text>
 	<text key="observation_id">
 		ID Observaci&#243;n
@@ -793,28 +804,28 @@
 		Fecha
 	</text>
 	<text key="CHANDRA_flux_b">
-		Flujo ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_lower_flux_b">
-		Flujo Bajo ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo Bajo ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_upper_flux_b">
-		Flujo Alto ACIS (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo Alto ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_flux_w">
-		Flujo (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_lower_flux_w">
-		Flujo Bajo HCR (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo Bajo HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_upper_flux_w">
-		Flujo Alto HCR (erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo Alto HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="CHANDRA_snr">
 		Raz\u00F3n se&#241;al/ruido
@@ -897,12 +908,6 @@
 	</text>
 	<text key="header_help">
 		Ayuda
-	</text>
-
-	<text key="ESASky_Description">
-		ESASky es una aplicaci&#243;n que le permite visualizar
-		y descargar datos astron&#243;micos p&#250;blicos de misiones
-		espaciales.
 	</text>
 
 	<text key="PublicationsBySourceCallback_helpTitle">
@@ -1190,9 +1195,9 @@
 		informaci&#243;n detallada de la misi&#243;n SUZAKU y sus
 		productos,
 		visite:
-		&lt;a href="//www.astro.isas.jaxa.jp/suzaku/"
+		&lt;a href="//www.darts.isas.jaxa.jp/astro/suzaku/"
 		target="_blank"&gt;
-		www.astro.isas.jaxa.jp/suzaku/&lt;/a&gt;.
+		www.darts.isas.jaxa.jp/astro/suzaku/&lt;/a&gt;.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
 		href="//www.cosmos.esa.int/web/esdc/esasky-observations#SUZAKU-OBS"
@@ -1917,7 +1922,7 @@
 	and polarization angles for sources with a significance in polarization
 	>99.99%
 	<text
-		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ">
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ2">
 		El catálogo PSZ de Planck es una lista de detecciones de
 		distorsiones causadas por el efecto Sunyaev-Zel'dovich (SZ) en casi
 		todo el cielo.
@@ -2270,6 +2275,10 @@
 	<text key="stylePanel_removeMedianCheckBox">
 		Sustraer la mediana del MP
 	</text>
+	<text key="sourceLimitDescription_EXTTAP">
+		Mostrando los primeros $sourceLimit$ resultados. Haga zoom para obtener todos los datos disponibles 
+		en una regi&#243;n m&#225;s peque&#241;a.
+	</text>
 	<text key="sourceLimitDescription">
 		Mostrando las primeras $sourceLimit$ fuentes,
 		ordenadas
@@ -2281,66 +2290,66 @@
 		(N&#250;mero de im&#225;genes)
 	</text>
 	<text key="INTEGRAL_flux20_40">
-		Flujo&lt;sub&gt;20-40 keV&lt;/sub&gt; (mCrab)
+		Flujo&lt;sub&gt;20-40 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
 	</text>
 	<text key="INTEGRAL_flux40_100">
-		Flujo&lt;sub&gt;40-100 keV&lt;/sub&gt; (mCrab)
+		Flujo&lt;sub&gt;40-100 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
 	</text>
 	<text key="3XMM_EPIC_ep_8_flux">
-		Flujo&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="3XMM_EPIC_ep_8_flux_err">
-		Error del flujo&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Error del flujo&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_uvw1_ab_flux">
-		Flujo UVW1&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo UVW1&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_uvw2_ab_flux">
-		Flujo UVW2&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo UVW2&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_uvm2_ab_flux">
-		Flujo UVM2&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo UVM2&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_u_ab_flux">
-		Flujo U&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo U&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_v_ab_flux">
-		Flujo V&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo V&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_OM_b_ab_flux">
-		Flujo B&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo B&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b0">
-		Flujo (0.2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b0_err">
-		Error de flujo (0.2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Error de flujo (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b4">
-		Flujo (2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b4_err">
-		Error de flujo (2-12kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Error de flujo (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b5">
-		Flujo (0.2-2kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Flujo (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="XMM_Slew_flux_b5_err">
-		Error de flujo (0.2-2kev)&lt;br&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)
+		Error de flujo (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
 	<text key="pm_ra">
 		Movimiento propio en
@@ -2812,6 +2821,21 @@
 		&gt;
 		Documentaci&#243;n completa de esta funcionalidad.
 		&lt;/a&gt; </text>
+		
+	<text key="treeMapContainer_help_EXT_TAP">
+	Con ESASky es posible inspeccionar datos de servicios de datos externos que cumplan con los est&#225;ndares 
+	del Observatorio Virtual.
+	&lt;br&gt;&lt;br&gt;
+	Aquellos servicios que dispongan de datos en la regi&#243;n visualizada aparecen en el diagrama. 
+	Al pinchar en cualquiera de ellos, se presentar&#225;n todos los tipos de productos disponibles en esa
+	 regi&#243;n (im&#225;genes, espectros, etc.). Pinchando en uno de ellos se mostrar&#225;n todas las colecciones
+	  que disponen de ese tipo de producto.
+	&lt;br&gt;&lt;br&gt;
+	Al pinchar en una colecci&#243;n se cargar&#225;n los datos en el panel y se mostrar&#225;n las correspondientes
+	 huellas de las observaciones. Si el campo de visi&#243;n es mayor de 10&#176; se mostrar&#225; el mapa de
+	 cobertura en lugar de las observaciones individuales.
+	</text>
+	
 	<text key="ResizingDataPanel">
 		Re-escalando el Panel de Datos
 	</text>
@@ -2838,12 +2862,9 @@
 		Buscando cat&#225;logos en VizieR, radio de 2 arcmin
 	</text>
 	<text key="commonObservationTablePanel_showingGlobalSkyCoverage">
-		Mostrando la cobertura global de la misi&#243;n.
-
-		Ac&#233;rquese y refresque la tabla
-		para obtener las huellas de las
-		observaciones individuales.
-	</text>
+		Mostrando la cobertura global de este conjunto de datos. Haga zoom y vuelva a cargar la tabla para obtener 
+		las huellas de las observaciones individuales.
+		</text>
 	<text key="WelcomeDialog_checkbox">
 		No volver a mostrar este mensaje
 	</text>
@@ -3017,25 +3038,25 @@
 		Nombre
 	</text>
 	<text key="RAStart">
-		RA inicial obj. (J2000)
+		RA inicial obj. &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DecStart">
-		Dec inicial obj. (J2000)
+		Dec inicial obj. &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="RAEnd">
-		RA final obj. (J2000)
+		RA final obj. &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DecEnd">
-		Dec final obj. (J2000)
+		Dec final obj. &lt;i&gt;(J2000)&lt;/i&gt;
 	</text>
 	<text key="DeltaPosDeg">
-		Delta Pos. (grados)
+		Delta Pos. &lt;i&gt;(grados)&lt;/i&gt;
 	</text>
 	<text key="SSOVMag">
-		V obj. (Mag)
+		V obj. &lt;i&gt;(Mag)&lt;/i&gt;
 	</text>
 	<text key="SSODistanceAU">
-		Distancia obj. (UA)
+		Distancia obj. &lt;i&gt;(UA)&lt;/i&gt;
 	</text>
 	<text key="tableGroup_Observation">
 		Observaci&#243;n
@@ -3128,6 +3149,13 @@
 		se muestran un m&#225;ximo de 3000 fuentes con publicaciones
 		asociadas, pero este l&#237;mite puede modificarse en los ajustes de
 		la funcionalidad.
+		
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		Documentaci&#243;n completa de esta funcionalidad.
+		&lt;/a&gt; 
 	</text>
 	<text key="publicationPanel_sourceLimitWarning">
 		Atenci&#243;n: Un l&#237;mite alto en el n&#250;mero de
@@ -3138,16 +3166,6 @@
 	</text>
 	<text key="publicationPanel_truncationValuePublicationLeast">
 		menor
-	</text>
-	<text
-		key="publicationPanel_truncationValuePublicationNumberOfPublications">
-		n&#250;mero de publicaciones
-	</text>
-	<text key="publicationPanel_getTheFirst">
-		Resultado limitado a las primeras
-	</text>
-	<text key="publicationPanel_sourcesBasedOn">
-		fuentes con el
 	</text>
 	<text key="publicationPanel_resetTooltip">
 		Restablecer l&#237;mite en el n&#250;mero de fuentes
@@ -3202,8 +3220,186 @@
 	<text key="searchPanel_inputByAuthor">
 		Por autor
 	</text>
-	
+	<text key="PublicationsByAuthorCallback_helpTitle">
+		Publicaciones por autor
+	</text>
+	<text key="PublicationsByAuthorCallback_helpDescription">
+		Publicaciones asociadas al nombre de este/a autor/a en SIMBAD, y acceso a las fuentes en SIMBAD de cada publicaci&#243;n
+		&lt;br&gt;
+		&lt;b&gt;
+		SIMBAD solo contiene publicaciones con objetos asociados (seg&#250;n CDS)
+		&lt;/b&gt;
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		Documentaci&#243;n completa de esta funcionalidad
+		&lt;/a&gt; 
+	</text>
+	<text key="MultiTargetTooltip_noNearbySimbadIdFound">
+		No se ha encontrado ningún identificador de SIMBAD cercano
+	</text>
+	<text key="MultiTargetTooltip_resolvingNearbyTargets">
+		Buscando objetos cercanos
+	</text>
 
+	<text key="datalinkDownload_loading">
+		Cargando datalink
+	</text>
+	<text key="datalink_loadFailed">
+		Error cargando datalink
+	</text>
+
+	<text key="abstractTablePanel_download">
+		Descargar
+	</text>
+
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_LAMOST">
+		El  Large Sky Area Multi-Object Fiber Spectroscopic Telescope (LAMOST) es una instalaci&#243;n cient&#237;fica china operada por los Observatorios Astron&#243;micos Nacionales de la Academia China de Ciencias. Se trata de un telescopio reflector Schmidt con 4000 fibras en un campo de visi&#243;n de 20 grados. El estudio LAMOST, iniciado en 2012, proporciona espectros calibrados en longitud de onda y flujo, sustra&#237;dos de cielo, en el rango  3690-9100 &#197;, con una resoluci&#243;n de 1800 a 5500 &#197;, para muchos tipos diferentes de objetos astron&#243;micos.
+		&lt;br&gt;&lt;br&gt;
+		La quinta edici&#243;n del estudio (LAMOST DR5) incluye observaciones hasta julio de 2017. El Cat&#225;logo General contiene 9.026.365 objetos, de los cuales 8.183.160 son estrellas, 152.863 galaxias, 52.453 qu&#225;sares, y 637.889 son de tipo desconocido. Se incluyen 5.808.985 objetos con una ratio se&#241;al-ruido (S/N) mayor que 10 en la banda g, 7.701.235 objetos con ratio se&#241;al-ruido mayor que 10 en la banda i, y 5.734.239 objetos con ratio se&#241;al-ruido mayor que 10 en ambas bandas.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#LAMOST"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; 
+	</text>
+	
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
+		La versi&#243;n 1.0 del cat&#225;logo IRC de fuentes puntuales de la 
+		misi&#243;n AKARI contiene posiciones y flujos de 870,973 fuentes 
+		en longitudes de onda del infrarrojo medio (844,649 fuentes en la 
+		banda de 9 micras y 194,551 fuentes en la banda de 18 micras).&#10;&#10;
+		&lt;br&gt;&lt;br&gt;
+		La c&#225;mara 
+		IRC escane&#243; el 96% del cielo en la banda de 9 micras (97% en la banda de 18 micras) 
+		dos o m&#225;s veces durante los 16 meses de la fase criog&#233;nica de la misi&#243;n. 
+		El cat&#225;logo de fuentes puntuales es el cat&#225;logo principal de la AKARI IRC 
+		survey. El cat&#225;logo est&#225; dise&#241;ado para peter un l&#237;mite de 
+		detecci&#243;n uniforme en todo el cielo, basado en el l&#237;mite de 
+		detecci&#243;n uniforme de cada observaci&#243;n. Observaciones redundantes 
+		se usan para aumentar la fiabilidad de la detecci&#243;n.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#Akari"
+		target="_blank"&gt;
+		M&#225;s informacion
+		&lt;/a&gt; 
+	</text>
+	
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_AKARI">
+		ESASky ofrece todas las observaciones de objetos espec&#237;ficos realizadas con la c&#225;mara infrarroja IRC de esta misi&#243;n, las cuales se descargan directamente de DARTS. La IRC consist&#237;a en tres sistemas independientes, NIR, MIR-S y MIR-L, que observaban en los rangos 1.7-5.5 &#956;m, 5.8-14.1 &#956;m y 12.4-26.5 &#956;m, respectivamente. Cada sistema dispon&#237;a de tres filtros. NIR y MIR-S cubr&#237;an el mismo campo de visi&#243;n, mientras que el de MIR-L era diferente y no se solapaba con el anterior. Este documento
+		&lt;a
+		href="//repository.exst.jaxa.jp/dspace/bitstream/a-is/906920/1/AA1830017000.pdf"
+		target="_blank"&gt;
+		proporciona una breve descripci&#243;n del instrumento y sus productos. 
+		&lt;/a&gt; 
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#AKARI-OBS"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Spitzer">
+		Como parte de la tercera remesa de datos de la fase criog&#233;nica (Cryogenic Release 3), el Spitzer Science Center y el Infrared Processing and Analysis Center (IPAC) han producido la lista de fuentes SEIP (SEIP Source List). Esta lista contiene la fotometr&#237;a de 42 millones de estrellas y galaxias medida con la c&#225;mara IRAC (Infrared Array Camera) en 3,6, 4,5, 5,8 y 8 micras y con el fot&#243;metro MIPS (Multiband Imaging Photometer) en 24 micras. Para producirla, se combinaron los datos archivados de m&#250;ltiples solicitudes de observaci&#243;n (Astronomical Observation Requests, AOR), lo que permiti&#243; la extracci&#243;n de fuentes m&#225;s d&#233;biles mediante un software de procesado uniforme, aprovechando  al m&#225;ximo la calibraci&#243;n final de las im&#225;genes de la fase criog&#233;nica.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#Spitzer"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; 
+	</text>
+	
+	
+	
+	
+	<text key="endTime">
+		Tiempo final
+	</text>
+		<text key="LAMOST_obj_type">
+		Tipo de objeto
+	</text>
+		<text key="LAMOST_class">
+		Clase
+	</text>
+		<text key="LAMOST_subclass">
+		Subclase
+	</text>
+		<text key="LAMOST_z">
+		Z
+	</text>
+	<text key="LAMOST_z_err">
+		Error en Z
+	</text>
+	<text key="LAMOST_snr_u">
+		S/N U
+	</text>
+	<text key="LAMOST_snr_g">
+		S/N G
+	</text>
+	<text key="LAMOST_snr_r">
+		S/N R
+	</text>
+	<text key="LAMOST_snr_i">
+		S/N I
+	</text>
+	<text key="LAMOST_snr_z">
+		S/N Z
+	</text>
+	<text key="LAMOST_effective_temperature">
+		Temperatura efectiva &lt;i&gt;(K)&lt;/i&gt;
+	</text>
+	<text key="LAMOST_surface_gravity">
+		Gravedad superficial
+	</text>
+	<text key="LAMOST_metallicity">
+		Metalicidad
+	</text>
+	<text key="LAMOST_radial_velocity">
+		Velocidad radial  &lt;i&gt;(km/s)&lt;/i&gt;
+	</text>
+	<text key="LAMOST_mag">
+		magnitud
+	</text>
+	<text key="AKARI_IRC_flux_s9w">
+		Flujo en S9W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_s9w_err">
+		Error del Flujo S9W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_l18w">
+		Flujo en L18W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flux_l18w_err">
+		Error del Flujo L18W &lt;i&gt;(Jy)&lt;/i&gt;
+	</text>
+	<text key="AKARI_IRC_flag_s9w">
+		Indicador para S9W
+	</text>
+	<text key="AKARI_IRC_flag_l18w">
+		Indicador para  L18W
+	</text>
+	<text key="AKARI_IRC_extended_s9w_flag">
+		Indicador de objeto extendido para S9W
+	</text>
+	<text key="AKARI_IRC_extended_l18w_flag">
+		Indicador de objeto extendido para L18W
+	</text>
+	<text key="AKARI_IRC_num_sw09_events">
+		N&#250;mero de eventos en SW09
+	</text>
+	<text key="AKARI_IRC_num_l18w_events">
+		N&#250;mero de eventos en L18W
+	</text>
+	<text key="AKARI_IRC_orderBy_flux_s9w">
+		Flujo en S9W
+	</text>
+	<text key="searchPanel_target">
+		Destino
+	</text>
 
 </Internationalization>
 

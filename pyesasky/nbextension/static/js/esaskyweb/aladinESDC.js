@@ -6647,7 +6647,7 @@ MOC = (function() {
     }
 
     // add pixel (order, ipix)
-    MOC.prototype._addPix = function(order, ipix, opacity) {
+    MOC.prototype._addPix = function(order, ipix) {
         var ipixOrder3 = Math.floor(ipix * Math.pow(4, (3 - order)));
         // fill low and high level cells
         // 1. if order <= LOWRES_MAXORDER, just store value in low and high res cells
@@ -6655,30 +6655,24 @@ MOC = (function() {
             if (!(order in this._lowResIndexOrder3[ipixOrder3])) {
                 this._lowResIndexOrder3[ipixOrder3][order] = [];
                 this._highResIndexOrder3[ipixOrder3][order] = [];
-                this._opacity[ipixOrder3][order] = [];
             }
             this._lowResIndexOrder3[ipixOrder3][order].push(ipix);
             this._highResIndexOrder3[ipixOrder3][order].push(ipix);
-            this._opacity[ipixOrder3][order].push(opacity)
         }
         // 2. if LOWRES_MAXORDER < order <= HIGHRES_MAXORDER , degrade ipix for low res cells
         else if (order <= MOC.HIGHRES_MAXORDER) {
             if (!(order in this._highResIndexOrder3[ipixOrder3])) {
                 this._highResIndexOrder3[ipixOrder3][order] = [];
-        		this._opacity[ipixOrder3][order] = [];
             }
             this._highResIndexOrder3[ipixOrder3][order].push(ipix);
-            this._opacity[ipixOrder3][order].push(opacity)
 
             var degradedOrder = MOC.LOWRES_MAXORDER;
             var degradedIpix = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
             var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
             if (!(degradedOrder in this._lowResIndexOrder3[degradedIpixOrder3])) {
                 this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
-           		this._opacity[degradedIpixOrder3][degradedOrder] = [];
             }
             this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
-            this._opacity[degradedIpixOrder3][degradedOrder].push(opacity)
         }
         // 3. if order > HIGHRES_MAXORDER , degrade ipix for low res and high res cells
         else {
@@ -6688,7 +6682,6 @@ MOC = (function() {
             var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
             if (!(degradedOrder in this._lowResIndexOrder3[degradedIpixOrder3])) {
                 this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
-                this._opacity[degradedIpixOrder3][degradedOrder] = [];
             }
             this._lowResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
 
@@ -6701,7 +6694,6 @@ MOC = (function() {
                 this._highResIndexOrder3[degradedIpixOrder3][degradedOrder] = [];
             }
             this._highResIndexOrder3[degradedIpixOrder3][degradedOrder].push(degradedIpix);
-            this._opacity[degradedIpixOrder3][degradedOrder].push(opacity)
         }
 
         this.nbCellsDeepestLevel += Math.pow(4, (this.order - order));
@@ -6729,9 +6721,8 @@ MOC = (function() {
                     this.order = order;
                 }
                 for (var k = 0; k < jsonMOC[orderStr].length; k++) {
-                    ipix = jsonMOC[orderStr][k][0];
-                    opacity = jsonMOC[orderStr][k][1];
-                    this._addPix(order, ipix, opacity);
+                    ipix = jsonMOC[orderStr][k];
+                    this._addPix(order, ipix);
                 }
             }
         }
@@ -6819,6 +6810,25 @@ MOC = (function() {
         this.view = view;
         this.reportChange();
     };
+    
+    MOC.prototype.setOpacity = function(opacity) {
+        this.opacity = opacity;
+        this.reportChange();
+    };
+    
+    MOC.prototype.setColor = function(color) {
+        this.color = color;
+        this.reportChange();
+    };
+    
+    MOC.prototype.clearAll = function() {
+        for (var k = 0; k < 768; k++) {
+            this._highResIndexOrder3[k] = {};
+            this._lowResIndexOrder3[k] = {};
+            this._opacity[k] = {};
+        }
+        this.reportChange();
+    }
 
     MOC.prototype.draw = function(ctx, projection, viewFrame, width, height, largestDim, zoomFactor, fov) {
         if (!this.isShowing || !this.ready) {
@@ -6913,11 +6923,13 @@ MOC = (function() {
         } else {
             ctx.fill();
             ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = this.color;
+            ctx.stroke();
         }
     };
 
     var drawCorners = function(ctx, xyCorners) {
-   		ctx.beginPath();
+   		//	ctx.beginPath();
         ctx.moveTo(xyCorners[0].vx, xyCorners[0].vy);
         ctx.lineTo(xyCorners[1].vx, xyCorners[1].vy);
         ctx.lineTo(xyCorners[2].vx, xyCorners[2].vy);
@@ -7118,7 +7130,7 @@ CooGrid = (function() {
         };
     };
 
-    var NB_STEPS = 20;
+    var NB_STEPS = 50;
     var NB_LINES = 20;
 
     CooGrid.prototype.redraw = function(ctx, projection, cooFrame, width, height, largestDim, zoomFactor, viewCenter, fov) {
@@ -7599,14 +7611,13 @@ Circle = (function() {
         }
     };
 
-    Circle.prototype.dispatchClickEvent = function() {
+ 	Circle.prototype.dispatchClickEvent = function() {
         if (this.overlay) {
             // footprint selection code adapted from Fabrizzio Giordano dev. from Serco for ESA/ESDC
             //window.dispatchEvent(new CustomEvent("footprintClicked", {
-            this.overlay.view.aladinDiv.dispatchEvent(new CustomEvent("footprintClicked", {
+            window.dispatchEvent(new CustomEvent("footprintClicked", {
                 detail: {
-                    footprintId: this.id,
-                    overlayName: this.overlay.name
+                    shape: this
                 }
             }));
         }
@@ -7636,6 +7647,16 @@ Circle = (function() {
             return;
         }
         this.isSelected = false;
+        if (this.overlay) {
+            this.overlay.reportChange();
+        }
+    };
+    
+    Circle.prototype.hover = function(isHovered) {
+        if (this.isHovered == isHovered) {
+            return;
+        }
+        this.isHovered = isHovered;
         if (this.overlay) {
             this.overlay.reportChange();
         }
@@ -12087,7 +12108,7 @@ View = (function() {
                     view.aladin.measurementTable.hide();
                     view.popup.hide();
 
-                    if (view.lastClickedObject instanceof Footprint) {
+                    if (view.lastClickedObject instanceof Footprint || view.lastClickedObject instanceof Circle) {
                         //view.lastClickedObject.deselect();
                     } else {
                         view.lastClickedObject.actionOtherObjectClicked();
@@ -12354,13 +12375,15 @@ View = (function() {
                 }
 
                 // trigger callback only if FoV (zoom) has changed !
-                if (fov !== this.old_fov) {
+            	if (fov !== this.old_fov || view.height !== this.old_height || view.width !== this.old_width) {
                     var fovChangedFn = view.aladin.callbacksByEventName['zoomChanged'];
-                    (typeof fovChangedFn === 'function') && fovChangedFn(fov);
+                    (typeof fovChangedFn === 'function') && fovChangedFn(fov, view.height * fov / view.width);
 
                     // finally, save fov value
                     this.old_fov = fov;
-                }
+                    this.old_height = view.height;
+                    this.old_width = view.width;
+            	}
 
             },
             View.CALLBACKS_THROTTLE_TIME_MS);
@@ -14032,7 +14055,7 @@ Aladin = (function() {
     Aladin.prototype.setZoom = function(fovDegrees) {
         this.view.setZoom(fovDegrees);
     };
-
+    
     // @API
     Aladin.prototype.setFoV = Aladin.prototype.setFov = function(fovDegrees) {
         this.view.setZoom(fovDegrees);
@@ -14399,10 +14422,8 @@ Aladin = (function() {
         this.view.addOverlay(overlay);
     };
     
-     Aladin.prototype.createMOC = function(options, jsonMOC) {
-        var moc = new MOC(options);
-        moc.dataFromJSON(jsonMOC);
-        this.view.addMOC(moc);
+     Aladin.prototype.createMOC = function(options) {
+        return new MOC(options);
     };
     
     Aladin.prototype.addMOC = function(moc) {
@@ -14452,7 +14473,26 @@ Aladin = (function() {
     Aladin.prototype.setOverlayImageLayer = function(imageSurvey, callback) {
         this.view.setOverlayImageSurvey(imageSurvey, callback);
     };
-
+    
+    //@api
+    Aladin.prototype.getVisibleNpix = function(norder){
+    	var cells = this.view.getVisibleCells(norder, CooFrameEnum.J2000);
+    	var txt = "";
+    	cells.forEach(myFunction); 
+    	function myFunction(value) {
+  			txt = txt + value.ipix + ",";
+		}
+    	return txt;
+	}
+    //@api
+    Aladin.prototype.triggerMouseWheelEvent = function(event){
+    	var newEvent = new Event("wheel");
+    	newEvent.detail = event.detail;
+    	newEvent.deltaY = event.detail;
+    	this.view.reticleCanvas.dispatchEvent(newEvent)
+	}
+	
+	
 
     Aladin.prototype.increaseZoom = function(step) {
         if (!step) {

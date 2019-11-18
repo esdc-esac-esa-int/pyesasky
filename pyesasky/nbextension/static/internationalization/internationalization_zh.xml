@@ -1,0 +1,2298 @@
+﻿﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Internationalization>
+<Internationalization langCode="zh" label="中文">
+	<text key="header_learnMore">
+		了解更多关于ESASky的信息
+	</text>
+	<text key="header_getURLCurrentView">
+		分享当前视图的网址
+	</text>
+	<text key="header_viewInWWTAbbr">
+		显示于WWT
+	</text>
+	<text key="header_viewInWWTFull">
+		在万维望远镜中显示
+	</text>
+	<text key="header_takeScreenshotFull">
+		获取当前页面截屏
+	</text>
+	<text key="header_takeScreenshot">
+		截屏
+	</text>
+	<!-- menuPanel -->
+	<text key="header_videoTutorials">
+		视频教程
+	</text>
+	<text key="header_comunity">
+		反馈
+	</text>
+	<text key="header_aboutUs">
+		关于我们
+	</text>
+	<text key="header_releaseNotes">
+		版本说明
+	</text>
+	<text key="header_newsletter">
+		新闻简报
+	</text>
+	<text key="header_sciMode">
+		科学模式
+	</text>
+	<text key="header_sciModeSwitchTooltip">
+		在科学模式和探索模式之间切换
+	</text>
+	<text key="header_share">
+		分享
+	</text>
+	<text key="header_help">
+		帮助
+	</text>
+
+	<!-- JsonRequestCallback -->
+	<text key="JsonRequestCallback_retrievingMOC">
+		获取MOC
+	</text>
+
+	<!-- SSOOrbitMetadataCallback -->
+	<text key="SSOOrbitMetadataCallback_retrievingOrbitPoints">
+		获取 $SSONAME$ 的轨迹点
+	</text>
+
+	<!-- countRequestCallback -->
+	<text key="CountRequestCallback_countingAvailableData">
+		数据刷新中……
+	</text>
+
+	<!-- getMissionDataCountRequestCallback -->
+	<text key="GetMissionDataCountRequestCallback_searchingInArchive">
+		检索 $NAME$ 归档数据
+	</text>
+
+	<!-- publicationsSourcesCallback -->
+	<text key="PublicationsSourcesCallback_retrievingPubSources">
+		获取与文章相关的资源
+	</text>
+
+	<!-- publicationsBySourceCallback -->
+	<text key="PublicationsBySourceCallback_retrievingPubsOf">
+		检索与 $NAME$ 相关的文章
+	</text>
+	<text key="PublicationsBySourceCallback_helpTitle">
+		文章
+	</text>
+	<text key="PublicationsBySourceCallback_helpDescription">
+		SIMBAD天文数据库中与目标相关联的文章，或访问每篇文章所包含的目标。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		关于此功能的完整文档
+		&lt;/a&gt; 
+	</text>
+
+	<!-- metadataCallback -->
+	<text key="MetadataCallback_retrievingMissionMetadata">
+		获取 $NAME$ 元数据
+	</text>
+	<text key="MetadataCallback_retrievingMissionData">
+		获取 $NAME$ 数据
+	</text>
+	<text key="MetadataCallback_retrievingSSOMetadata">
+		获取太阳系天体 $NAME$ 元数据
+	</text>
+
+	<!-- searchPanel -->
+	<text key="searchPanel_inputByTargetName ">
+		输入目标名称：
+	</text>
+	<text key="searchPanel_solarSystemObjects">
+		太阳系天体：
+	</text>
+	<text key="searchPanel_inputByName">
+		按名称：
+	</text>
+	<text key="searchPanel_inputByObjectNumber">
+		按天体编号：
+	</text>
+	<text key="searchPanel_inputByCoordinates">
+		输入目标坐标：
+	</text>
+	<text key="searchPanel_wrongCoordsInput">
+		坐标解析错误，请检查可用的输入格式
+	</text>
+	<text key="searchPanel_ssoTargetNotFound">
+		未找到太阳系天体
+	</text>
+	<text key="searchPanel_seeMoreExamples">
+		浏览更多示例
+	</text>
+	<text key="searchPanel_search">
+		搜索...
+	</text>
+
+	<!-- searchPresenter_resolvingTarget -->
+	<text key="searchPresenter_resolvingTarget">
+		正在解析 $NAME$ ...
+	</text>
+
+	<!-- uploadTargetList -->
+	<text key="uploadTargetList_targetList">
+		目标列表文件：
+	</text>
+	<text key="uploadTargetList_targetListDescriptionText">
+		选择一个示例目标列表或选择一个包含目标列表的文本文件，可以是目标名称（应能通过SIMBAD进行解析）或坐标列表。
+		当列表加载时，界面顶部会出现“正在解析目标列表...”。当加载完成后，目标列表就会出现在左侧。
+		&lt;br&gt;&lt;br&gt;
+		点击一个目标以查看它。如果一个目标不能被SIMBAD天文数据库解析，它将会被排除掉。
+		目标列表下方有一些视频风格的按钮，按下播放键后将对目标列表进行播放。
+		当前目标将在列表中高亮显示，文本和注释也可以添加到目标列表中，其中文本会在ESASky的播放器按钮栏下方显示。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-target-lists"
+		target="_blank"&gt;
+		文本显示的格式及一些示例文件，请参阅此链接
+		&lt;/a&gt;
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#list"
+		target="_blank"&gt;
+		关于此功能的完整文档
+		&lt;/a&gt;
+	</text>
+	<text key="uploadTargetList_uploadTargetList">
+		上传目标列表
+	</text>
+	<text key="uploadTargetList_uploadTargetListFailed">
+		操作失败，由于
+	</text>
+	<text key="uploadTargetList_removeTargetList">
+		移除目标列表
+	</text>
+	<text key="uploadTargetList_title">
+		目标列表
+	</text>
+	<text key="uploadTargetList_selectList">
+		选择目标列表
+	</text>
+	<text key="uploadTargetList_orUpload">
+		或
+	</text>
+	<text key="uploadTargetList_resolvingTargetList">
+		解析目标列表
+	</text>
+
+	<!-- uploadTargetListPanel -->
+	<text key="uploadTargetListPanel_MultiTargetCatalog">
+		多目标星表
+	</text>
+
+	<!-- treeMap -->
+	<text key="treeMap_ASTRO_IMAGING">
+		图像观测
+	</text>
+	<text key="treeMap_ASTRO_CATALOGUE">
+		星表
+	</text>
+	<text key="treeMap_ASTRO_SPECTRA">
+		光谱
+	</text>
+	<text key="treeMap_SSO">
+		太阳系天体观测
+	</text>
+	<text key="treeMap_loading_ASTRO_IMAGING">
+		加载观测结果
+	</text>
+	<text key="treeMap_loading_ASTRO_CATALOGUE">
+		加载星表
+	</text>
+	<text key="treeMap_loading_ASTRO_SPECTRA">
+		加载光谱
+	</text>
+	<text key="treeMap_loading_SSO">
+		加载太阳系天体
+	</text>
+	<text key="treeMap_noData_ASTRO_IMAGING">
+		未找到图像观测结果
+	</text>
+	<text key="treeMap_noData_ASTRO_CATALOGUE">
+		未找到星表条目
+	</text>
+	<text key="treeMap_noData_ASTRO_SPECTRA">
+		未找到光谱数据
+	</text>
+	<text key="treeMap_noData_SSO">
+		未找到太阳系天体观测结果
+	</text>
+	<text key="treeMap_nameOfSelectedLabel">
+		太阳系天体：$SSONAME$ ($SSOTYPE$)
+	</text>
+
+	<!-- Sky -->
+	<text key="sky_wavelength">
+		波长
+	</text>
+	<text key="sky_selectWavelength">
+		选择波段
+	</text>
+	<text key="sky_skies">
+		天空图层
+	</text>
+	<text key="sky_selectSky">
+		选择天空图层
+	</text>
+	<text key="sky_selectSky_help">
+		天空按照不同波段（从伽马射线到射电波段）划分成了不同图层。
+		底部的其他区块目前用于放置物理模型。
+		在第一个面板中按波段选择天空图层，然后可在第二个面板中进行浏览。
+		单击 i 图标可以找到天空图层的详细信息。
+		想获取更多细节和所有可用的天空图层列表，可访问 HiPS 信息页。
+		&lt;br&gt;&lt;br&gt;
+		天空图层的颜色是可以修改的，可以选择颜色表中的“原色”、“EOSB”、“普朗克”、“彩虹”、“灰度”和“立方螺旋”。
+		&lt;br&gt;&lt;br&gt;
+		可以通过 + 按钮添加一个天空图层。
+		&lt;br&gt;&lt;br&gt;
+		单击视频样式的按钮可以在堆栈中控制播放内容“前进”、“后退”或“停止”。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#skies"
+		target="_blank"&gt;
+		关于此功能的完整文档
+		&lt;/a&gt; 
+	</text>
+	<text key="sky_selectASky">
+		选择一个天空图层
+	</text>
+	<text key="sky_skyDetails">
+		天空图层细节
+	</text>
+	<text key="sky_removeSky">
+		移除天空图层
+	</text>
+	<text key="sky_loadingSkies">
+		加载天空图层
+	</text>
+
+	<!-- HiPS Details Popup -->
+	<text key="hiPSDetailsPopup_mapName">
+		星图名称：
+	</text>
+	<text key="hiPSDetailsPopup_mission">
+		任务：
+	</text>
+	<text key="hiPSDetailsPopup_instrument">
+		仪器：
+	</text>
+	<text key="hiPSDetailsPopup_wavFreq">
+		波长/频率：
+	</text>
+	<text key="hiPSDetailsPopup_mapCreatedBy">
+		星图创建者：
+	</text>
+	<text key="hiPSDetailsPopup_forMoreInformation">
+		更多信息请点击&amp;nbsp;
+	</text>
+	<text key="hiPSDetailsPopup_here">
+		此处
+	</text>
+	<text key="hiPSDetailsPopup_close">
+		关闭
+	</text>
+
+	<!-- Change Palette Button -->
+	<text key="changePaletteBtn_changePaletteTooltip">
+		调色板
+	</text>
+
+	<!-- abstractTablePanel -->
+	<text key="abstractTablePanel_downloadRow">
+		下载行
+	</text>
+	<text key="abstractTablePanel_preview">
+		预览
+	</text>
+	<text key="abstractTablePanel_sourceInPublication">
+	</text>
+	<text key="abstractTablePanel_name">
+		名称
+	</text>
+	<text key="abstractTablePanel_observation">
+		观测
+	</text>
+
+	<text key="abstractTablePanel_noDataMatching">
+		没有符合过滤条件的数据
+	</text>
+
+	<text key="dateFilter_resetFilter">
+		重置过滤条件
+	</text>
+	<text key="doubleFilter_resetFilter">
+		重置过滤条件
+	</text>
+
+	<!-- commonObservationTablePanel -->
+	<text key="commonObservationTablePanel_sendRowToVOA">
+		发送数据行到虚拟天文台应用程序
+	</text>
+	<text key="commonObservationTablePanel_centreOnObservation">
+		居中于观测点
+	</text>
+
+	<!-- sourcesTablePanel -->
+	<text key="SourcesTablePanel_centreOnSource">
+		居中于源
+	</text>
+
+	<!-- planObservationPanel -->
+	<text key="planObservationPanel_projectFutureObservations">
+		用于 $MISSION$ 的观测规划工具
+	</text>
+	<text key="planObservationPanel_helpMessageText">
+		此工具将天文仪器的覆盖区域显示到天空中，并且可以任意选择位置和方向，以协助天文学家制定观测计划。
+		目前，该工具可应用于詹姆斯韦伯天文望远镜（JWST）的所有仪器，包括它的整个焦平面。在不久的将来，还有将适配其他望远镜，如XMM牛顿望远镜、哈勃空间望远镜等等。
+		&lt;br&gt;&lt;br&gt;
+		注意：此功能不是为了取代詹姆斯韦伯天文望远镜的观测提案工具（APT），而是用于协助那些准备使用詹姆斯韦伯天文望远镜对ESASky中已有数据进行重复观测的天文学家。
+		或者协助天文学家确认他们的观测点覆盖（或避开）了特定区域。
+		利用这个功能生成的坐标和位置角度应在官方的APT中进行检查和不断完善。
+		关于APT的安装及相关信息，请查看
+		&lt;a href="//www.stsci.edu/hst/proposing/apt" target="_blank"&gt;
+		这个 STScI 网页&lt;/a&gt;; 
+		关于JWST不同仪器的详细信息，
+		&lt;a href="//jwst.stsci.edu/instrumentation" target="_blank"&gt;
+		可以在这里查阅&lt;/a&gt;。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.youtube.com/watch?v=n2iW1HfVgVE&amp;feature=youtu.be"
+		target="_blank"&gt;
+		也可以访问如下视频：了解如何制订JWST的观测计划&lt;/a&gt;。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#planning"
+		target="_blank"&gt;
+		关于此功能的完整文档&lt;/a&gt; 		
+	</text>
+	
+	<!-- futureFootprintRow -->
+	<text key="futureFootprintRow_addJWSTInstrument">
+		添加JWST的一个终端设备
+	</text>
+	<text key="futureFootprintRow_rotation">
+		旋转
+	</text>
+	<text key="futureFootprintRow_allInstruments">
+		所有仪器
+	</text>
+	<text key="futureFootprintRow_removeFootprint">
+		移除该覆盖图
+	</text>
+	<text key="futureFootprintRow_increase">
+		增强
+	</text>
+	<text key="futureFootprintRow_angleBy">
+		角度
+	</text>
+	<text key="futureFootprintRow_decrease">
+		减弱
+	</text>
+	<text key="futureFootprintRow_copyCoordinatesAndData">
+		复制坐标和数据
+	</text>
+	<text key="futureFootprintRow_centre">
+		中心
+	</text>
+	<text key="futureFootprintRow_coordinateSystem">
+		坐标系：
+	</text>
+	<text key="futureFootprintRow_dataCopiedToClipboard">
+		数据已复制到剪贴板
+	</text>
+	<text key="futureFootprintRow_aperture">
+		光圈
+	</text>
+
+
+	<!-- screenShotDialogBox -->
+	<text key="screenShotDialogBox_screenshot">
+		ESASky截屏
+	</text>
+
+	<!-- ctrlToolBar -->
+	<text key="ctrlToolBar_URLClipboard">
+		网址已复制到剪贴板
+	</text>
+
+	<!-- ctrlToolBarPresenter -->
+	<text key="ctrlToolBarPresenter_bibcode">
+		期刊文章识别码：$HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_authors">
+		作者：$HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_journal">
+		期刊：$JOURNAL$, $DATE$
+	</text>
+	<text key="ctrlToolBarPresenter_pubSources">
+		文章包含的源：
+	</text>
+	<text key="ctrlToolBarPresenter_adsSearch">
+		检索ADS：$HTML$
+	</text>
+	<text key="ctrlToolBarPresenter_authorSources">
+		与作者相关的源：
+	</text>
+	<text key="ctrlToolBarPresenter_showingMaxSources">
+		只显示前 $COUNT$ 个源
+	</text>
+	<text key="ctrlToolBarPresenter_showingCountSources">
+		显示 $COUNT$ 个源
+	</text>
+	<text key="ctrlToolBarPresenter_loadPublicationDetails">
+		加载文章的详细信息
+	</text>
+	<text key="ctrlToolBarPresenter_retrievingPublicationTargetList">
+		获取目标列表
+	</text>
+
+	<!-- playerPanel -->
+	<text key="playerPanel_next">
+		下一层
+	</text>
+	<text key="playerPanel_pause">
+		暂停
+	</text>
+	<text key="playerPanel_play">
+		自动切换
+	</text>
+	<text key="playerPanel_previous">
+		上一层
+	</text>
+	<text key="playerPanel_surveyTourStarted">
+		巡天漫游开始
+	</text>
+
+	<!-- sampConstants -->
+	<text key="sampConstants_help">
+		关于SAMP互操作信息的帮助
+	</text>
+	<text key="sampConstants_sendingViaSamp">
+		通过SAMP发送 @@
+	</text>
+
+	<!-- webConstants -->
+	<text key="webConstants_manageSkies">
+		天空图层
+	</text>
+	<text key="webConstants_uploadTargetList">
+		目标列表
+	</text>
+	<text key="webConstants_exploreImageObservations">
+		图像数据
+	</text>
+	<text key="webConstants_exploreCatalogue">
+		星表数据
+	</text>
+	<text key="webConstants_exploreSpectral">
+		光谱数据
+	</text>
+	<text key="webConstants_exploreData">
+		浏览 $TARGET$ 的数据
+	</text>
+	<text key="webConstants_trackSSO">
+		通过搜索框追踪太阳系天体
+	</text>
+	<text key="webConstants_projectFutureObservations">
+		观测规划工具
+	</text>
+	<text key="webConstants_explorePublications">
+		文献数据
+	</text>
+	<text key="webConstants_exploreRandomTarget">
+		随机浏览
+	</text>
+
+	<!-- displayUtils -->
+	<text key="displayUtils_connectivityProblems">
+		网络连通问题
+	</text>
+	<text key="displayUtils_VOnotFound">
+		未能在您的电脑上找到正在运行的虚拟天文台工具
+	</text>
+	<text key="displayUtils_startOneOf">
+		请选择一项：
+	</text>
+	<text key="displayUtils_toCommunicateWithDS9">
+		为了与DS9通信，您也必须启动
+	</text>
+	<text key="displayUtils_seeHelp">
+		了解更多细节请查看帮助
+	</text>
+	<text key="displayUtils_tryAgain">
+		当这些程序运行之后，请再次尝试。
+	</text>
+
+	<!-- resultsPresenter -->
+	<text key="resultsPresenter_noDataFound">
+		找不到数据
+	</text>
+	<text key="commonObservationTablePanel_showingGlobalSkyCoverage">
+		显示该任务的天区覆盖情况。可放大并刷新表格，以获得单个观测的天区覆盖图。
+	</text>
+	<text key="resultsPresenter_computingDataCrossMatch">
+		与 $SSOTEXT$ 进行交叉证认
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_IMAGING_INTEGRAL">
+		INTEGRAL/IBIS卫星的观测结果包含了目标位置周围大量的单次曝光(科学窗口)。
+		由于这个原因，加之IBIS视场非常大，使得其难以显示其所有科学窗口的天区覆盖情况。
+		因而ESASky只显示其每次观测所指向的中心位置，并列出所有覆盖了该位置的科学窗口。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#INTEGRAL"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_IMAGING_XMM">
+		XMM牛顿望远镜(XMM-Newton)观测数据中包含出现在XMM-Newton归档数据(&lt;a href="//nxsa.esac.esa.int/nxsa-web/#home"
+		target="_blank"&gt;XSA&lt;/a&gt;)中已公开的高级处理管道系统(PPS)数据产品。
+		所包含的数据结合了三个摄像机（EPIC PN、EPIC MOS1和EPIC MOS2）在0.2-12 keV能量范围的高级图像产品。
+		数据的选择标准建立于已存在且公开的EPIC图像组合。
+		拼接子产品被排除在外，但观测结果的整体拼接图像是包含其中的。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#XMM-Newton-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_Chandra">
+		钱德拉(Chandra)数据集包括了截至2017年10月8日为止，可从Chandra数据存档中获得的，所有来自ACIS、LETG、HETG和HRC已公开的观测结果(图像和光谱)
+		(&lt;a href="//cda.harvard.edu/chaser/"
+		target="_blank"&gt;cda.harvard.edu/chaser/&lt;/a&gt;).
+		有关 Chandra 及其数据产品的详细资料，请浏览以下网址:
+		&lt;a href="//cxc.harvard.edu/" target="_blank"&gt;
+		cxc.harvard.edu/&lt;/a&gt;.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#Chandra-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_SUZAKU">
+		这些观测结果包括了出现在日本ISAS数据记录传输系统(DARTS)中的朱雀号探测器(SUZAKU)的所有公开图像产品。
+		有关SUZAKU任务及其数据产品可访问
+		&lt;a href="//www.darts.isas.jaxa.jp/astro/suzaku/" target="_blank"&gt;
+		www.darts.isas.jaxa.jp/astro/suzaku/&lt;/a&gt;。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#SUZAKU-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_IMAGING_XMM-OM-OPTICAL">
+		ESASky中的&lt;a href="//www.cosmos.esa.int/web/xmm-newton/technical-details-om"
+		target="_blank"&gt;
+		光学监视器(OM)
+		&lt;/a&gt;数据基于开放的观测数据，其中至少有一个OM高级图像流水线产品。
+		在流水线中，各个OM滤镜图像被组合起来并向北对齐。
+		ESASky中包含了以下OM图像文件类型: RSIMAG默认模式(RSIMAG), 全帧低分辨率模式(LSIMAG), 全帧高分辨率模式(HSIMAG), 和用户定义模式(USIMAG)。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#OM-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_IMAGING_XMM-OM-UV">
+		ESASky中的
+		&lt;a href="//www.cosmos.esa.int/web/xmm-newton/technical-details-om"
+		target="_blank"&gt;
+		光学监视器(OM)
+		&lt;/a&gt;
+		数据基于开放的观测数据，其中至少有一个OM高级图像流水线产品。
+		在流水线中，各个OM滤镜图像被组合起来并向北对齐。
+		ESASky中包含了以下OM图像文件类型: RSIMAG默认模式(RSIMAG), 全帧低分辨率模式(LSIMAG), 全帧高分辨率模式(HSIMAG), 和用户定义模式(USIMAG)。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#OM-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST">
+		由ESASky提供的哈勃太空望远镜(HST)观测数据是来自HST三个数据集的科学成果集合:
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		标准HST档案
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		哈勃遗珍档案(HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		高级科学产品(HLSP)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky对HST数据进行了过滤，优先显示所有HST合成图像（图像之间有重叠），然后再显示独立的图像（即不与其他图像重叠）。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_IMAGING_Herschel">
+		可用的赫歇尔(Herschel)数据囊括了来自HIFI、PACS和SPIRE仪器的公开观测数据（包括PACS/SPIRE并行观测数据）。
+		可下载的科学数据产品均是可独立浏览的。
+		对于这些产品的简要说明已经列在下方。
+		点击
+		&lt;a href="//www.cosmos.esa.int/web/herschel/data-products-overview"
+		target="_blank"&gt;
+		这里
+		&lt;/a&gt;
+		查看关于Herschel数据产品的更多信息。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#HERSCHEL-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_ISO">
+		1995年11月发射的红外空间天文台(ISO)是世界上第一个真正的在轨红外天文台。
+		它携带了四种科学仪器:两台光谱仪(SWS和LWS)、一台成像光偏振仪(ISOPHOT)和一台照相机(ISOCAM)。
+		ESASky仅能提供来自于ISOCAM的ISO图像数据，而来自全部四台仪器的光谱数据则均能提供。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#ISO-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_INTEGRAL">
+		IBIS/ISGRI软伽玛射线源星表是一个全天星表，基于INTERGRAL-IBIS卫星的前1000轨数据。
+		该星表于2009年发布，并于2016年进行了更新。
+		它由卫星任务在2002年至2010年末期间所有高质量的公开数据构建而成，
+		包含了在17-100 keV能量范围可以明显检测到的939个源，
+		其中有120个是之前所未发现的软伽马射线发射体。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#INTEGRAL"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_CHANDRA">
+		钱德拉源星表(CSC)包含开放图像观测数据中由ACIS和HRC设备中检测到的位置和流量。
+		目前，该星表只包括点源和空间扩展小于30角秒的紧凑源。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#Chandra"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-EPIC">
+		3XMM-DR8星表包含了由XMM牛顿望远镜10242次PIC观测中的源，覆盖从0.2 keV到12 keV的能量范围。
+		目前，ESASky中只显示质量标志(QUALITY flag)为0或1的源(即“好”或“有可疑参数”的源)。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#3XMM"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-EPIC-STACK">
+		堆叠星表 3XMM-DR7s 由434组数据汇编而成，包含1789条重复观测的高质量XMM牛顿望远镜数据。
+		这些数据是在2000年2月3日至2016年12月15日期间观测的，相关数据已经开放。这些观测数据也已被用于生成3XMM-DR7星表。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#3XMMs"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-OM">
+		SUSS2.1 星表集合了XMM-Newton太空望远镜所搭载的光学监视器偶然观测到的目标。
+		它提供了超过500万个源的位置、星等，及其在六个宽域紫外、光学滤镜的流量，还包括了其诊断报告和变量统计。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#SUSS2.1"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-SLEW">
+		XMMSL1是XMM-Newton卫星Slew数据的第一个X射线源星表，由XMM-Newton相关科学工作者构建。
+		在对重叠部分进行校正后，Slew巡天实际覆盖了整个天空的65%。
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#XMMSL1"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Tycho-2">
+		Tycho-2星表是一个天体测量参考星表，包含了天空中250万颗最亮恒星的位置、自行和二色测光(B和V波段)数据。该星表基于依巴谷卫星星图仪的观测，创建所用观测数据与原始第谷星表相同。使用改进的处理技术，光谱条数明显增多，精度显著提高。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#TYCHO"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Gaia DR2">
+		Gaia DR2星表提供了超过13亿颗G波段星等在3到21之间的恒星的位置、视差和自行数据，以及超过720万颗G波段星等中值在4至13级之间、有效温度在3550K到6900K之间的恒星的平均径向速度。
+		视差不确定范围在0.04毫角秒（G&lt;17星等）到0.7毫角秒（G=20星等）之间。
+		自行不确定范围从小于0.06毫角秒/年（G&lt;15星等）到1.2毫角秒/年（G=20星等）。径向速度的精度范围从亮端200-300米/秒到暗端的1.2千米/秒（有效温度4750K）和2.5千米/秒（有效温度6500K）。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#GAIA"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>		
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_2MASS">
+		2微米全天巡视(2MASS)观测在三个近红外波段（J、H、Ks）覆盖了99.998%的星空。2MASS点源星表(PSC)包含470,992,970个点源的位置和测光信息。该星表中的源至少在一个波段的观测数据信噪比大于7，或三个波段的信噪比都大于5。此外，源的位置也必须满足一些条件，以确保它不是伪信号或存在源之间互相干扰。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#2MASS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AllWise">
+		AllWISE源星表包含了AllWISE多波段星图中747,634,026个天体的天体测量信息，以及四个波段(3.4微米、4.6微米、12微米和22微米)的中红外测光信息。相对WISE星表，AllWISE星表改进了全部四个波段离散光源的测光信息。此外，该星表还改进了每颗星变源概率的值。同时，由于在两次巡天观测相隔的11年间，2MASS参考星表的自行修正，天体测量信息得以改进。
+	&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#WISE"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Hipparcos-2">
+		Hipparcos-2星表是对依巴谷观测任务获得数据的更新。它将Hp星等小于等于8的恒星的精度提高了4倍。它包含了118,218颗恒星的位置、视差和自行数据。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HIPPARCOS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_HSC">
+		哈勃源星表是哈勃遗珍档案(HLA)中所有可观测目标整合而成的星表。它包含了对3000万个天体的8000万观测数据，涉及112种不同的探测器/过滤器组合，以及哈勃空间望远镜约16万次曝光。
+		来自哈勃遗珍档案(HLA)第八次数据发布的源列表使用了Budavari &amp; Ludow(2012)开发的算法进行匹配。
+		平均测光精度优于0.10星等，相对精度在特定情况下可达0.02。相对天体测量残差一般在10毫角秒内，而对于大多数源，绝对测量精度好于0.1角秒。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 	
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-HPPSC-070">
+		赫歇尔-帕克斯点源星表(HPPSC)包含大约50万个条目。数据来自赫歇尔望远镜搭载的光电阵列相机和光谱仪（PACS）可观测的三个波段，覆盖约8%的远红外星空。
+		宽带滤波器集中在70微米、100微米和160微米，角分辨率分别为5.6"、6.8"和11.3"。这个星表由三张表格组成，每个波段对应一个星表。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HPPSC"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; 
+	</text>	
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-HPPSC-100">
+		赫歇尔-帕克斯点源星表(HPPSC)包含大约50万个条目。数据来自赫歇尔望远镜搭载的光电阵列相机和光谱仪（PACS）可观测的三个波段，覆盖约8%的远红外星空。
+		宽带滤波器集中在70微米、100微米和160微米，角分辨率分别为5.6"、6.8"和11.3"。这个星表由三张表格组成，每个波段对应一个星表。 
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HPPSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>		
+	<text	key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-HPPSC-160">
+		赫歇尔-帕克斯点源星表(HPPSC)包含大约50万个条目。数据来自赫歇尔望远镜搭载的光电阵列相机和光谱仪（PACS）可观测的三个波段，覆盖约8%的远红外星空。
+		宽带滤波器集中在70微米、100微米和160微米，角分辨率分别为5.6"、6.8"和11.3"。这个星表由三张表格组成，每个波段对应一个星表。 
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HPPSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>		
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-SPSC-250">
+		SPIRE点源星表(SPSC)有超过160万个条目，由赫歇尔望远镜上搭载的光谱及测光成象接收机(SPIRE)在亚毫米范围内所进行的6878次观测中提取出来。该星表由三个表格组成，每个表格对应SPIRE的一个测光波段：250微米、350微米和500微米(分别对应1199千兆赫、857千兆赫和600千兆赫)。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HSPSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-SPSC-350">
+		SPIRE点源星表(SPSC)有超过160万个条目，由赫歇尔望远镜上搭载的光谱及测光成象接收机(SPIRE)在亚毫米范围内所进行的6878次观测中提取出来。该星表由三个表格组成，每个表格对应SPIRE的一个测光波段：250微米、350微米和500微米(分别对应1199千兆赫、857千兆赫和600千兆赫)。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HSPSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Herschel-SPSC-500">
+		SPIRE点源星表(SPSC)有超过160万个条目，由赫歇尔望远镜上搭载的光谱及测光成象接收机(SPIRE)在亚毫米范围内所进行的6878次观测中提取出来。该星表由三个表格组成，每个表格对应SPIRE的一个测光波段：250微米、350微米和500微米(分别对应1199千兆赫、857千兆赫和600千兆赫)。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HSPSC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PGCC">
+		PGCC2包含13，188个银河系内的源和54个麦哲伦星云内的源，都在普朗克数据中被定义为冷源(低于周围环境温度的源)。这些源都是从普朗克HFI 857、545和353 GHz图和3 THz IRIS图中筛选出来的。观测标准为在所有普朗克波段的信噪比大于4，并且与其他源的最小角距离为5角分。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#PGCC"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PCCS2E-HFI">
+		PCCS2是从普朗克全任务强度和偏振图中提取的一组单频源星表。这些星图包含了LFI通道48个月的数据，以及HFI通道29个月的数据。因此，从这些图中得到的流量密度，是这两个时间段内，源发射的平均值。对于100-353兆赫兹通道，星表中还包含了有显著偏振（>99.99%）的源的偏振流量密度磁通密度和偏振角。
+		&lt;br&gt;
+		100兆赫兹及以上源的星表被分成了两个次星表：PCCS2，包括所有可靠观测(>80%)；PCCS2E，包含位于无法估计其可靠性天区的源。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#PCCS2"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PCCS2-HFI">
+		PCCS2是从普朗克全任务强度和偏振图中提取的一组单频源星表。这些星图包含了LFI通道48个月的数据，以及HFI通道29个月的数据。因此，从这些图中得到的流量密度，是这两个时间段内，源发射的平均值。对于100-353兆赫兹通道，星表中还包含了有显著偏振（>99.99%）的源的偏振流量密度磁通密度和偏振角。
+		&lt;br&gt;
+		100兆赫兹及以上源的星表被分成了两个次星表：PCCS2，包括所有可靠观测(>80%)；PCCS2E，包含位于无法估计其可靠性天区的源。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#PCCS2"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PCCS2-LFI">
+		PCCS2是从普朗克全任务强度和偏振图中提取的一组单频源星表。这些星图包含了LFI通道48个月的数据，以及HFI通道29个月的数据。因此，从这些图中得到的流量密度，是这两个时间段内，源发射的平均值。对于100-353兆赫兹通道，星表中还包含了有显著偏振（>99.99%）的源的偏振流量密度磁通密度和偏振角。
+	 	&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#PCCS2"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ2">
+		普朗克SZ星表是从普朗克数据中提取出来的一个几乎覆盖全天的SZ探测表，源于HFI频率通道图，并使用PCCS星表中相应通道的亮点源（信噪比＞10）遮挡、填充生成。这个星表包含1653个探测数据，其中1203个经由外部数据对比确认为星团。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#PSZ2"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_XMM-NEWTON">
+		包括高级别数据处理流水线系统（PPS）产生数据在内的XMM牛顿望远镜的观测数据在XXM牛顿望远镜科学归档中已经开放。(&lt;a href="//nxsa.esac.esa.int/nxsa-web/#home" target="_blank"&gt;XSA&lt;/a&gt;). 
+		RGS设备在5-35 ?[0.33-2.5 keV]（第一级光谱）获得高分辨本领（150-800）。对两个频谱仪，有效面积在15 ? [0.83 keV] (第一级)达到峰值，约为150平方厘米。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#RGS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_Chandra">
+		钱德拉数据集包括来自ACIS、LETG、HETG和HRC仪器所有截至2017年10月8日前公开的观测数据（图像和光谱），并且可通过(&lt;a href="//cda.harvard.edu/chaser/" target="_blank"&gt;cda.harvard.edu/chaser/&lt;/a&gt;)在钱德拉数据归档中查找。
+		更多关于钱德拉任务的详细信息及其数据产品可访问：&lt;a href="//cxc.harvard.edu/" target="_blank"&gt; cxc.harvard.edu/&lt;/a&gt;
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#Chandra-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_IUE">
+		国际紫外探测(IUE)是欧洲空间局、美国航天局和英国粒子物理学和天文学研究委员会（PPARC）的联合项目。
+		该任务在1978年至1996年运行期间，使用了三种中阶梯光栅摄谱仪：单波长光谱仪(SWP)、低功率光谱仪(LWP)和低功率光谱仪(LWR)。
+		在低分辨率模式下，光谱分辨率为~0.6 纳米, 对应R~250在150纳米和R~450在270纳米的分辨本领。在高分辨率模式下，分辨率为~0.02纳米,对应R~7500在150纳米和R~13500在270纳米的分辨本领。
+		ESASky提供了直接从&lt;a href="//sdc.cab.inta-csic.es/ines/index2.html" target="_blank"&gt;IU新提取光谱(INES)归档 &lt;/a&gt;获得的三种摄谱仪的完全校准光谱。该归档存储于位于马德里（西班牙）附近的&lt;a href="//cab.inta-csic.es/en/" target="_blank"&gt;西班牙天体生物学中心（CAB）&lt;/a&gt; 
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#IUE"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(UV)">
+		由ESASky提供的哈勃空间望远镜(HST)观测数据是来自哈勃三个数据集的科学成果:	
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		标准哈勃空间望远镜归档数据集
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		哈勃遗珍档案(HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		高级别科学产品数据(HLSP)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky对哈勃空间望远的归档数据使用了过滤器，首先显示所有哈勃空间望远镜的合成图像(成协的)，然后显示不成协的单个图像(哈勃空间望远镜单例)。	
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>		
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(OPTICAL)">
+		由ESASky提供的哈勃空间望远镜(HST)观测数据是来自哈勃三个数据集的科学成果:	
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		标准哈勃空间望远镜归档数据集
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		哈勃遗珍档案(HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		高级别科学产品数据(HLSP)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky对哈勃空间望远的归档数据使用了过滤器，首先显示所有哈勃空间望远镜的合成图像(成协的)，然后显示不成协的单个图像(哈勃空间望远镜单例)。	
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(IR)">
+		由ESASky提供的哈勃空间望远镜(HST)观测数据是来自哈勃三个数据集的科学成果:	
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		标准哈勃空间望远镜归档数据集
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		哈勃遗珍档案(HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		高级别科学产品数据(HLSP)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky对哈勃空间望远的归档数据使用了过滤器，首先显示所有哈勃空间望远镜的合成图像(成协的)，然后显示不成协的单个图像(哈勃空间望远镜单例)。	
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_ISO(IR)">
+		红外空间天文台(ISO)是世界上第一个真正的轨道红外天文台，于1995年11月发射升空。它携带了四种科学设备：两台光谱仪(SWS和LWS)、一台成像光偏振仪(ISOPHOT)和一台照相机(ISOCAM)。可通过ESASky界面浏览的ISO图像数据只有来自ISOCAM的数据。四台仪器获得的光谱数据则可全部浏览。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#ISO-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_Herschel">
+		可使用的赫歇尔（Herschel)数据包括了来自远红外外差光谱仪、光电探测器阵列照相机和光谱仪以及光谱和光度成像接收器三大设备的所有开放观测数据(包括PACS/SPIRE的平行观测)。
+		这些可下载的科学数据是独立浏览产品。产品的简介:点击&lt;a href="//www.cosmos.esa.int/web/herschel/data-products-overview" target="_blank"&gt; 这里 &lt;/a&gt; 了解赫歇尔数据产品的更多信息。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#HERSCHEL-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_SSO_Herschel">
+		可使用的赫歇尔（Herschel)数据包括了来自远红外外差光谱仪、光电探测器阵列照相机和光谱仪以及光谱和光度成像接收器三大设备的所有开放观测数据(包括PACS/SPIRE的平行观测)。
+		这些可下载的科学数据是独立浏览产品。产品的简介:点击&lt;a href="//www.cosmos.esa.int/web/herschel/data-products-overview" target="_blank"&gt; 这里 &lt;/a&gt; 了解赫歇尔数据产品的更多信息。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#HERSCHEL-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_SSO_HST">
+		由ESASky提供的哈勃空间望远镜(HST)观测数据是来自哈勃三个数据集的科学成果:	
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		标准哈勃空间望远镜归档数据集
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		哈勃遗珍档案(HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		高级别科学产品数据(HLSP)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky对哈勃空间望远的归档数据使用了过滤器，首先显示所有哈勃空间望远镜的合成图像(成协的)，然后显示不成协的单个图像(哈勃空间望远镜单例)。	
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<text key="resultsPresenter_helpDescription_SSO_XMM">
+		包括高级别数据处理流水线系统（PPS）产生数据在内的XMM牛顿望远镜的观测数据在XXM牛顿望远镜科学归档中已经开放。(&lt;a href="//nxsa.esac.esa.int/nxsa-web/#home" target="_blank"&gt;XSA&lt;/a&gt;). 
+		关于XMM牛顿望远镜数据产品的详细信息可在&lt;a href="//www.cosmos.esa.int/web/xmm-newton/guide-to-xmm-products" target="_blank"&gt;XXM牛顿望远镜科学归档数据产品指南&lt;/a&gt;中查看。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#XMM-Newton-OBS"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt; 
+	</text>
+	<!-- closeableTabLayoutPanel -->
+	<text key="closeableTabLayoutPanel_closeTab">
+		关闭标签
+	</text>
+	<text key="closeableTabLayoutPanel_saveResultsTableOrDownload">
+		保存结果表或者下载选择的产品
+	</text>
+	<text key="closeableTabLayoutPanel_sendTableToVOA">
+		发送表格至虚拟天文台应用
+	</text>
+	<text key="closeableTabLayoutPanel_recentre">
+		重新居中
+	</text>
+	<text key="closeableTabLayoutPanel_refreshData">
+		刷新数据
+	</text>
+	<text key="closeableTabLayoutPanel_styleBtn">
+		自定义类型
+	</text>
+	<text key="abstractTablePanel_loadingData">
+		数据加载中...
+	</text>
+	<text key="abstractTablePanel_filterTooltip">
+		过滤器	
+	</text>
+	<!-- targetWidget -->
+	<text key="targetWidget_showTargetInTheSky">
+		在天空中显示目标
+	</text>
+	<text key="targetWidget_targetNotFoundInSimbad">
+		在SIMBAD天文数据库中未找到目标
+	</text>
+	<!-- welcomeDialog -->
+	<text key="WelcomeDialog_title">
+		欢迎来到ESASky！
+	</text>
+	<text key="WelcomeDialog_description">
+		ESASky是一个空基探测任务数据可视化展示和使用的软件。
+	</text>
+	<text key="WelcomeDialog_checkbox">
+		不再显示这个对话框	
+	</text>
+	<text key="WelcomeDialog_cookieInformation">
+		（阅读我们的cookie政策）
+	</text>
+	<text key="WelcomeDialog_closeButton">
+		关闭
+	</text>
+	<text key="WelcomeDialog_chooseMode">
+		选择一个模式	
+	</text>
+	<text key="WelcomeDialog_modeDescription">
+		选择科学模式探索并下载科研可用数据。
+		&lt;br&gt;&lt;br&gt;
+		选择探索模式简单地浏览不同波段星空。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#MODES"
+		target="_blank"&gt;
+		更多信息
+		&lt;/a&gt;
+	</text>
+	<text key="WelcomeDialog_modeDescriptionHeader">
+		ESASky模式
+	</text> 
+	<text key="WelcomeDialog_science">
+		科学
+	</text> 
+	<text key="WelcomeDialog_explorer">
+		探索
+	</text> 
+	<text key="AllSkyPanel_fovButton">
+		以十进制模式增加视场
+	</text>
+	<!-- allSkyPresenter -->
+	<text key="AllSkyPresenter_futureSelectedDetectorCatalog">
+		选择的探测器星表
+	</text>
+	<!-- allSkyFocusPanel -->
+	<text key="AllSkyFocusPanel_searchInSimbad">
+		在SIMBAD中搜索坐标，半径2角秒
+	</text>
+	<text key="AllSkyFocusPanel_searchInNed">
+		在NED中搜索坐标，半径2角秒
+	</text>
+	<text key="AllSkyFocusPanel_searchInVizierPhotometry">
+		在VizieR测光显示器中显示测光信息，半径5角秒
+	</text>
+	<text key="AllSkyFocusPanel_searchInVizier">
+		在VizieR中搜索星表，半径2角秒
+	</text>
+	<text key="AllSkyFocusPanel_searchIn">
+		搜索
+	</text>
+	<!-- fovDialogBox -->
+	<text key="FovDialogBox_inputFoVTextBox">
+		以十进制模式增加视场
+	</text>
+	<text key="FovDialogBox_wrongFov">
+		只可输入数字和点
+	</text>
+	<!-- zoomControlPanel -->
+	<text key="ZoomControlPanel_zoomIn">
+		放大
+	</text>
+	<text key="ZoomControlPanel_zoomOut">
+		缩小
+	</text>
+	<!-- EsaSkyNumberControl -->
+	<text key="EsaSkyNumberControl_increaseWithLabel">
+		增加$TITLE$ $STEP$
+	</text>
+	<text key="EsaSkyNumberControl_decreaseWithLabel">
+		减少$TITLE$ $STEP$
+	</text>
+	<!-- saveAllView -->
+	<text key="saveAllView_save_In_VOTABLE_Format">
+		VOTable
+	</text>
+	<text key="saveAllView_save_In_VOTABLE_Format_Title">
+		保存为 XML VOTable
+	</text>
+	<text key="saveAllView_save_In_CSV_Format">
+		CSV
+	</text>
+	<text key="saveAllView_save_In_CSV_Format_Title">
+		保存为CSV，逗号分隔
+	</text>
+	<text key="saveAllView_Download_Btn_Text">
+		下载数据产品
+	</text>
+	<text key="saveAllView_Download_Btn_Title">
+		下载选择的产品
+	</text>
+	<text key="saveAllView_Rows_Selected_Label">
+		当前选项卡中选中$COUNT$行
+	</text>
+	<!-- pointInformation -->
+	<text key="PointInformation_to">
+		从$FROM$到$TO$	
+	</text>
+	<!-- multiTargetTooltip -->
+	<text key="MultiTargetTooltip_nearestSimbadId">
+		最近的SIMBAD主ID
+	</text>
+	<!-- planningDetectorCenterTooltip -->
+	<text key="PlanningDetectorCenterTooltip_instrument">
+		设备：
+	</text>
+	<text key="PlanningDetectorCenterTooltip_detector">
+		测器：
+	</text>
+	<text key="PlanningDetectorCenterTooltip_referenceRA">
+		参考赤经
+	</text>
+	<text key="PlanningDetectorCenterTooltip_referenceDEC">
+		参考赤纬
+	</text>
+	<text key="stylePanel_Title">
+		$MISSION$类型
+	</text>
+	<text key="stylePanel_helpMessageText">
+		使用这个面板自定义结果类型
+	</text>
+	<text key="stylePanel_removeAvgCheckBox">
+		减去平均自行
+	</text>
+	<text key="stylePanel_removeMedianCheckBox">
+		减去中位自行
+	</text>
+	<!-- catalogString -->
+	<text key="name">
+		名称
+	</text>
+	<text key="flux">
+		流量
+	</text>
+	<text key="type">
+		类型
+	</text>
+	<text key="significance">
+		显著性	
+	</text>
+	<text key="exposure">
+		曝光
+	</text>
+	<text key="flux20_40keV">
+		流量在20-40keV
+	</text>
+	<text key="fluxUVW1">
+		UVW1滤波器开始的流量
+	</text>
+	<text key="btMagnitude">
+		BT星等
+	</text>
+	<text key="SN">
+		信噪比
+	</text>
+	<text key="gMagnitude">
+		G星等
+	</text>
+	<text key="hpMagnitude">
+		Hp星等
+	</text>
+	<text key="fluxDensity">
+		流量密度
+	</text>
+	<text key="error">
+		误差
+	</text>
+	<text key="sourceLimitDescription">
+		显示$orderBy$排序中第一个$sourceLimit$源	
+	</text>
+	<text key="sourceLimitNumImages">
+		显示观测次数最多的$sourceLimit$源
+	</text>
+	<text key="INTEGRAL_flux20_40">
+		流量&lt;sub&gt;20-40 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
+	</text>
+	<text key="INTEGRAL_flux40_100">
+		流量&lt;sub&gt;40-100 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
+	</text>
+	<text key="INTEGRAL_Type">
+		类型	
+	</text>
+	<text key="INTEGRAL_Significance">
+		显著性
+	</text>
+	<text key="INTEGRAL_Exposure">
+		曝光时间&lt;i&gt;（ksec）&lt;/i&gt;
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux">
+		流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux_err">
+		流量误差&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="observation_id">
+		观测ID
+	</text>
+	<text key="XMM_OM_poserr">
+		&amp;Delta;位置
+	</text>
+	<text key="XMM_OM_date_obs">
+		观测日期
+	</text>
+	<text key="XMM_OM_uvw1_ab_flux">
+		UVW1流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_uvw2_ab_flux">
+		UVW2流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_uvm2_ab_flux">
+		UVM2流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_u_ab_flux">
+		U流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_v_ab_flux">
+		V流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_b_ab_flux">
+		B流量&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b0">
+		流量（0.2-12kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b0_err">
+		流量误差（0.2-12kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b4">
+		流量（2-12kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b4_err">
+		流量误差（2-12kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b5">
+		流量（0.2-2kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b5_err">
+		流量误差（0.2-2kev）&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="pm_ra">
+		赤经自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="pm_de">
+		赤纬自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Tycho_2_bt_mag">
+		BT星等&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="Tycho_2_vt_mag">
+		VT星等&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="parallax">
+		视差&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_parallax_error">
+		视差误差&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_pmra_error">
+		赤经自行误差&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_pmdec_error">
+		赤纬自行误差&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_TGAS_phot_g_mean_mag">
+		G平均星等&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="mag">
+		星等&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="HSC_v2_1_match_id">
+		匹配ID
+	</text>
+	<text key="targetName">
+		目标名称
+	</text>
+	<text key="HSC_v2_1_num_images">
+		图像个数
+	</text>
+	<text key="HSC_v2_1_fluxes">
+		滤光片
+	</text>
+	<text key="HSC_v2_1_fluxesvalues">
+		星等 &lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="HSC_v2_1_sigmavalues">
+		星等误差 &lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_flux">
+		流量 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_rms">
+		&amp;Delta; 流量 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_elong_flag">
+		距角标志
+	</text>
+	<text key="Herschel_HPPSC_edge_flag">
+		边标志
+	</text>
+	<text key="Herschel_HPPSC_blend_flag">
+		混合标志
+	</text>
+	<text key="Herschel_HPPSC_ssomap_flag">
+		SSO地图标志
+	</text>
+	<text key="Herschel_HPPSC_fluxdao">
+		Fluxdao &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_fluxdao_err">
+		&amp;Delta;Fluxdao &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_fluxtm2">
+		TM2流量 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_fluxtm2_err">
+		&amp;Delta;TM2流量 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="Herschel_HPPSC_pntsrc_flag">
+		点源标志
+	</text>
+	<text key="Herschel_HPPSC_lowfwhm_flag">
+		低半峰全宽标志
+	</text>
+	<text key="Herschel_HPPSC_largegal_flag">
+		大星系标志
+	</text>
+	<text key="Herschel_HPPSC_mapedge_flag">
+		地图边缘标志
+	</text>
+	<text key="Herschel_HPPSC_ssocont_flag">
+		SSO污染物标志
+	</text>
+	<text key="Submm">
+		亚毫米
+	</text>
+	<text key="Herschel_HPPSC_extsrc_flag">
+		展源标志
+	</text>
+	<text key="PGCC_snr">
+		信噪比
+	</text>
+	<text key="PGCC_gau_major_axis">
+		主半峰全宽 &lt;i&gt;(角分)&lt;/i&gt;
+	</text>
+	<text key="PGCC_gau_major_gau_major_axis_sig">
+		主半峰全宽误差 &lt;i&gt;(角分)&lt;/i&gt;
+	</text>
+	<text key="PGCC_gau_minor_axis">
+		副半峰全宽 &lt;i&gt;(角分)&lt;/i&gt;
+	</text>
+	<text key="PGCC_gau_minor_axis_sig">
+		副半峰全宽误差 &lt;i&gt;(角分)&lt;/i&gt;
+	</text>
+	<text key="PCCS2E_frequency">
+		频率 &lt;i&gt;(GHz)&lt;/i&gt;
+	</text>
+	<text key="PCCS2E_detflux">
+		流量密度 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="PCCS2E_detflux_err">
+		流量密度误差 &lt;i&gt;(mJy)&lt;/i&gt;
+	</text>
+	<text key="PCCS2E_highest_reliability_cat">
+		星表可靠性
+	</text>
+	<text key="Gaia_DR1_ra_error">
+		赤经误差&lt;i&gt;(mas）&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_dec_error">
+		赤纬误差&lt;i&gt;(mas）&lt;/i&gt;
+	</text>
+	<text key="PSZ_redshift">
+		Redshift软件
+	</text>
+	<text key="PSZ_msz">
+		Sunyaev-Zeldovich 质量
+		&lt;i&gt;(10&lt;sup&gt;14&lt;/sup&gt;
+		M&lt;sub&gt;solar&lt;/sub&gt;)&lt;/i&gt;
+	</text>
+	<text key="PSZ_validation">
+		验证
+	</text>
+	<text key="productURL">
+		产品网址
+	</text>
+	<text key="instrument">
+		设备
+	</text>
+	<text key="startTime">
+		开始时间
+	</text>
+	<text key="duration">
+		持续时间 &lt;i&gt;(s)&lt;/i&gt;
+	</text>
+	<text key="EP_STACK_ONTIME">
+		EP准时 &lt;i&gt;(s)&lt;/i&gt;
+	</text>
+	<text key="durationKs">
+		持续时间 &lt;i&gt;(ks)&lt;/i&gt;
+	</text>
+	<text key="Chandra_ProposalID">
+		提案ID
+	</text>
+	<text key="Chandra_StartTime">
+		开始时间 &lt;i&gt;(MJD)&lt;/i&gt;
+	</text>
+	<text key="filter">
+		滤光片
+	</text>
+	<text key="Collection">
+		收藏
+	</text>
+	<text key="Herschel_Filter">
+		滤光片 &lt;i&gt;(微米)&lt;/i&gt;
+	</text>
+	<text key="XMM_NEWTON_Wavelength">
+		波长
+	</text>
+	<text key="IUE_Aperture">
+		口径
+	</text>
+	<text key="IUE_Dispersion">
+		色散
+	</text>
+	<text key="FileName">
+		文件名
+	</text>
+	<text key="opticalElement">
+		光学元件
+	</text>
+	<text key="centralWavelength">
+		中心波长 &lt;i&gt;(纳米)&lt;/i&gt;
+	</text>
+	<text key="ISO_ObservationIDAux">
+		观测ID辅助
+	</text>
+	<text key="ObservingMode">
+		观测模式
+	</text>
+	<text key="Herschel_WavelengthRange">
+		波长范围
+	</text>
+	<text key="PublicationTooltip_BIBCOUNT">
+		相关文献数:</text>
+	<text key="3XMM_EPIC_ep_8_n_contrib">
+		提交数
+	</text>
+	<text key="3XMM_EPIC_ep_8_n_obs">
+		观测数
+	</text>
+	<text key="3XMM_EPIC_ep_8_extent">
+		延展度
+	</text>
+	<text key="3XMM_EPIC_ep_8_extent_err">
+		延展度误差
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux_var">
+		流量变化
+	</text>
+	<text key="3XMM_EPIC_ep_8_iau_name">
+		IAU名称
+	</text>
+	<text key="RA_J1991">
+		赤经 &lt;i&gt;(&#126;J1991)&lt;/i&gt;
+	</text>
+	<text key="DEC_J1991">
+		赤纬 &lt;i&gt;(&#126;J1991)&lt;/i&gt;
+	</text>
+	<text key="RA_J1991.25">
+		赤经 &lt;i&gt;(J1991.25)&lt;/i&gt;
+	</text>
+	<text key="DEC_J1991.25">
+		赤纬 &lt;i&gt;(J1991.25)&lt;/i&gt;
+	</text>
+	<text key="RA_J2000">
+		赤经 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DEC_J2000">
+		赤纬 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="RA_J2015">
+		赤经 &lt;i&gt;(J2015.0)&lt;/i&gt;
+	</text>
+	<text key="DEC_J2015">
+		赤纬 &lt;i&gt;(J2015.0)&lt;/i&gt;
+	</text>
+	<text key="RA_J2015.5">
+		赤经 &lt;i&gt;(J2015.5)&lt;/i&gt;
+	</text>
+	<text key="DEC_J2015.5">
+		赤纬 &lt;i&gt;(J2015.5)&lt;/i&gt;
+	</text>
+	<text key="SoftX-ray">
+		软X射线
+	</text>
+	<text key="HardX-ray">
+		硬X射线
+	</text>
+	<text key="UV">
+		紫外
+	</text>
+	<text key="Ultraviolet">
+		紫外
+	</text>
+	<text key="Optical">
+		光学
+	</text>
+	<text key="NearIR">
+		近红外
+	</text>
+	<text key="MidToFarIR">
+		中远红外
+	</text>
+	<text key="MidIR">
+		中红外
+	</text>
+	<text key="MidInfrared">
+		中红外
+	</text>
+	<text key="FarIR">
+		远红外
+	</text>
+	<text key="NearInfrared">
+		近红外
+	</text>
+	<text key="MidToFarInfrared">
+		中远红外
+	</text>
+	<text key="FarInfrared">
+		远红外
+	</text>
+	<text key="Submm">
+		亚毫米波
+	</text>
+	<text key="Submillimeter">
+		亚毫米波
+	</text>
+	<text key="Radio">
+		射电
+	</text>
+	<text key="pubDate">
+		发布日期
+	</text>
+	<text key="BIBCODE">
+		BIBCODE
+	</text>
+	<text key="Title">
+		标题
+	</text>
+	<text key="Authors">
+		作者
+	</text>
+	<text key="Journal">
+		期刊
+	</text>
+	<text key="Date">
+		日期
+	</text>
+	<text key="CHANDRA_flux_b">
+		流量ACIS&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_lower_flux_b">
+		低流量ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_upper_flux_b">
+		高流量ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_flux_w">
+		流量 &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_lower_flux_w">
+		低流量HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_upper_flux_w">
+		高流量HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_snr">
+		信噪比
+	</text>
+	<text key="Gaia_phot_g_mean_flux">
+		流量 &lt;i&gt;(e-/s)&lt;/i&gt;
+	</text>
+	<text key="Gaia_phot_g_mean_flux_error">
+		流量误差 &lt;i&gt;(e-/s)&lt;/i&gt;
+	</text>
+	<text key="Gaia_phot_g_mean_mag">
+		G星等 &lt;i&gt;(mag)&lt;/i&gt;
+	</text>
+	<text key="Flag">
+		标志
+	</text>
+	<text key="SNR">
+		信噪比
+	</text>
+	<text key="Herschel_fwhmxfit">
+		FWHM x拟合
+	</text>
+	<text key="Herschel_fwhmyfit">
+		FWHM y拟合
+	</text>
+	<text key="Herschel_snr">
+		S/N_S
+	</text>
+	<text key="Herschel_stn">
+		S/N_R
+	</text>
+	<text key="Herschel_Warmat">
+		Warmat
+	</text>
+	<text key="HST_Collection">
+		收藏
+	</text>
+	<text key="Observation ObjectId">
+		观测ObjectId
+	</text>
+	<text key="BIBCODE_preview">
+		BIBCODE_预览
+	</text>
+	<text key="GalaxyClusters">
+		星系团
+	</text>
+	<text key="GlobularClusters">
+		球状星团
+	</text>
+	<text key="SpiralGalaxies">
+		漩涡星系
+	</text>
+	<text key="StarFormationRegions">
+		恒星形成区
+	</text>
+	<text key="SupernovaRemnants">
+		超新星遗迹
+	</text>
+	<text key="BrownDwarfs">
+		褐矮星
+	</text>
+	<text key="BrownDwarfsInMultipleSystems">
+		多星系统中的褐矮星
+	</text>
+	<text key="BrightNebulae">
+		亮星云
+	</text>
+	<text key="DarkNebulae">
+		暗星云
+	</text>
+	<text key="ClosestExoplanetarySystems">
+		近邻系外行星系统
+	</text>
+	<text key="SupermassiveBlackHoles">
+		特大质量黑洞
+	</text>
+	<text key="OpenClusters">
+		疏散星团
+	</text>
+	<text key="PeculiarGalaxies">
+		特殊星系
+	</text>
+	<text key="InteractingGalaxies">
+		相互作用星系
+	</text>
+	<text key="CESAR_ISM">
+		CESAR星际介质
+	</text>
+	<text key="CESAR_Galaxies">
+		CESAR星系
+	</text>
+	<text key="CESAR_Colours">
+		CESAR颜色
+	</text>
+	<text key="2MASS_J_Mag">
+		J星等
+	</text>
+	<text key="2MASS_J_Mag_err">
+		&amp;Delta;J星等
+	</text>
+	<text key="2MASS_H_Mag">
+		H星等
+	</text>
+	<text key="2MASS_H_Mag_err">
+		&amp;Delta;H星等
+	</text>
+	<text key="2MASS_KS_Mag">
+		Ks星等
+	</text>
+	<text key="2MASS_KS_Mag_err">
+		&amp;Delta;Ks星等
+	</text>
+
+	<text key="AllWise_ra_err">
+		&amp;Delta;RA
+	</text>
+	<text key="AllWise_dec_err">
+		&amp;Delta;Dec
+	</text>
+	<text key="AllWise_w1mpro">
+		W1星等
+	</text>
+	<text key="AllWise_w1mpro_error">
+		&amp;Delta;W1星等
+	</text>
+	<text key="AllWise_w2mpro">
+		W2星等
+	</text>
+	<text key="AllWise_w2mpro_error">
+		&amp;Delta;W2星等
+	</text>
+	<text key="AllWise_w3mpro">
+		W3星等
+	</text>
+	<text key="AllWise_w3mpro_error">
+		&amp;Delta;W3星等
+	</text>
+	<text key="AllWise_w4mpro">
+		W4星等
+	</text>
+	<text key="AllWise_w4mpro_error">
+		&amp;Delta;W4星等		
+	</text>
+	<text key="Gaia_DR1_ra_error">
+		&amp;Delta;RA
+		</text>
+	<text key="Gaia_DR1_dec_error">
+		&amp;Delta;Dec
+	</text>
+	<text key="Gaia_DR2_parallax">
+		视差（毫角秒） &lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_parallax_error">
+		&amp;Delta;视差&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_pmra">
+		赤经自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_pmra_error">
+		&amp;Delta;赤经自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_pmdec">
+		赤纬自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_pmdec_error">
+		&amp;Delta;赤纬自行&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_phot_g_mean_mag">
+		G星等
+	</text>
+	<text key="Gaia_DR2_br_rp">
+		(BP - RP)星等
+	</text>
+	<text key="Gaia_DR2_radial_velocity">
+		径向速度&lt;br&gt;&lt;i&gt;(km/s)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_radial_velocity_error">
+		&amp;Delta;径向速度
+	</text>
+	<text key="Gaia_DR2_phot_variable_flag">
+		变量标志
+	</text>
+	<text key="Gaia_DR2_teff_val">
+		有效温度&lt;br&gt;&lt;i&gt;(K)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR2_a_g_val">
+		A_{G}星等
+	</text>
+
+	<text key="treeMapContainer_help_ASTRO_IMAGING">
+		要搜索成像、星表或光谱数据(并打开数据面板)，请单击左侧菜单中相应的成像、星表和光谱图标。浏览器中会显示出所显示天区中的图像数据、星表资源和光谱数据的数量(不仅仅是搜索目标)。
+		&lt;br&gt;&lt;br&gt;
+		单击其中一个菜单将弹出一个树状图，显示每个任务的图像星表或光谱数据。树状图中框的大小与可用数据量成正比，数据量最大的框永远在左上角。波长区域包含了任务和任务名称，大多数情况下，任务是按照波长的颜色进行编码的。伽玛射线、x射线和紫外线显示为蓝色或紫色；可见光显示为绿色；红外到无线电波段显示为橙色和红色。如上所述，这些结果是针对整个区域显示的，不仅仅是针对某个源。所显示的只是最高层次的科学观测结果。
+		&lt;br&gt;&lt;br&gt;		
+		树状图是交互式的，可以通过滚动条查看对图像数量、星表源或图层光谱的汇总，也可以点击全部数据按钮查看所有可用数据的汇总(包括图像、星表和光谱)。基于选中的树状图，可以单击每个任务以查询数据库并加载该图层的图像、星表或光谱。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#datapanel"
+		target="_blank"
+		&gt;
+		此功能的完整文档	&lt;/a&gt;
+	</text>
+	<text key="treeMapContainer_help_ASTRO_SPECTRA">
+		要搜索成像、星表或光谱数据(并打开数据面板)，请单击左侧菜单中相应的成像、星表和光谱图标。浏览器中会显示出所显示天区中的图像数据、星表资源和光谱数据的数量(不仅仅是搜索目标)。
+		&lt;br&gt;&lt;br&gt;
+		单击其中一个菜单将弹出一个树状图，显示每个任务的图像星表或光谱数据。树状图中框的大小与可用数据量成正比，数据量最大的框永远在左上角。波长区域包含了任务和任务名称，大多数情况下，任务是按照波长的颜色进行编码的。伽玛射线、x射线和紫外线显示为蓝色或紫色；可见光显示为绿色；红外到无线电波段显示为橙色和红色。如上所述，这些结果是针对整个区域显示的，不仅仅是针对某个源。所显示的只是最高层次的科学观测结果。
+		&lt;br&gt;&lt;br&gt;		
+		树状图是交互式的，可以通过滚动条查看对图像数量、星表源或图层光谱的汇总，也可以点击全部数据按钮查看所有可用数据的汇总(包括图像、星表和光谱)。基于选中的树状图，可以单击每个任务以查询数据库并加载该图层的图像、星表或光谱。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#datapanel"
+		target="_blank"
+		&gt;
+		此功能的完整文档	&lt;/a&gt;
+	</text>
+	<text key="treeMapContainer_help_ASTRO_CATALOGUE">
+		要搜索成像、星表或光谱数据(并打开数据面板)，请单击左侧菜单中相应的成像、星表和光谱图标。浏览器中会显示出所显示天区中的图像数据、星表资源和光谱数据的数量(不仅仅是搜索目标)。
+		&lt;br&gt;&lt;br&gt;
+		单击其中一个菜单将弹出一个树状图，显示每个任务的图像星表或光谱数据。树状图中框的大小与可用数据量成正比，数据量最大的框永远在左上角。波长区域包含了任务和任务名称，大多数情况下，任务是按照波长的颜色进行编码的。伽玛射线、x射线和紫外线显示为蓝色或紫色；可见光显示为绿色；红外到无线电波段显示为橙色和红色。如上所述，这些结果是针对整个区域显示的，不仅仅是针对某个源。所显示的只是最高层次的科学观测结果。
+		&lt;br&gt;&lt;br&gt;		
+		树状图是交互式的，可以通过滚动条查看对图像数量、星表源或图层光谱的汇总，也可以点击全部数据按钮查看所有可用数据的汇总(包括图像、星表和光谱)。基于选中的树状图，可以单击每个任务以查询数据库并加载该图层的图像、星表或光谱。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#datapanel"
+		target="_blank"
+		&gt;
+		此功能的完整文档		&lt;/a&gt; 
+	</text>
+	<text key="treeMapContainer_help_SSO">
+		在ESASky中，您现在可以从哈勃空间望远镜、赫歇尔和XMM-牛顿望远镜等的观测数据库中搜索任何行星、卫星或彗星(计划内的观测或者偶得的图像)。在搜索框中输入天体的名称或者ID号，将会给出建议目标的所有备选。
+		&lt;br&gt;&lt;br&gt;
+		选择t之后，太阳系图标将被激活，显示出现有图像观测的数量，树状图也将打开。选择任务，所有可用的图像观测将被加载到数据面板中，覆盖图也将绘制到天空图层上。此外，太阳系天体在整个任务运行过程中的轨道将被绘制出来。
+		&lt;br&gt;&lt;br&gt;
+		为了实现这一功能，ESASky团队创建了一个批处理管道程序，利用IMCCE(巴黎天体力学和星历计算研究所)的软件，结合航天器的位置来获取每个太阳系天体的星历信息，并对太阳系天体轨道与整个任务数据库进行交叉匹配，以发现在拍摄图像期间，太阳系天体落在成像仪器视野之内的观测结果。
+		&lt;br&gt;&lt;br&gt;
+		小行星和其他太阳系天体将被添加到ESASky的下一个更新版本中，来自其他观测任务的图像结果很快也会被添加进来。
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-interface#SSO"
+		target="_blank"
+		&gt;
+		此功能的完整文档	&lt;/a&gt;
+	</text>
+	<text key="ResizingDataPanel">
+		调整数据面板大小
+	</text>
+	<text key="dataPanelPager_of">
+		的
+	</text>
+	<text key="dataPanelPager_nextPagerTooltip">
+		下一页
+	</text>
+	<text key="dataPanelPager_previousPagerTooltip">
+		上一页
+	</text>
+	<text key="wavelength_GAMMA_RAY">
+		伽马射线
+	</text>
+	<text key="wavelength_GAMMA_RAY_Tooltip">
+		100 keV - 10 GeV
+	</text>
+	<text key="wavelength_HARD_X_RAY">
+		硬X射线
+	</text>
+	<text key="wavelength_HARD_X_RAY_Tooltip">
+    10 - 100 keV, 10 - 100 埃
+	</text>
+	<text key="wavelength_SOFT_X_RAY">
+		软X射线
+	</text>
+	<text key="wavelength_SOFT_X_RAY_Tooltip">
+		0.12 - 10 keV, 0.12 - 100 埃
+	</text>
+	<text key="wavelength_UV">
+		紫外线
+	</text>
+	<text key="wavelength_UV_Tooltip">
+		10 - 100 nm, 100 - 1000 埃
+	</text>
+	<text key="wavelength_OPTICAL">
+		光学
+	</text>
+	<text key="wavelength_OPTICAL_Tooltip">
+		100 - 750nm, 0.1 - 0.75 微米
+	</text>
+	<text key="wavelength_NEAR_IR">
+		近红外
+	</text>
+	<text key="wavelength_NEAR_IR_Tooltip">
+		0.75 - 2.5 micron, 120 to 400 THz
+		</text>
+	<text key="wavelength_MID_IR">
+		中红外
+	</text>
+	<text key="wavelength_MID_IR_Tooltip">
+		2.5 - 10 微米, 30 to 120 THz
+	</text>
+	<text key="wavelength_FAR_IR">
+		远红外
+	</text>
+	<text key="wavelength_FAR_IR_Tooltip">
+		10 - 200 微米, 30 THz - 1500 GHz
+	</text>
+	<text key="wavelength_SUBMM">
+		亚毫米波
+	</text>
+	<text key="wavelength_SUBMM_Tooltip">
+		200 - 1000 微米, 1500 GHz - 300 GHz	</text>
+	<text key="wavelength_RADIO">
+		射电
+	</text>
+	<text key="wavelength_RADIO_Tooltip">
+		&gt;1 mm, &lt;300 GHz
+	</text>
+	<text key="wavelength_USER">
+		用户
+	</text>
+	<text key="wavelength_USER_Tooltip">
+		用户上传的HiPS数据
+	</text>
+	<text key="wavelength_OTHERS">
+		其他
+	</text>
+	<text key="wavelength_OTHERS_Tooltip">
+		其他
+	</text>
+	<text key="colorPalette_NATIVE">
+		原有色调
+	</text>
+	<text key="colorPalette_EOSB">
+		EOSB色调
+	</text>
+	<text key="colorPalette_PLANCK">
+		普朗克
+	</text>
+	<text key="colorPalette_RAINBOW">
+		彩虹
+	</text>
+	<text key="colorPalette_GREYSCALE">
+		灰度
+	</text>
+	<text key="colorPalette_CUBEHELIX">
+		立方螺旋
+	</text>
+	<text key="ssoName">
+		名称
+	</text>
+	<text key="RAStart">
+		初始赤经 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DecStart">
+		初始赤纬 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="RAEnd">
+		终止赤经 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DecEnd">
+		终止赤纬 &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DeltaPosDeg">
+		位置范围 &lt;i&gt;(角度)&lt;/i&gt;
+	</text>
+	<text key="SSOVMag">
+		V  &lt;i&gt;（星等）&lt;/i&gt;
+	</text>
+	<text key="SSODistanceAU">
+		距离  &lt;i&gt;（天文单位）&lt;/i&gt;
+	</text>
+	<text key="tableGroup_Observation">
+		观测结果
+	</text>
+	<text key="ASTEROID">
+		小行星
+	</text>
+	<text key="COMET">
+		彗星
+	</text>
+	<text key="SATELLITE">
+		卫星
+	</text>
+	<text key="SPACECRAFT">
+		航天器
+	</text>
+	<text key="PLANET">
+		行星
+	</text>
+	<text key="DWARF_PLANET">
+		矮行星
+	</text>
+	<text key="SSO">
+		太阳系天体
+	</text>
+	<text key="SPACEJUNK">
+		太空垃圾
+	</text>
+	<text key="EXOPLANET">
+		系外行星
+	</text>
+	<text key="STAR">
+		恒星
+	</text>
+	
+	
+	
+	
+	<text key="header_gridFull">
+		显示坐标网格
+	</text>
+	<text key="header_gridDropdown">
+		坐标网格
+	</text>
+	<text key="searchPanel_targetNotFound">
+		未找到
+	</text>
+	<text key="treeMap_EXT_TAP">
+		TAP服务
+	</text>
+	<text key="treeMap_loading_EXT_TAP">
+		从外部TAP服务导入数据
+	</text>
+	<text key="treeMap_noData_EXT_TAP">
+		没有找到外部TAP数据
+	</text>
+	<text key="ctrlToolBarPresenter_loadingAuthorSources">
+		在$AUTHOR$的文献中搜寻目标
+	</text>
+	<text key="webConstants_exploreExtTaps">
+		从外部TAP服务导入数据
+	</text>
+	<text key="PreviewDialog_loading_postcard">
+		加载预览
+	</text>
+	<text key="Preview_postcardLoadFailed">
+		从数据库中加载预览失败
+	</text>
+	<text key="headerPresenter_helpLink">
+		https://www.cosmos.esa.int/web/esdc/esasky-how-to
+	</text>
+	<text key="selectSkyPanel_addSky">
+		添加星空
+	</text>
+	<text key="publicationPanel_title">
+		文献和出版物
+	</text>
+	<text key="publicationPanel_removeAndClose">
+		去掉文献信息并关闭面板
+	</text>
+	<text key="publicationPanel_refreshTooltip">
+		显示当前视图中有关联文献的源
+	</text>
+	<text key="publicationPanel_updateOnMove">
+		移动时及时更新
+	</text>
+	<text key="publicationPanel_updateOnMoveTooltip">
+		每次改变位置时更新结果
+	</text>
+	<text key="publicationPanel_sourceLimitWarning">
+		警告：结果上限设置过高会降低性能
+	</text>
+	<text key="publicationPanel_truncationValuePublicationMost">
+		最多
+	</text>
+	<text key="publicationPanel_truncationValuePublicationLeast">
+		最少
+	</text>
+	<text key="publicationPanel_updating">
+		更新中……
+	</text>
+	<text key="publicationPanel_statusTextNoPublications">
+		本区域没有相关的文献
+	</text>
+	<text key="publicationPanel_statusTextNumSources">
+		相关文献对应有$NUM_SOURCES$个源
+	</text>
+	<text key="publicationPanel_statusTextTruncated">
+		[有删节]		
+	</text>
+	<text key="publicationPanel_statusTextFailed">
+		加载文献信息失败
+	</text>
+	<text key="publicationPanel_advanced">
+		设置
+	</text>
+	<text key="publicationPanel_resetTooltip">
+		重置源限制
+	</text>
+	<text key="publicationSourceLimitDescription">
+		$mostOrLeast$篇文献相关的最前面$sourceLimit$ 个源的结果
+	</text>
+	<text key="publicationPanel_truncationValueTooltip">
+		选择是否优先考虑那些有最高或最低关联文献数的源
+		（该功能仅适用于结果有删节的情况）
+	</text>
+	<text key="popupHeader_minimize">
+		隐藏面板
+	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsMessage">
+		经过检索$MISSIONS$数据库没有找到该目标的交叉证认结果。
+	</text>
+	<text key="SsoCountRequestCallback_noCrossMatchResultsTitle">
+		没有找到目标的交叉证认结果
+	</text>
+	<text key="searchPanel_showMoreAuthors">
+		显示更多作者
+	</text>
+	<text key="searchPanel_showMoreAuthorsTooltip">
+		显示与作者匹配的最前$COUNT$条信息
+	</text>
+	<text key="searchPanel_showMoreSso">
+		显示更多太阳系天体
+	</text>
+	<text key="searchPanel_showMoreSsoTooltip">
+		显示全部符合条件的太阳系天体
+	</text>
+	<text key="searchPanel_author">
+		作者
+	</text>
+	<text key="searchPanel_target">
+		目标
+	</text>
+	<text key="searchPanel_showMoreBibcodes">
+		显示更多Bibcode
+	</text>
+	<text key="searchPanel_showMoreBibcodeTooltip">
+		显示与Bibcode匹配的最前$COUNT$条信息
+	</text>
+	<text key="searchPanel_bibcode">
+		Bibcode
+	</text>
+	<text key="searchPanel_inputByBibcode">
+		基于Bibcode
+	</text>
+	<text key="searchPanel_inputByAuthor">
+		基于作者
+	</text>
+	<text key="PublicationsByAuthorCallback_helpTitle">
+		与该作者相关的文献
+	</text>
+	<text key="PublicationsByAuthorCallback_helpDescription">
+		在SIMBAD数据库中与这个作者名称关联的文献以及与文献关联的源
+		&lt;br&gt;
+		&lt;b&gt;
+		SIMBAD只收录存在相关源的文献（信息由CDS提供）
+		&lt;/b&gt;
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
+		target="_blank"&gt;
+		这个功能的完整资料。
+		&lt;/a&gt; 
+	</text>
+	<text key="MultiTargetTooltip_noNearbySimbadIdFound">
+		在SIMBAD中没有找到邻近的ID
+	</text>
+	<text key="MultiTargetTooltip_resolvingNearbyTargets">
+		解析邻近的目标
+	</text>
+	<text key="treeMapContainer_help_EXT_TAP">
+		在ESASky中你现在可以访问符合虚拟天文台（VO）数据服务标准的外部数据。在当前视图中有数据的服务都会出现在树状图中。点击某个服务便可加载其相应数据结果并显示。
+	</text>
+	<text key="publicationPanel_helpText">
+		目前显示的是视野中有相关文献和出版物的源，信息来自SIMBAD。点击图标会打开一个表单列出该目标对应的文献信息，包括标题、作者和发表日期等基本信息以及ADS中该文献的链接。ESASky还提供了加载指定文献中所有相关天体列表的功能。&lt;br&gt; &lt;br&gt; 默认情况下ESASky一次显示文献中最多3000个源的信息。具体数量可以在设置中调整。
+	</text>
+	
+</Internationalization>
