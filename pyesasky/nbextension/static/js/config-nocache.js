@@ -3,6 +3,6 @@ var serverProperties = {
  tapContext: "https://sky.esa.int/esasky-tap",
  localeFilesLocation: "",
  targetListFilesLocation: "",
- showExtTap: "false",
+ showExtTap: "true",
  showMissingTranslationBox: "false"
 };
