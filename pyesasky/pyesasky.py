@@ -901,3 +901,77 @@ class ESASkyWidget(widgets.DOMWidget):
                 raise tornado.web.HTTPError(status_code=404)
             with open(file_location, "rb") as source_file:
                 self.write(source_file.read())
+
+
+    """ External TAP Services"""
+
+    def getAvailableTapServices(self):
+        """Returns the available predefined External TAP Services in ESASky"""
+
+        content = dict(
+                        event='getAvailableTapServices'
+                        )
+        return self._sendAvaitCallback(content)
+    
+    def getAllAvailableTapMissions(self):
+        """Returns all the missions and dataproducts from the available predefined
+         External TAP Services in ESASky"""
+
+        content = dict(
+                        event='getAllAvailableTapMissions'
+                        )
+        return self._sendAvaitCallback(content)
+   
+    def getTapADQL(self, tapServiceName):
+        """Returns the adql that will be run on this tapService"""
+
+        content = dict(
+                        event='getTapADQL',
+                        content = dict(
+                            tapService = tapServiceName
+                        ))
+        return self._sendAvaitCallback(content)
+
+    def getTapServiceCount(self, tapServiceName):
+        """Returns the available data in the current sky for the named tapService"""
+
+        content = dict(
+                        event='getTapServiceCount',
+                        content = dict(
+                            tapService = tapServiceName
+                        ))
+        return self._sendAvaitCallback(content)
+    
+    def plotTapService(self, tapServiceName):
+        """Plots data from selected mission in the an external TAP service"""
+
+        content = dict(
+                        event='plotTapService',
+                        content = dict(
+                            tapService = tapServiceName
+                        ))
+        return self._sendAvaitCallback(content)
+
+    def plotTapServiceWithDetails(self, name, tapUrl, ADQL, dataOnlyInView = True, color = "", limit = -1, ):
+        """Searches and plots data from specified TAP service
+       
+        Arguments:
+        name -- (String) Name that will be shown on the screen 
+        tapUrl -- (String) URL to the tap service
+        ADQL -- (String) The ADQL that will be used for retrieving the data
+        dataOnlyInView -- (Boolean, default:True) Adds a WHERE statement to only retrieve data in the current view
+        color -- (String, default: preset list) Color for display in RGB format (e.g. #FF0000 for red)
+        limit -- (Int, default: 3000) Limit for amount of results to display        
+        """
+
+        content = dict(
+                        event='plotTapServiceWithDetails',
+                        content = dict(
+                            name = name,
+                            tapUrl = tapUrl,
+                            dataOnlyInView = dataOnlyInView,
+                            adql = ADQL,
+                            color = color,
+                            limit = limit
+                        ))
+        self._sendToFrontEnd(content)
