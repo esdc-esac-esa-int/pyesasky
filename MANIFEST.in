@@ -35,3 +35,6 @@ global-exclude *.pyc
 global-exclude *.pyo
 global-exclude .git
 global-exclude .ipynb_checkpoints
+
+recursive-include jupyter.d/jupyter_notebook_config.d/ *.json
+recursive-include pyesasky/nbextension/static/ *.js

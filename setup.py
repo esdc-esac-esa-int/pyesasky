@@ -85,6 +85,7 @@ cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
 cmdclass['jsdeps'] = combine_commands(
     install_npm(HERE, build_cmd='build:all'),
     ensure_targets(jstargets),
+    
 )
 
 
@@ -101,7 +102,7 @@ setup_args = dict(
     long_description        = long_description,
     long_description_content_type = "text/markdown",  
     packages                = find_packages(),
-    author                  = 'Fabrizio Giordano <fgiordano@sciops.esa.int>, Mattias Wångblad <mattias@winterway.eu>',
+    author                  = 'Fabrizio Giordano <fgiordano@sciops.esa.int>, Mattias Wångblad <mattias@winterway.eu>, ESDC ', 
     #author_email            = 'fgiordano@sciops.esa.int',
     url                     = 'https://github.com/esdc-esac-esa-int/pyesasky',
     license                 = 'GNU Lesser General Public License',
@@ -121,6 +122,16 @@ setup_args = dict(
         'Programming Language :: Python :: 3.5',
     ],
     include_package_data    = True,
+    data_files=[
+        # like `jupyter nbextension install --sys-prefix`
+        ("share/jupyter/nbextensions/pyesasky", [
+            "pyesasky/nbextension/static/index.js",
+        ]),
+        # like `jupyter nbextension enable --sys-prefix`
+        ("etc/jupyter/nbconfig/notebook.d", [
+            "jupyter.d/jupyter_notebook_config.d/pyesasky.json"
+        ]),
+    ],
     install_requires        = [
         'numpy>=1.9',
         'matplotlib>1.5',
@@ -161,6 +172,7 @@ setup_args = dict(
     },
     entry_points = {
     },
+    zip_safe=False
 )
 
 if __name__ == '__main__':
