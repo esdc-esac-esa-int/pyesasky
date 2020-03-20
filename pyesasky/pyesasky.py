@@ -47,7 +47,9 @@ class ESASkyWidget(widgets.DOMWidget):
                 raise ConnectionError("Communication could not be established with widget. \n" \
                 + "Possible errors could be that installed version of PyESASky differs in python " \
                 + "and Jupyter lab. \nMake sure to upgrade to the latest version of both \n" \
-                + "pip install --upgrade pyesasky \njupyter labextension install pyesasky@latest") 
+                + "pip install --upgrade pyesasky \njupyter labextension install pyesasky@latest\n\n"\
+                + "Also make sure that jupyter lab manager is up to date with your current jupyter lab version\n"\
+                + "jupyter labextension install @jupyter-widgets/jupyterlab-manager")
         
     def _waitGuiReady(self):
         self.guiReadyCallSent = True
