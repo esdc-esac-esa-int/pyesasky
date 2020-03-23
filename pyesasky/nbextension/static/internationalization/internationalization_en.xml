@@ -260,6 +260,21 @@
 	<text key="treeMap_nameOfSelectedLabel">
 		SSO: $SSONAME$ ($SSOTYPE$)
 	</text>
+	<text key="treeMap_notInRange_ASTRO_IMAGING">
+		No Image data found in this wavelength range.
+	</text>
+	<text key="treeMap_notInRange_ASTRO_CATALOGUE">
+		No Catalogue entries found in this wavelength range.
+	</text>
+	<text key="treeMap_notInRange_ASTRO_SPECTRA">
+		No Spectral data found in this wavelength range.
+	</text>
+	<text key="treeMap_notInRange_SSO">
+		No SSO Observations found in this wavelength range.
+	</text>
+	<text key="treeMap_notInRange_EXT_TAP">
+		No data from external taps found in this wavelength range.
+	</text>
 
 	<!-- Sky -->
 	<text key="sky_wavelength">
@@ -707,9 +722,9 @@
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
-	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST">
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-OPTICAL">
 		The Hubble Space Telescope (HST) observational data
-		provided by ESASky are science products from the three Hubble data
+		provided by ESASky are science products from the two Hubble data
 		collections:
 		&lt;ul&gt;
 		&lt;li&gt;
@@ -724,9 +739,33 @@
 		Legacy Archive (HLA) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky applies a filter on the HST
+		archival data to show firstly all HST composite images (associations),
+		then to show any single images (HST singleton) that are not part of
+		any association.
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; </text>
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-UV">
+		The Hubble Space Telescope (HST) observational data
+		provided by ESASky are science products from the two Hubble data
+		collections:
+		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
-		The High Level Science Products (HLSP) collection
+		The standard HST archive
+		collection
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		The Hubble
+		Legacy Archive (HLA) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -740,6 +779,36 @@
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-IR">
+		The Hubble Space Telescope (HST) observational data
+		provided by ESASky are science products from the two Hubble data
+		collections:
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		The standard HST archive
+		collection
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		The Hubble
+		Legacy Archive (HLA) collection
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky applies a filter on the HST
+		archival data to show firstly all HST composite images (associations),
+		then to show any single images (HST singleton) that are not part of
+		any association.
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; </text>
+		
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_IMAGING_Herschel">
 		The available Herschel data include all public observations from
@@ -774,6 +843,20 @@
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_ALMA">
+		ALMA (Atacama Large Millimeter/submillimeter Array) is the world's largest 
+		ground-based facility for observations in the millimeter/submillimeter regime. 
+		ALMA comprises a giant array of fifty 12-m antennas, which can be configured 
+		to achieve baselines up to 16 km. It is equipped with state-of-the-art 
+		receivers that cover all the atmospheric windows up to 1 THz.
+
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#ALMA-OBS"
+		target="_blank"&gt;
+		More information
+		&lt;/a&gt; </text>
 
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_INTEGRAL">
@@ -792,12 +875,16 @@
 		More information
 		&lt;/a&gt; </text>
 	<text
-		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_CHANDRA">
-		The Chandra Source Catalog (CSC) contains positions and fluxes
-		detected in public imaging observations by the ACIS and HRC
-		instruments onboard the Chandra X-ray Observatory. Currently the
-		catalogue includes only point sources and compact sources with
-		observed spatial extension smaller than about 30 arcseconds.
+		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_CHANDRA-SC2">
+                The Chandra Source Catalog (CSC) is the definitive catalog of X-ray sources 
+		detected by the Chandra X-ray Observatory. Version 2.0 (CSC 2.0) is the second 
+		major release of the catalog, and represents a significant improvement with 
+		respect to version 1.1 in terms of sky coverage, sensitivity and capabilities. 
+		CSC 2.0 includes measured properties for 317,167 unique compact and extended 
+		X-ray sources in the sky, allowing statistical analysis of large samples, as 
+		well as individual source studies. Extracted properties are provided for 928,280 
+		individual observation detections identified in 10,382 Chandra ACIS and HRC-I 
+		imaging observations released publicly through the end of 2014.
 
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
@@ -807,28 +894,32 @@
 		&lt;/a&gt; </text>
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-EPIC">
-		The 3XMM-DR8 catalogue contains source detections drawn from 10242
+    The 4XMM-DR9 catalogue contains source detections drawn from 11,204
 		XMM-Newton EPIC observations, covering an energy interval from 0.2 keV
 		to 12 keV. Presently, only sources with QUALITY flag equals 0 or 1
 		(sources "good" or "with suspect parameters") are displayed in ESASky.
 
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
-		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#3XMM"
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#4XMM"
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-EPIC-STACK">
-		The stacked catalogue 3XMM-DR7s has been compiled from 434 groups,
-		comprising 1789 overlapping good-quality XMM-Newton observations. They
+    The stacked catalogue 4XMM-DR9s has been compiled from 1329 groups,
+		comprising 6604 overlapping good-quality XMM-Newton observations. They
 		were selected from the public observations taken between 2000 February
-		3 and 2016 December 15, which were used to generate the catalogue
-		3XMM-DR7.
+		3 and 2018 November 13 which overlap by at least one arcminute in radius
+		and are not affected by very high background emission. It contains 288191
+		unique sources, 218283 of them multiply observed, with positions and
+		source parameters like fluxes in the XMM-Newton standard energy bands,
+		hardness ratios, quality estimate, and information on inter-observation
+		variability. 
 
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
-		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#3XMMs"
+		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#4XMMs"
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
@@ -848,14 +939,16 @@
 		&lt;/a&gt; </text>
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_XMM-SLEW">
-		​XMMSL1 is the first catalogue of X-ray sources detected in
+		​XMMSL2 is the second catalogue of X-ray sources detected in
 		XMM-Newton slew data, and has been constructed by members of the
-		XMM-Newton SOC and the EPIC consortium on behalf of ESA. After
-		correcting for overlaps, the Slew Survey covered 65% of the sky.
+		XMM-Newton SOC and the EPIC consortium on behalf of ESA. This release uses
+		results of work which has been carried out within the framework of the
+		EXTraS project. After correcting for overlaps, the Slew Survey covered
+		84% of the sky.
 
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
-		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#XMMSL1"
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#XMMSL"
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
@@ -922,16 +1015,16 @@
 		More information
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
-		The AKARI IRC Point Source Catalogue Version 1.0 provides positions 
-		and fluxes of 870,973 sources (844,649 sources in 9 micron band and 
+		The AKARI IRC Point Source Catalogue Version 1.0 provides positions
+		and fluxes of 870,973 sources (844,649 sources in 9 micron band and
 		194,551 sources in 18 micron band) in the Mid-Infrared wavelengths.
 		&lt;br&gt;&lt;br&gt;
-		
-		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron 
-		band twice or more during the 16 months of the cryogenic mission phase. 
-		The Point Source Catalogue is the primary catalogue from the AKARI IRC 
-		survey. The catalogue is designed to have a uniform detection limit over 
-		the entire sky, based on the uniform source detection limit per scan observation. 
+
+		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron
+		band twice or more during the 16 months of the cryogenic mission phase.
+		The Point Source Catalogue is the primary catalogue from the AKARI IRC
+		survey. The catalogue is designed to have a uniform detection limit over
+		the entire sky, based on the uniform source detection limit per scan observation.
 		Redundant observations are used to increase the reliability of the detection.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
@@ -974,19 +1067,18 @@
 		More information
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_HSC">
-		The Hubble Source Catalog is a combination of all the
-		visit-based source lists in the Hubble Legacy Archive (HLA) into a
-		single catalogue.
-		It contains about 80 million detections of 30 million objects, involving
-		112 different detector/filter combinations, and about 160,000 HST
-		exposures.
-		Source lists from the Data Release 8 of the Hubble Legacy Archive (HLA) are
-		matched using an algorithm developed by Budávari &amp; Ludow (2012).
-		The mean photometric accuracy is better than 0.10 mag, with relative
-		accuracies as good as 0.02 in certain cases.
-		The relative astrometric residuals are typically within 10 mas, and the
-		absolute astrometric accuracy is better than about 0.1 arcsec for most
-		sources.
+		The Hubble Source Catalog is a combination of all the visit-based source
+		lists in the Hubble Legacy Archive (HLA) into a single catalogue and is
+		designed to optimize science from the Hubble Space Telescope by combining
+		the tens of thousands of visit-based source lists in the HLA into a single
+		master catalog.
+    The HSC v3 contains members of the WFPC2, ACS/WFC, WFC3/UVIS and WFC3/IR
+		Source Extractor source lists from HLA data release 10. The cross-matching
+		process involves adjusting the relative astrometry of overlapping images
+		so as to minimize positional offsets between closely aligned sources in
+		different images. After correction, the astrometric residuals of
+		cross-matched sources are significantly reduced, with median errors
+		less than 8 mas.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
 		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#HSC"
@@ -1248,7 +1340,7 @@
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(UV)">
 		The Hubble Space Telescope (HST) observational data
-		provided by ESASky are science products from the three Hubble data
+		provided by ESASky are science products from the two Hubble data
 		collections:
 		&lt;ul&gt;
 		&lt;li&gt;
@@ -1261,11 +1353,6 @@
 		&lt;span&gt;
 		The Hubble
 		Legacy Archive (HLA) collection
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		The High Level Science Products (HLSP) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -1282,7 +1369,7 @@
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(OPTICAL)">
 		The Hubble Space Telescope (HST) observational data provided by
-		ESASky are science products from the three Hubble data collections:
+		ESASky are science products from the two Hubble data collections:
 		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
@@ -1293,11 +1380,6 @@
 		&lt;span&gt;
 		The Hubble Legacy
 		Archive (HLA) collection
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		The High Level Science Products (HLSP) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -1313,7 +1395,7 @@
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(IR)">
 		The Hubble Space Telescope (HST) observational data
-		provided by ESASky are science products from the three Hubble data
+		provided by ESASky are science products from the two Hubble data
 		collections:
 		&lt;ul&gt;
 		&lt;li&gt;
@@ -1326,11 +1408,6 @@
 		&lt;span&gt;
 		The Hubble
 		Legacy Archive (HLA) collection
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		The High Level Science Products (HLSP) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -1399,7 +1476,7 @@
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_SSO_HST">
 		The Hubble Space Telescope (HST) observational data
-		provided by ESASky are science products from the three Hubble data
+		provided by ESASky are science products from the two Hubble data
 		collections:
 		&lt;ul&gt;
 		&lt;li&gt;
@@ -1412,11 +1489,6 @@
 		&lt;span&gt;
 		The Hubble
 		Legacy Archive (HLA) collection
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		The High Level Science Products (HLSP) collection
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -1511,13 +1583,13 @@
 	</text>
 	<text key="WelcomeDialog_modeDescriptionHeader">
 		ESASky Modes
-	</text> 
+	</text>
 	<text key="WelcomeDialog_science">
 		Science
-	</text> 
+	</text>
 	<text key="WelcomeDialog_explorer">
 		Explorer
-	</text> 
+	</text>
 
 	<text key="AllSkyPanel_fovButton">
 		Add FoV manually in decimals
@@ -1623,10 +1695,10 @@
 		Use this panel for customizing the style of the results
 	</text>
 	<text key="stylePanel_removeAvgCheckBox">
-		Substract average PM
+		Subtract average PM
 	</text>
 	<text key="stylePanel_removeMedianCheckBox">
-		Substract median PM
+		Subtract median PM
 	</text>
 
 	<!-- catalogString -->
@@ -1703,6 +1775,38 @@
 		Flux error&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
+	<text key="4XMM_EPIC_ep_2_flux">
+		Flux&lt;sub&gt;0.5-1 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_2_flux_err">
+		Flux error&lt;sub&gt;0.5-1 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_3_flux">
+		Flux&lt;sub&gt;1-2 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_3_flux_err">
+		Flux error&lt;sub&gt;1-2 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_4_flux">
+		Flux&lt;sub&gt;2-4.5 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_4_flux_err">
+		Flux error&lt;sub&gt;2-4.5 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_5_flux">
+		Flux&lt;sub&gt;4.5-12 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="4XMM_EPIC_ep_5_flux_err">
+		Flux error&lt;sub&gt;4.5-12 keV&lt;/sub&gt;&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
 	<text key="observation_id">
 		Observation ID
 	</text>
@@ -1736,27 +1840,27 @@
 		B Flux&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b0">
+	<text key="XMM_Slew_flux_b8">
 		Flux (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b0_err">
+	<text key="XMM_Slew_flux_b8_err">
 		Flux error (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b4">
+	<text key="XMM_Slew_flux_b7">
 		Flux (2-12kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b4_err">
+	<text key="XMM_Slew_flux_b7_err">
 		Flux error (2-12kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b5">
+	<text key="XMM_Slew_flux_b6">
 		Flux (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="XMM_Slew_flux_b5_err">
+	<text key="XMM_Slew_flux_b6_err">
 		Flux error (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
@@ -1771,7 +1875,7 @@
 		VT Magnitude&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
 	<text key="parallax">
 		Parallax&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
-	<text key="Gaia_DR1_TGAS_parallax_error">
+		<text key="Gaia_DR1_TGAS_parallax_error">
 		Parallax error&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
 	<text key="Gaia_DR1_TGAS_pmra_error">
 		PM in RA error&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
@@ -1781,21 +1885,24 @@
 		G mean Mag&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
 	<text key="mag">
 		Magnitude&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="HSC_v2_1_match_id">
+	<text key="HSC_v3_1_match_id">
 		Match ID
 	</text>
 	<text key="targetName">
 		Target name
 	</text>
-	<text key="HSC_v2_1_num_images">
+	<text key="HSC_v3_1_num_images">
 		Number of Images
 	</text>
-	<text key="HSC_v2_1_fluxes">
-		Filters
+	<text key="HSC_v3_1_num_images_per_filter">
+		Number of Images per filter
 	</text>
-	<text key="HSC_v2_1_fluxesvalues">
+	<text key="HSC_v3_1_fluxes">
+		Filter
+	</text>
+	<text key="HSC_v3_1_fluxesvalues">
 		Magnitude &lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="HSC_v2_1_sigmavalues">
+	<text key="HSC_v3_1_sigmavalues">
 		Magnitude Error &lt;i&gt;(mag)&lt;/i&gt; </text>
 	<text key="Herschel_HPPSC_flux">
 		Flux &lt;i&gt;(mJy)&lt;/i&gt; </text>
@@ -1889,6 +1996,14 @@
 	</text>
 	<text key="duration">
 		Duration &lt;i&gt;(s)&lt;/i&gt; </text>
+		
+	<text key="min_frequency_ghz">
+		Min Frequency (GHz) </text>
+	<text key="max_frequency_ghz">
+		Max Frequency (GHz) </text>
+	<text key="scientific_category">
+		Scientific Category</text>
+		
 	<text key="EP_STACK_ONTIME">
 		EP Ontime &lt;i&gt;(s)&lt;/i&gt; </text>
 	<text key="durationKs">
@@ -2039,30 +2154,133 @@
 	<text key="Date">
 		Date
 	</text>
-	<text key="CHANDRA_flux_b">
+	<text key="CSC2_flux_aper_b">
 		Flux ACIS &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="CHANDRA_lower_flux_b">
+	<text key="CSC2_flux_aper_lolim_b">
 		Lower Flux ACIS &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="CHANDRA_upper_flux_b">
+	<text key="CSC2_flux_aper_hilim_b">
 		Upper Flux ACIS &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="CHANDRA_flux_w">
-		Flux &lt;i&gt;(erg
+	<text key="CSC2_flux_aper_w">
+		Flux HRC &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="CHANDRA_lower_flux_w">
-		Lower Flux HCR &lt;i&gt;(erg
+	<text key="CSC2_flux_aper_lolim_w">
+		Lower Flux HRC &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
-	<text key="CHANDRA_upper_flux_w">
-		Upper Flux HCR &lt;i&gt;(erg
+	<text key="CSC2_flux_aper_hilim_w">
+		Upper Flux HRC &lt;i&gt;(erg
 		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
 	</text>
+  <text key="CSC2_flux_aper_avg_b">
+	  Average Flux ACIS &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_flux_aper_avg_lolim_b">
+	  Average Lower Flux ACIS &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_flux_aper_avg_hilim_b">
+	  Average Upper Flux ACIS &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_flux_aper_avg_w">
+	  Average Flux HRC &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_flux_aper_avg_lolim_w">
+	  Average Lower Flux HRC &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_flux_aper_avg_hilim_w">
+	  Average Upper Flux HRC &lt;i&gt;(erg
+	  cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+  </text>
+  <text key="CSC2_err_ellipse_r0">
+	  Major radius of error ellipse &lt;i&gt;(arcsec)&lt;/i&gt;
+  </text>
+  <text key="CSC2_err_ellipse_r1">
+  	Minor radius of error ellipse &lt;i&gt;(arcsec)&lt;/i&gt;
+  </text>
+  <text key="CSC2_err_ellipse_ang">
+	  Position angle error ellipse &lt;i&gt;(deg)&lt;/i&gt;
+  </text>
+  <text key="CSC2_significance">
+	  Highest Flux Significance
+  </text>
+  <text key="CSC2_likelihood">
+	  Likelihood
+  </text>
+  <text key="CSC2_likelihood_class">
+	  Likelihood Classification
+  </text>
+  <text key="CSC2_conf_flag">
+	  Confusion Flag
+  </text>
+  <text key="CSC2_extent_flag">
+	  Extent Flag
+  </text>
+  <text key="CSC2_sat_src_flag">
+	  Source Saturation Flag
+  </text>
+  <text key="CSC2_streak_src_flag">
+	  Source Streak Flag
+  </text>
+  <text key="CSC2_var_flag">
+	  Variability Flag
+  </text>
+  <text key="CSC2_var_inter_hard_flag">
+	  Hardness Ratio Variability Flag
+  </text>
+  <text key="CSC2_hard_hm">
+	  Hard-Medium Hardness Ratio
+  </text>
+  <text key="CSC2_hard_hm_lolim">
+	  Lower Hard-Medium Hardness Ratio
+  </text>
+  <text key="CSC2_hard_hm_hilim">
+	  Upper Hard-Medium Hardness Ratio
+  </text>
+  <text key="CSC2_hard_ms">
+	  Medium-Soft Hardness Ratio
+  </text>
+  <text key="CSC2_hard_ms_lolim">
+	  Lower Medium-Soft Hardness Ratio
+  </text>
+  <text key="CSC2_hard_ms_hilim">
+	  Upper Medium-Soft Hardness Ratio
+  </text>
+  <text key="CSC2_var_intra_index_b">
+	  ACIS Intra-Obs Variability Index
+  </text>
+  <text key="CSC2_var_intra_index_w">
+	  HRC Intra-Obs Variability Index
+  </text>
+  <text key="CSC2_var_inter_index_b">
+		ACIS Inter-Obs Variability Index
+	</text>
+	<text key="CSC2_var_inter_index_w">
+		HRC Inter-Obs Variability Index
+	</text>
+  <text key="CSC2_var_inter_hard_prob_hm">
+    Hard-Medium Hardness Ratio Variability Prob
+  </text>
+	<text key="CSC2_var_inter_hard_prob_ms">
+	  Medium-Soft Hardness Ratio Variability Prob
+  </text>
+	<text key="CSC2_acis_time">
+	  ACIS time &lt;i&gt;(s)&lt;/i&gt;
+  </text>
+	<text key="CSC2_hrc_time">
+	  HRC time &lt;i&gt;(s)&lt;/i&gt;
+  </text>
+
 	<text key="CHANDRA_snr">
 		Signal to Noise Ratio
 	</text>
@@ -2628,7 +2846,7 @@
 		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
 		target="_blank"&gt;
 		Full documentation of this feature.
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
 	<text key="MultiTargetTooltip_noNearbySimbadIdFound">
 		No nearby SIMBAD id found
@@ -2636,7 +2854,7 @@
 	<text key="MultiTargetTooltip_resolvingNearbyTargets">
 		Resolving nearby targets
 	</text>
-	
+
 	<text key="datalinkDownload_loading">
 		Loading datalink
 	</text>
@@ -2691,18 +2909,18 @@
 		<text key="treeMapContainer_help_EXT_TAP">
 		In ESASky you can now explore data from external data Services
 		which conforms with Virtual Observatory (IVOA) standards.
-		
+
 		Services which have any data in the current region will appear
-		in the tree map. Clicking on any service will show the available 
+		in the tree map. Clicking on any service will show the available
 		dataproduct types in the visible region (Images, Spectra etc). Clicking
 		on a prdouct type will show the available collections these product exist in.
-		
+
 		Clicking on the collection/facility will load the data into the data panel and display
 		the corresponding footprints in the sky. For FoV larger than 10° a map of observation coverage (MOC)
 		 of the available regions will be shown instead.
 		</text>
-		
-		
+
+
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_LAMOST">
 		The Large Sky Area Multi-Object Fiber Spectroscopic Telescope (LAMOST) is a Chinese national scientific research facility operated by the National Astronomical Observatories, Chinese Academy of Sciences. It is a special reflecting Schmidt telescope with 4000 fibers in a field of view of 20 degrees. The LAMOST survey, initiated in 2012, provides flux- and wavelength-calibrated, sky-subtracted spectra in the wavelength range of 3690-9100 angstrom with a resolution of 1800 at the 5500 angstrom.for many types of astronomical objects.
 		&lt;br&gt;&lt;br&gt;
@@ -2713,19 +2931,19 @@
 		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#LAMOST"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
-		The AKARI IRC Point Source Catalogue Version 1.0 provides positions 
-		and fluxes of 870,973 sources (844,649 sources in 9 micron band and 
+		The AKARI IRC Point Source Catalogue Version 1.0 provides positions
+		and fluxes of 870,973 sources (844,649 sources in 9 micron band and
 		194,551 sources in 18 micron band) in the Mid-Infrared wavelengths.
 		&lt;br&gt;&lt;br&gt;
-		
-		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron 
-		band twice or more during the 16 months of the cryogenic mission phase. 
-		The Point Source Catalogue is the primary catalogue from the AKARI IRC 
-		survey. The catalogue is designed to have a uniform detection limit over 
-		the entire sky, based on the uniform source detection limit per scan observation. 
+
+		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron
+		band twice or more during the 16 months of the cryogenic mission phase.
+		The Point Source Catalogue is the primary catalogue from the AKARI IRC
+		survey. The catalogue is designed to have a uniform detection limit over
+		the entire sky, based on the uniform source detection limit per scan observation.
 		Redundant observations are used to increase the reliability of the detection.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
@@ -2734,18 +2952,18 @@
 		More information
 		&lt;/a&gt; </text>
 	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_AKARI">
-		ESASky serves all pointed observations taken with the InfraRed Camera (IRC) of this mission, which are directly downloaded from DARTS. The IRC consisted of three independent camera systems, NIR, MIR-S and MIR-L, which observed the wavelength bands of 1.7-5.5 μm, 5.8-14.1 μm, and 12.4-26.5 μm, respectively. Each camera system had three filters available. NIR and MIR-S covered the same field of view (FoV), while MIR-L had a different one, which did not overlap with the NIR/MIR-S FoV. A brief description of the instrument and data products is given in 
+		ESASky serves all pointed observations taken with the InfraRed Camera (IRC) of this mission, which are directly downloaded from DARTS. The IRC consisted of three independent camera systems, NIR, MIR-S and MIR-L, which observed the wavelength bands of 1.7-5.5 μm, 5.8-14.1 μm, and 12.4-26.5 μm, respectively. Each camera system had three filters available. NIR and MIR-S covered the same field of view (FoV), while MIR-L had a different one, which did not overlap with the NIR/MIR-S FoV. A brief description of the instrument and data products is given in
 		&lt;a
 		href="//repository.exst.jaxa.jp/dspace/bitstream/a-is/906920/1/AA1830017000.pdf"
 		target="_blank"&gt;
-		this document. 
-		&lt;/a&gt; 
+		this document.
+		&lt;/a&gt;
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
 		href="//www.cosmos.esa.int/web/esdc/esasky-observations#AKARI-OBS"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Spitzer">
 		The Spitzer Science Center and the Infrared Processing and Analysis Center have produced as part of the Cryogenic Release 3 the SEIP Source List. This list contains photometry for 42 million stars and galaxies for the Infrared Array Camera (IRAC) at 3.6, 4.5, 5.8 adn 8 microns and for the 24 micron band of the Multiband Imaging Photometer (MIPS). The Spitzer SEIP Source List has been produced combining data across multiple Astronomical Observation Request (AOR) archival data that allows the extraction of fainter sources using a uniform processing pipeline taking advantage of the best and final calibration of the cryogenic imaging data.
@@ -2755,7 +2973,7 @@
 		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#Spitzer"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
 	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_Spitzer">
 		Spitzer Enhanced Imaging Products (SEIP), Cryogenic Release version 3.0. These are combined images ("Super Mosaics") for data from Spitzer's cryogenic mission, including all four bands (3.6, 4.5, 5.8, 8 microns) of the Infraed Array Camera (IRAC), and the 24 micron band of the Multiband Imaging Photometer for Spitzer ("MIPS").
@@ -2765,7 +2983,7 @@
 		href="//www.cosmos.esa.int/web/esdc/esasky-observations#Spitzer"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
 	<text key="endTime">
 		End Time
@@ -2849,14 +3067,14 @@
 		Flux S9W
 	</text>
 	<text key="publicationPanel_helpText">
-		Shown are the sources in the field-of-view that have associated publications according to SIMBAD. Clicking on each icon will open a table listing the publications for that object, including basic information (title, authors, publication date) and a link to the paper in ADS. There is also the possibility to load the full list of objects studied in a given publication for further exploration with ESASky. &lt;br&gt; &lt;br&gt; By default, ESASky is showing at most 3 000 sources with related publications at the same time, but this number can be changed in the settings.  
-		
+		Shown are the sources in the field-of-view that have associated publications according to SIMBAD. Clicking on each icon will open a table listing the publications for that object, including basic information (title, authors, publication date) and a link to the paper in ADS. There is also the possibility to load the full list of objects studied in a given publication for further exploration with ESASky. &lt;br&gt; &lt;br&gt; By default, ESASky is showing at most 3 000 sources with related publications at the same time, but this number can be changed in the settings.
+
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
 		href="//www.cosmos.esa.int/web/esdc/esasky-interface#publications"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; 
+		&lt;/a&gt;
 	</text>
-	
+
 </Internationalization>

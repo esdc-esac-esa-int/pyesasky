@@ -179,6 +179,22 @@
 	<text key="treeMap_nameOfSelectedLabel">
 		OSS: $SSONAME$ ($SSOTYPE$)
 	</text>
+	
+	<text key="treeMap_notInRange_ASTRO_IMAGING">
+		Ninguna im&#225;gen encontrada en este rango de longitudes de onda.
+	</text>
+	<text key="treeMap_notInRange_ASTRO_CATALOGUE">
+		Ningun cat&#225;logo encontrado en este rango de longitudes de onda.
+	</text>
+	<text key="treeMap_notInRange_ASTRO_SPECTRA">
+		Ning&#xFA;n Dato espectral encontrado en este rango de longitudes de onda. 
+	</text>
+	<text key="treeMap_notInRange_SSO">
+		Ninguna observaci&#xF3;n de objetos del sistema solar encontrada en este rango de longitudes de onda.
+	</text>
+	<text key="treeMap_notInRange_EXT_TAP">
+		Ning&#xFA;n dato de taps externos encontrado en este rango de longitudes de onda.
+	</text>
 
 	<!-- HiPS Details Popup -->
 	<text key="hiPSDetailsPopup_mapName">
@@ -530,219 +546,9 @@
 	<text key="PlanningDetectorCenterTooltip_referenceDEC">
 		DEC de referencia:
 	</text>
-
-	<!-- catalogString -->
-	<text key="name">
-		Nombre
-	</text>
-	<text key="type">
-		Tipo
-	</text>
-	<text key="significance">
-		Significancia
-	</text>
-	<text key="exposure">
-		Exposici&#243;n
-	</text>
-	<text key="flux20_40keV">
-		Flujo a 20-40 keV
-	</text>
-	<text key="flux">
-		Flujo
-	</text>
-	<text key="fluxUVW1">
-		Flujo en el filtro UVW1
-	</text>
-	<text key="btMagnitude">
-		magnitud BT
-	</text>
-	<text key="SN">
-		Raz\u00F3n se&#241;al/ruido
-	</text>
-	<text key="gMagnitude">
-		Magnitud G
-	</text>
-	<text key="hpMagnitude">
-		Magnitud Hp
-	</text>
-	<text key="fluxDensity">
-		Densidad de flujo
-	</text>
-	<text key="error">
-		Error
-	</text>
-	<text key="INTEGRAL_Type">
-		Tipo
-	</text>
-	<text key="INTEGRAL_Significance">
-		Significancia
-	</text>
-	<text key="INTEGRAL_Exposure">
-		Exposici&#243;n &lt;i&gt;(ksec)&lt;/i&gt;
-	</text>
-	<text key="observation_id">
-		ID Observaci&#243;n
-	</text>
-	<text key="XMM_OM_poserr">
-		&amp;Delta;Pos
-	</text>
-	<text key="XMM_OM_date_obs">
-		Fecha de observaci&#243;n
-	</text>
-	<text key="HSC_v2_1_match_id">
-		ID cruzado
-	</text>
-	<text key="targetName">
-		Nombre del objeto
-	</text>
-	<text key="HSC_v2_1_num_images">
-		Numero de Im&#225;genes
-	</text>
-	<text key="HSC_v2_1_fluxes">
-		Filtros
-	</text>
-	<text key="HSC_v2_1_fluxesvalues">
-		Magnitud &lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="HSC_v2_1_sigmavalues">
-		Error de magnitud &lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_flux">
-		Flujo &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_rms">
-		&amp;Delta;Flujo &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_elong_flag">
-		Indicador de elongaci&#243;n
-	</text>
-	<text key="Herschel_HPPSC_edge_flag">
-		Indicador de borde
-	</text>
-	<text key="Herschel_HPPSC_blend_flag">
-		Indicador de combinaci&#243;n
-	</text>
-	<text key="Herschel_HPPSC_ssomap_flag">
-		Indicador de Mapa de OSS
-	</text>
-	<text key="Herschel_HPPSC_fluxdao">
-		Densidad de flujo medida por DAOPHOT
-		&lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_fluxdao_err">
-		Error en dens. de flujo DAOPHOT &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_fluxtm2">
-		Densidad de flujo medida por TM2
-		&lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_fluxtm2_err">
-		Error en dens. de flujo TM2 &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="Herschel_HPPSC_pntsrc_flag">
-		Indicador de fuente puntual
-	</text>
-	<text key="Herschel_HPPSC_lowfwhm_flag">
-		Indicador de anchura a media altura (FWHM) baja
-	</text>
-	<text key="Herschel_HPPSC_largegal_flag">
-		Indicador de Galaxia Grande
-	</text>
-	<text key="Herschel_HPPSC_mapedge_flag">
-		Indicador de borde del mapa
-	</text>
-	<text key="Herschel_HPPSC_ssocont_flag">
-		Indicador de OSS contaminador
-	</text>
-	<text key="Submm">
-		Submilim&#233;trico
-	</text>
-	<text key="Herschel_HPPSC_extsrc_flag">
-		Indicador de fuente extendida
-	</text>
-	<text key="PGCC2_snr">
-		Raz\u00F3n se&#241;al/ruido
-	</text>
-	<text key="PGCC2_gau_major_axis">
-		FWHM mayor &lt;i&gt;(arcmin)&lt;/i&gt; </text>
-	<text key="PGCC2_gau_major_gau_major_axis_sig">
-		Error FWHM mayor &lt;i&gt;(arcmin)&lt;/i&gt; </text>
-	<text key="PGCC2_gau_minor_axis">
-		FWHM menor &lt;i&gt;(arcmin)&lt;/i&gt; </text>
-	<text key="PCCS2E_frequency">
-		Frequencia &lt;i&gt;(GHz)&lt;/i&gt; </text>
-	<text key="PCCS2E_detflux">
-		Densidad de Flujo &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="PCCS2E_detflux_err">
-		Error de densidad de Flujo &lt;i&gt;(mJy)&lt;/i&gt; </text>
-	<text key="PCCS2E_highest_reliability_cat">
-		Fiabilidad del cat&#225;logo
-	</text>
-	<text key="PSZ_redshift">
-		Desplazamiento al Rojo
-	</text>
-	<text key="PSZ_msz">
-		Masa de Sunyaev-Zeldovich
-		&lt;i&gt;(10&lt;sup&gt;14&lt;/sup&gt;
-		M&lt;sub&gt;solar&lt;/sub&gt;)&lt;/i&gt; </text>
-	<text key="PSZ_validation">
-		Validaci&#243;n
-	</text>
-	<text key="productURL">
-		URL del producto
-	</text>
-	<text key="instrument">
-		Instrumento
-	</text>
-	<text key="startTime">
-		Hora de inicio
-	</text>
-	<text key="duration">
-		Duraci&#243;n &lt;i&gt;(s)&lt;/i&gt; </text>
-	<text key="durationKs">
-		Duraci&#243;n &lt;i&gt;(ks)&lt;/i&gt; </text>
-	<text key="Chandra_ProposalID">
-		ID de propuesta
-	</text>
-	<text key="Chandra_StartTime">
-		Hora de inicio &lt;i&gt;(MJD)&lt;/i&gt; </text>
-	<text key="filter">
-		Filtro
-	</text>
-	<text key="Collection">
-		Colecci&#243;n
-	</text>
-	<text key="Herschel_Filter">
-		Filtro &lt;i&gt;(microns)&lt;/i&gt; </text>
-	<text key="XMM_NEWTON_Wavelength">
-		Longitud de onda
-	</text>
-	<text key="IUE_Aperture">
-		Abertura
-	</text>
-	<text key="IUE_Dispersion">
-		Dispersi&#243;n
-	</text>
-	<text key="FileName">
-		Nombre del archivo
-	</text>
-	<text key="opticalElement">
-		Elemento &#243;ptico
-	</text>
-	<text key="centralWavelength">
-		Longitud de onda central &lt;i&gt;(nm)&lt;/i&gt; </text>
-	<text key="ISO_ObservationIDAux">
-		ID de observaci&#243;n Aux
-	</text>
-	<text key="ObservingMode">
-		Modo de observaci&#243;n
-	</text>
-	<text key="Herschel_WavelengthRange">
-		Rango de longitud de onda
-	</text>
 	<text key="PublicationTooltip_BIBCOUNT">
 		N&#250;mero de publicaciones:
 	</text>
-	<text key="RA_J2000">
-		RA &lt;i&gt;(J2000)&lt;/i&gt; </text>
-	<text key="DEC_J2000">
-		Dec &lt;i&gt;(J2000)&lt;/i&gt; </text>
-	<text key="RA_J2015">
-		RA &lt;i&gt;(J2015.0)&lt;/i&gt; </text>
-	<text key="DEC_J2015">
-		Dec &lt;i&gt;(J2015.0)&lt;/i&gt; </text>
 	<text key="SoftX-ray">
 		Rayos X Blandos
 	</text>
@@ -803,69 +609,7 @@
 	<text key="Date">
 		Fecha
 	</text>
-	<text key="CHANDRA_flux_b">
-		Flujo ACIS &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_lower_flux_b">
-		Flujo Bajo ACIS &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_upper_flux_b">
-		Flujo Alto ACIS &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_flux_w">
-		Flujo &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_lower_flux_w">
-		Flujo Bajo HCR &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_upper_flux_w">
-		Flujo Alto HCR &lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="CHANDRA_snr">
-		Raz\u00F3n se&#241;al/ruido
-	</text>
-	<text key="Gaia_phot_g_mean_flux">
-		Flujo &lt;i&gt;(e-/s)&lt;/i&gt; </text>
-	<text key="Gaia_phot_g_mean_flux_error">
-		Error Flujo &lt;i&gt;(e-/s)&lt;/i&gt; </text>
-	<text key="Gaia_phot_g_mean_mag">
-		Magnitud G &lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="Flag">
-		Marcado
-	</text>
-	<text key="SNR">
-		RSR
-	</text>
-	<text key="Herschel_fwhmxfit">
-		FWHM x Fit
-	</text>
-	<text key="Herschel_fwhmyfit">
-		FWHM y Fit
-	</text>
-	<text key="Herschel_snr">
-		S/N_S
-	</text>
-	<text key="Herschel_stn">
-		S/N_R
-	</text>
-	<text key="Herschel_Warmat">
-		Warmat
-	</text>
-	<text key="HST_Collection">
-		Colecci&#243;n
-	</text>
-	<text key="Observation ObjectId">
-		ObjectId de la observaci&#243;n
-	</text>
-	<text key="BIBCODE_preview">
-		BIBCODE
-	</text>
+	
 	<text key="header_learnMore">
 		&#161;Aprenda m&#225;s sobre ESASky!
 	</text>
@@ -1260,12 +1004,13 @@
 		target="_blank"&gt;
 		M&#225;s informaci&#243;n
 		&lt;/a&gt; </text>
-	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST">
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-OPTICAL">
 		Los datos observacionales del Telescopio Espacial Hubble
 		(HST)
 		proporcionados por ESASky son productos cient&#237;ficos
 		de las
-		tres colecciones de datos de Hubble:
+		dos colecciones de datos de Hubble:
 		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
@@ -1278,11 +1023,74 @@
 		Archive (HLA)
 		&lt;/span&gt;
 		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky aplica un filtro en los datos de archivo
+		del HST
+		para mostrar en primer lugar todas las im&#225;genes compuestas
+		(asociaciones)
+		y despu&#233;s todas las im&#225;genes individuales
+		(&quot;HST
+		singleton&quot;)
+		que no forman parte de ninguna
+		asociaci&#243;n.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; </text>
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-UV">
+		Los datos observacionales del Telescopio Espacial Hubble
+		(HST)
+		proporcionados por ESASky son productos cient&#237;ficos
+		de las
+		dos colecciones de datos de Hubble:
+		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
-		La
-		colecci&#243;n de
-		Productos Cient&#237;ficos de Alto Nivel (HLSP)
+		La colecci&#243;n HST est&#225;ndar
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		La colecci&#243;n del Hubble Legacy
+		Archive (HLA)
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;/ul&gt;
+		ESASky aplica un filtro en los datos de archivo
+		del HST
+		para mostrar en primer lugar todas las im&#225;genes compuestas
+		(asociaciones)
+		y despu&#233;s todas las im&#225;genes individuales
+		(&quot;HST
+		singleton&quot;)
+		que no forman parte de ninguna
+		asociaci&#243;n.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-observations#HST-OBS"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; </text>
+		
+	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_HST-IR">
+		Los datos observacionales del Telescopio Espacial Hubble
+		(HST)
+		proporcionados por ESASky son productos cient&#237;ficos
+		de las
+		dos colecciones de datos de Hubble:
+		&lt;ul&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		La colecci&#243;n HST est&#225;ndar
+		&lt;/span&gt;
+		&lt;/li&gt;
+		&lt;li&gt;
+		&lt;span&gt;
+		La colecci&#243;n del Hubble Legacy
+		Archive (HLA)
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -1916,11 +1724,6 @@
 		M&#225;s informaci&#243;n
 		&lt;/a&gt; </text>
 
-	therefore the flux densities derived from these maps are an average of
-	the source emission over these two periods of time. For the channels
-	100-353 GHz, the catalogue also contains polarization flux densities
-	and polarization angles for sources with a significance in polarization
-	>99.99%
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_Planck-PSZ2">
 		El catálogo PSZ de Planck es una lista de detecciones de
@@ -2044,7 +1847,7 @@
 		(HST)
 		proporcionados por ESASky son productos cient&#237;ficos
 		de las
-		tres colecciones de datos de Hubble:
+		dos colecciones de datos de Hubble:
 		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
@@ -2054,12 +1857,6 @@
 		&lt;li&gt;
 		&lt;span&gt;
 		La colecci&#243;n del Hubble Legacy Archive (HLA)
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		La colecci&#243;n de
-		Productos Cient&#237;ficos de Alto Nivel (HLSP)
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -2083,7 +1880,7 @@
 		key="resultsPresenter_helpDescription_ASTRO_SPECTRA_HST(OPTICAL)">
 		Los datos observacionales del Telescopio Espacial Hubble (HST)
 		proporcionados por ESASky son productos cient&#237;ficos
-		de las tres
+		de las dos
 		colecciones de datos de Hubble:
 		&lt;ul&gt;
 		&lt;li&gt;
@@ -2095,12 +1892,6 @@
 		&lt;li&gt;
 		&lt;span&gt;
 		La colecci&#243;n del Hubble Legacy Archive (HLA)
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		La colecci&#243;n de
-		Productos Cient&#237;ficos de Alto Nivel (HLSP)
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -2201,7 +1992,7 @@
 		(HST)
 		proporcionados por ESASky son productos cient&#237;ficos
 		de las
-		tres colecciones de datos de Hubble:
+		dos colecciones de datos de Hubble:
 		&lt;ul&gt;
 		&lt;li&gt;
 		&lt;span&gt;
@@ -2211,12 +2002,6 @@
 		&lt;li&gt;
 		&lt;span&gt;
 		La colecci&#243;n del Hubble Legacy Archive (HLA)
-		&lt;/span&gt;
-		&lt;/li&gt;
-		&lt;li&gt;
-		&lt;span&gt;
-		La colecci&#243;n de
-		Productos Cient&#237;ficos de Alto Nivel (HLSP)
 		&lt;/span&gt;
 		&lt;/li&gt;
 		&lt;/ul&gt;
@@ -2289,127 +2074,6 @@
 		observaciones
 		(N&#250;mero de im&#225;genes)
 	</text>
-	<text key="INTEGRAL_flux20_40">
-		Flujo&lt;sub&gt;20-40 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
-	</text>
-	<text key="INTEGRAL_flux40_100">
-		Flujo&lt;sub&gt;40-100 keV&lt;/sub&gt; &lt;i&gt;(mCrab)&lt;/i&gt;
-	</text>
-	<text key="3XMM_EPIC_ep_8_flux">
-		Flujo&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="3XMM_EPIC_ep_8_flux_err">
-		Error del flujo&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_uvw1_ab_flux">
-		Flujo UVW1&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_uvw2_ab_flux">
-		Flujo UVW2&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_uvm2_ab_flux">
-		Flujo UVM2&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_u_ab_flux">
-		Flujo U&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_v_ab_flux">
-		Flujo V&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_OM_b_ab_flux">
-		Flujo B&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b0">
-		Flujo (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b0_err">
-		Error de flujo (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b4">
-		Flujo (2-12kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b4_err">
-		Error de flujo (2-12kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b5">
-		Flujo (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="XMM_Slew_flux_b5_err">
-		Error de flujo (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
-		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
-	</text>
-	<text key="pm_ra">
-		Movimiento propio en
-		AR&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="pm_de">
-		Movimiento propio en
-		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Tycho_2_bt_mag">
-		Magnitud BT&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="Tycho_2_vt_mag">
-		Magnitud VT&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="parallax">
-		Paralaje&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
-	<text key="Gaia_DR1_TGAS_parallax_error">
-		Error de paralaje&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
-	<text key="Gaia_DR1_TGAS_pmra_error">
-		Error de MP en AR&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR1_TGAS_pmdec_error">
-		Error de MP en Dec
-		error&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR1_TGAS_phot_g_mean_mag">
-		Mag G media&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="mag">
-		Magnitud&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
-	<text key="PGCC2_gau_minor_axis_sig">
-		Error en FWHM menor &lt;i&gt;(arcmin)&lt;/i&gt; </text>
-	<text key="EP_STACK_ONTIME">
-		Tiempo de exposición total (EP Ontime)
-		&lt;i&gt;(s)&lt;/i&gt; </text>
-
-	<text key="3XMM_EPIC_ep_8_n_contrib">
-		N. Contrib
-	</text>
-	<text key="3XMM_EPIC_ep_8_n_obs">
-		N. Obs
-	</text>
-	<text key="3XMM_EPIC_ep_8_extent">
-		Extensi&#243;n
-	</text>
-	<text key="3XMM_EPIC_ep_8_extent_err">
-		Error en la extensi&#243;n
-	</text>
-	<text key="3XMM_EPIC_ep_8_flux_var">
-		Var. de flujo
-	</text>
-	<text key="3XMM_EPIC_ep_8_iau_name">
-		Nombre IAU
-	</text>
-	<text key="RA_J1991">
-		AR &lt;i&gt;(&#126;J1991)&lt;/i&gt; </text>
-	<text key="DEC_J1991">
-		Dec &lt;i&gt;(&#126;J1991)&lt;/i&gt; </text>
-	<text key="RA_J1991.25">
-		AR &lt;i&gt;(J1991.25)&lt;/i&gt; </text>
-	<text key="DEC_J1991.25">
-		Dec &lt;i&gt;(J1991.25)&lt;/i&gt; </text>
-	<text key="RA_J2015.5">
-		AR &lt;i&gt;(J2015.5)&lt;/i&gt; </text>
-	<text key="DEC_J2015.5">
-		Dec &lt;i&gt;(J2015.5)&lt;/i&gt; </text>
 	<text key="MidIR">
 		IR medio
 	</text>
@@ -2467,96 +2131,6 @@
 	</text>
 	<text key="CESAR_Colours">
 		CESAR Colores
-	</text>
-	<text key="2MASS_J_Mag">
-		ßJ mag
-	</text>
-	<text key="2MASS_J_Mag_err">
-		&amp;Delta;J mag
-	</text>
-	<text key="2MASS_H_Mag">
-		H mag
-	</text>
-	<text key="2MASS_H_Mag_err">
-		&amp;Delta;H mag
-	</text>
-	<text key="2MASS_KS_Mag">
-		Ks mag
-	</text>
-	<text key="2MASS_KS_Mag_err">
-		&amp;Delta;Ks mag
-	</text>
-
-	<text key="AllWise_ra_err">
-		&amp;Delta;RA
-	</text>
-	<text key="AllWise_dec_err">
-		&amp;Delta;Dec
-	</text>
-	<text key="AllWise_w1mpro">
-		W1 mag
-	</text>
-	<text key="AllWise_w1mpro_error">
-		&amp;Delta;W1 mag
-	</text>
-	<text key="AllWise_w2mpro">
-		W2 mag
-	</text>
-	<text key="AllWise_w2mpro_error">
-		&amp;Delta;W2 mag
-	</text>
-	<text key="AllWise_w3mpro">
-		W3 mag
-	</text>
-	<text key="AllWise_w3mpro_error">
-		&amp;Delta;W3 mag
-	</text>
-	<text key="AllWise_w4mpro">
-		W4 mag
-	</text>
-	<text key="AllWise_w4mpro_error">
-		&amp;Delta;W4 mag
-	</text>
-
-	<text key="Gaia_DR1_ra_error">
-		&amp;Delta;RA
-	</text>
-	<text key="Gaia_DR1_dec_error">
-		&amp;Delta;Dec
-	</text>
-	<text key="Gaia_DR2_parallax">
-		Paralaje &lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_parallax_error">
-		&amp;Delta;Paralaje&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_pmra">
-		Movimiento propio en
-		AR&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_pmra_error">
-		&amp;Delta;MP en AR&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_pmdec">
-		Movimiento propio en
-		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_pmdec_error">
-		&amp;Delta;MP en
-		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_phot_g_mean_mag">
-		G mag
-	</text>
-	<text key="Gaia_DR2_br_rp">
-		(BP - RP) mag
-	</text>
-	<text key="Gaia_DR2_radial_velocity">
-		Velocidad Radial&lt;br&gt;&lt;i&gt;(km/s)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_radial_velocity_error">
-		&amp;Delta;Velocidad Radial
-	</text>
-	<text key="Gaia_DR2_phot_variable_flag">
-		Indicador de variabilidad
-	</text>
-	<text key="Gaia_DR2_teff_val">
-		T_{eff}&lt;br&gt;&lt;i&gt;(K)&lt;/i&gt; </text>
-	<text key="Gaia_DR2_a_g_val">
-		A_{G} mag
 	</text>
 	<text key="treeMapContainer_help_ASTRO_IMAGING">
 		A fin de buscar datos de imagen, cat&#225;logos o
@@ -3034,30 +2608,7 @@
 		target="_blank"&gt;
 		M&#225;s informaci&#243;n
 		&lt;/a&gt; </text>
-	<text key="ssoName">
-		Nombre
-	</text>
-	<text key="RAStart">
-		RA inicial obj. &lt;i&gt;(J2000)&lt;/i&gt;
-	</text>
-	<text key="DecStart">
-		Dec inicial obj. &lt;i&gt;(J2000)&lt;/i&gt;
-	</text>
-	<text key="RAEnd">
-		RA final obj. &lt;i&gt;(J2000)&lt;/i&gt;
-	</text>
-	<text key="DecEnd">
-		Dec final obj. &lt;i&gt;(J2000)&lt;/i&gt;
-	</text>
-	<text key="DeltaPosDeg">
-		Delta Pos. &lt;i&gt;(grados)&lt;/i&gt;
-	</text>
-	<text key="SSOVMag">
-		V obj. &lt;i&gt;(Mag)&lt;/i&gt;
-	</text>
-	<text key="SSODistanceAU">
-		Distancia obj. &lt;i&gt;(UA)&lt;/i&gt;
-	</text>
+
 	<text key="tableGroup_Observation">
 		Observaci&#243;n
 	</text>
@@ -3312,93 +2863,610 @@
 		M&#225;s informaci&#243;n
 		&lt;/a&gt; 
 	</text>
+	<text key="searchPanel_target">
+		Destino
+	</text>
 	
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- DO NOT TRANSLATE -->
+	<text key="name">
+		Name
+	</text>
+	<text key="flux">
+		Flux
+	</text>
+	<text key="type">
+		Type
+	</text>
+	<text key="significance">
+		Significance
+	</text>
+	<text key="exposure">
+		Exposure
+	</text>
+	<text key="flux20_40keV">
+		Flux at 20-40 keV
+	</text>
+	<text key="fluxUVW1">
+		Flux starting with the UVW1 filter
+	</text>
+	<text key="btMagnitude">
+		BT Magnitude
+	</text>
+	<text key="SN">
+		Signal to Noise
+	</text>
+	<text key="gMagnitude">
+		G magnitude
+	</text>
+	<text key="hpMagnitude">
+		Hp magnitude
+	</text>
+	<text key="fluxDensity">
+		Flux Density
+	</text>
+	<text key="error">
+		error
+	</text>
+	<text key="INTEGRAL_flux20_40">
+		Flux&lt;sub&gt;20-40 keV&lt;/sub&gt; (mCrab)
+	</text>
+	<text key="INTEGRAL_flux40_100">
+		Flux&lt;sub&gt;40-100 keV&lt;/sub&gt; (mCrab)
+	</text>
+	<text key="INTEGRAL_Type">
+		Type
+	</text>
+	<text key="INTEGRAL_Significance">
+		Significance
+	</text>
+	<text key="INTEGRAL_Exposure">
+		Exposure (ksec)
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux">
+		Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux_err">
+		Flux error&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="observation_id">
+		Observation ID
+	</text>
+	<text key="XMM_OM_poserr">
+		&amp;Delta;Pos
+	</text>
+	<text key="XMM_OM_date_obs">
+		Date observed
+	</text>
+	<text key="XMM_OM_uvw1_ab_flux">
+		UVW1 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_uvw2_ab_flux">
+		UVW2 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_uvm2_ab_flux">
+		UVM2 Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_u_ab_flux">
+		U Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_v_ab_flux">
+		V Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_OM_b_ab_flux">
+		B Flux&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b0">
+		Flux (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b0_err">
+		Flux error (0.2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b4">
+		Flux (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b4_err">
+		Flux error (2-12kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b5">
+		Flux (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="XMM_Slew_flux_b5_err">
+		Flux error (0.2-2kev)&lt;br&gt;&lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="pm_ra">
+		Proper Motion in RA&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="pm_de">
+		Proper Motion in
+		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="Tycho_2_bt_mag">
+		BT Magnitude&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="Tycho_2_vt_mag">
+		VT Magnitude&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="parallax">
+		Parallax&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
+	<text key="mag">
+		Magnitude&lt;br&gt;&lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="HSC_v3_1_match_id">
+		Match ID
+	</text>
+	<text key="targetName">
+		Target name
+	</text>
+	<text key="HSC_v3_1_num_images">
+		Number of Images
+	</text>
+	<text key="HSC_v3_1_num_images_per_filter">
+		Number of Images per filter
+	</text>
+	<text key="HSC_v3_1_fluxes">
+		Filter
+	</text>
+	<text key="HSC_v3_1_fluxesvalues">
+		Magnitude &lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="HSC_v3_1_sigmavalues">
+		Magnitude Error &lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_flux">
+		Flux &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_rms">
+		&amp;Delta;Flux &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_elong_flag">
+		Elong Flag
+	</text>
+	<text key="Herschel_HPPSC_edge_flag">
+		Edge Flag
+	</text>
+	<text key="Herschel_HPPSC_blend_flag">
+		Blend Flag
+	</text>
+	<text key="Herschel_HPPSC_ssomap_flag">
+		SSO Map Flag
+	</text>
+	<text key="Herschel_HPPSC_fluxdao">
+		Fluxdao &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_fluxdao_err">
+		&amp;Delta;Fluxdao &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_fluxtm2">
+		Flux TM2 &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_fluxtm2_err">
+		&amp;Delta;Flux TM2 &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="Herschel_HPPSC_pntsrc_flag">
+		Point Source Flag
+	</text>
+	<text key="Herschel_HPPSC_lowfwhm_flag">
+		Low FWHM Flag
+	</text>
+	<text key="Herschel_HPPSC_largegal_flag">
+		Large Galaxy Flag
+	</text>
+	<text key="Herschel_HPPSC_mapedge_flag">
+		Map Edge Flag
+	</text>
+	<text key="Herschel_HPPSC_ssocont_flag">
+		SSO Contaminator Flag
+	</text>
+	<text key="Submm">
+		Submillimeter
+	</text>
+	<text key="Herschel_HPPSC_extsrc_flag">
+		Extended Source Flag
+	</text>
+	<text key="PGCC_snr">
+		Signal to Noise
+	</text>
+	<text key="PGCC_gau_major_axis">
+		Major FWHM &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC_gau_major_gau_major_axis_sig">
+		Major FWHM Error &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC_gau_minor_axis">
+		Minor FWHM &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PGCC_gau_minor_axis_sig">
+		Minor FWHM Error &lt;i&gt;(arcmin)&lt;/i&gt; </text>
+	<text key="PCCS2E_frequency">
+		Frequency &lt;i&gt;(GHz)&lt;/i&gt; </text>
+	<text key="PCCS2E_detflux">
+		Flux Density &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="PCCS2E_detflux_err">
+		Flux Density Error &lt;i&gt;(mJy)&lt;/i&gt; </text>
+	<text key="PCCS2E_highest_reliability_cat">
+		Cat. Reliability
+	</text>
+	<text key="Gaia_DR1_ra_error">
+		RA error &lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="Gaia_DR1_dec_error">
+		Dec error &lt;i&gt;(mas)&lt;/i&gt;
+	</text>
+	<text key="PSZ_redshift">
+		Redshift
+	</text>
+	<text key="PSZ_msz">
+		Sunyaev-Zeldovich Mass
+		&lt;i&gt;(10&lt;sup&gt;14&lt;/sup&gt;
+		M&lt;sub&gt;solar&lt;/sub&gt;)&lt;/i&gt; </text>
+	<text key="PSZ_validation">
+		Validation
+	</text>
+	<text key="productURL">
+		ProductURL
+	</text>
+	<text key="instrument">
+		Instrument
+	</text>
+	<text key="startTime">
+		Start Time
+	</text>
+	<text key="duration">
+		Duration &lt;i&gt;(s)&lt;/i&gt; </text>
+	<text key="EP_STACK_ONTIME">
+		EP Ontime &lt;i&gt;(s)&lt;/i&gt; </text>
+	<text key="durationKs">
+		Duration &lt;i&gt;(ks)&lt;/i&gt; </text>
+	<text key="Chandra_ProposalID">
+		Proposal ID
+	</text>
+	<text key="Chandra_StartTime">
+		Start Time &lt;i&gt;(MJD)&lt;/i&gt; </text>
+	<text key="filter">
+		Filter
+	</text>
+	<text key="Collection">
+		Collection
+	</text>
+	<text key="Herschel_Filter">
+		Filter &lt;i&gt;(microns)&lt;/i&gt; </text>
+	<text key="XMM_NEWTON_Wavelength">
+		Wavelength
+	</text>
+	<text key="IUE_Aperture">
+		Aperture
+	</text>
+	<text key="IUE_Dispersion">
+		Dispersion
+	</text>
+	<text key="FileName">
+		Filename
+	</text>
+	<text key="opticalElement">
+		Optical Element
+	</text>
+	<text key="centralWavelength">
+		Central Wavelength &lt;i&gt;(nm)&lt;/i&gt; </text>
+	<text key="ISO_ObservationIDAux">
+		Observation ID Aux
+	</text>
+	<text key="ObservingMode">
+		Observing Mode
+	</text>
+	<text key="Herschel_WavelengthRange">
+		Wavelength Range
+	</text>
+	<text key="PublicationTooltip_BIBCOUNT">
+		Num. pub.:
+	</text>
+	<text key="3XMM_EPIC_ep_8_n_contrib">
+		N. Contrib
+	</text>
+	<text key="3XMM_EPIC_ep_8_n_obs">
+		N. Obs
+	</text>
+	<text key="3XMM_EPIC_ep_8_extent">
+		Extent
+	</text>
+	<text key="3XMM_EPIC_ep_8_extent_err">
+		Extent error
+	</text>
+	<text key="3XMM_EPIC_ep_8_flux_var">
+		Flux Var
+	</text>
+	<text key="3XMM_EPIC_ep_8_iau_name">
+		IAU Name
+	</text>
+	<text key="RA_J1991">
+		RA &lt;i&gt;(&#126;J1991)&lt;/i&gt; </text>
+	<text key="DEC_J1991">
+		Dec &lt;i&gt;(&#126;J1991)&lt;/i&gt; </text>
+	<text key="RA_J1991.25">
+		RA &lt;i&gt;(J1991.25)&lt;/i&gt; </text>
+	<text key="DEC_J1991.25">
+		Dec &lt;i&gt;(J1991.25)&lt;/i&gt; </text>
+	<text key="RA_J2000">
+		RA &lt;i&gt;(J2000)&lt;/i&gt; </text>
+	<text key="DEC_J2000">
+		Dec &lt;i&gt;(J2000)&lt;/i&gt; </text>
+	<text key="RA_J2015">
+		RA &lt;i&gt;(J2015.0)&lt;/i&gt; </text>
+	<text key="DEC_J2015">
+		Dec &lt;i&gt;(J2015.0)&lt;/i&gt; </text>
+	<text key="RA_J2015.5">
+		RA &lt;i&gt;(J2015.5)&lt;/i&gt; </text>
+	<text key="DEC_J2015.5">
+		Dec &lt;i&gt;(J2015.5)&lt;/i&gt; </text>
+	<text key="CHANDRA_flux_b">
+		Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_lower_flux_b">
+		Lower Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_upper_flux_b">
+		Upper Flux ACIS &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_flux_w">
+		Flux &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_lower_flux_w">
+		Lower Flux HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_upper_flux_w">
+		Upper Flux HCR &lt;i&gt;(erg
+		cm&lt;sup&gt;-2&lt;/sup&gt;s&lt;sup&gt;-1&lt;/sup&gt;)&lt;/i&gt;
+	</text>
+	<text key="CHANDRA_snr">
+		Signal to Noise Ratio
+	</text>
+	<text key="Gaia_phot_g_mean_flux">
+		Flux &lt;i&gt;(e-/s)&lt;/i&gt; </text>
+	<text key="Gaia_phot_g_mean_flux_error">
+		Flux Error &lt;i&gt;(e-/s)&lt;/i&gt; </text>
+	<text key="Gaia_phot_g_mean_mag">
+		G Magnitude &lt;i&gt;(mag)&lt;/i&gt; </text>
+	<text key="Flag">
+		Flag
+	</text>
+	<text key="SNR">
+		SNR
+	</text>
+	<text key="Herschel_fwhmxfit">
+		FWHM x Fit
+	</text>
+	<text key="Herschel_fwhmyfit">
+		FWHM y Fit
+	</text>
+	<text key="Herschel_snr">
+		S/N_S
+	</text>
+	<text key="Herschel_stn">
+		S/N_R
+	</text>
+	<text key="Herschel_Warmat">
+		Warmat
+	</text>
+	<text key="HST_Collection">
+		Collection
+	</text>
+	<text key="Observation ObjectId">
+		Observation ObjectId
+	</text>
+	<text key="BIBCODE_preview">
+		BIBCODE_preview
+	</text>
+	<text key="2MASS_J_Mag">
+		J mag
+	</text>
+	<text key="2MASS_J_Mag_err">
+		&amp;Delta;J mag
+	</text>
+	<text key="2MASS_H_Mag">
+		H mag
+	</text>
+	<text key="2MASS_H_Mag_err">
+		&amp;Delta;H mag
+	</text>
+	<text key="2MASS_KS_Mag">
+		Ks mag
+	</text>
+	<text key="2MASS_KS_Mag_err">
+		&amp;Delta;Ks mag
+	</text>
+
+	<text key="AllWise_ra_err">
+		&amp;Delta;RA
+	</text>
+	<text key="AllWise_dec_err">
+		&amp;Delta;Dec
+	</text>
+	<text key="AllWise_w1mpro">
+		W1 mag
+	</text>
+	<text key="AllWise_w1mpro_error">
+		&amp;Delta;W1 mag
+	</text>
+	<text key="AllWise_w2mpro">
+		W2 mag
+	</text>
+	<text key="AllWise_w2mpro_error">
+		&amp;Delta;W2 mag
+	</text>
+	<text key="AllWise_w3mpro">
+		W3 mag
+	</text>
+	<text key="AllWise_w3mpro_error">
+		&amp;Delta;W3 mag
+	</text>
+	<text key="AllWise_w4mpro">
+		W4 mag
+	</text>
+	<text key="AllWise_w4mpro_error">
+		&amp;Delta;W4 mag
+	</text>
+	<text key="Gaia_DR2_parallax">
+		Parallax &lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_parallax_error">
+		&amp;Delta;Parallax&lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_pmra">
+		Proper Motion in RA&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_pmra_error">
+		&amp;Delta;PM in RA&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_pmdec">
+		Proper Motion in
+		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_pmdec_error">
+		&amp;Delta;PM in
+		Dec&lt;br&gt;&lt;i&gt;(mas/yr)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_phot_g_mean_mag">
+		G mag
+	</text>
+	<text key="Gaia_DR2_br_rp">
+		(BP - RP) mag
+	</text>
+	<text key="Gaia_DR2_radial_velocity">
+		Radial Velocity&lt;br&gt;&lt;i&gt;(km/s)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_radial_velocity_error">
+		&amp;Delta;Radial Velocity
+	</text>
+	<text key="Gaia_DR2_phot_variable_flag">
+		Variable flag
+	</text>
+	<text key="Gaia_DR2_teff_val">
+		T_{eff}&lt;br&gt;&lt;i&gt;(K)&lt;/i&gt; </text>
+	<text key="Gaia_DR2_a_g_val">
+		A_{G} mag
+	</text>
+	<text key="ssoName">
+		Name
+	</text>
+	<text key="RAStart">
+		RA Start &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DecStart">
+		Dec Start &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="RAEnd">
+		RA End &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DecEnd">
+		Dec End &lt;i&gt;(J2000)&lt;/i&gt;
+	</text>
+	<text key="DeltaPosDeg">
+		Delta Pos. &lt;i&gt;(Deg)&lt;/i&gt;
+	</text>
+	<text key="SSOVMag">
+		V. &lt;i&gt;(Mag)&lt;/i&gt;
+	</text>
+	<text key="SSODistanceAU">
+		Distance &lt;i&gt;(AU)&lt;/i&gt;
+	</text>
 	<text key="endTime">
-		Tiempo final
+		End Time
 	</text>
-		<text key="LAMOST_obj_type">
-		Tipo de objeto
+	<text key="LAMOST_obj_type">
+		Object Type
 	</text>
-		<text key="LAMOST_class">
-		Clase
+	<text key="LAMOST_class">
+		Class
 	</text>
-		<text key="LAMOST_subclass">
-		Subclase
+	<text key="LAMOST_subclass">
+		Subclass
 	</text>
-		<text key="LAMOST_z">
+	<text key="LAMOST_z">
 		Z
 	</text>
 	<text key="LAMOST_z_err">
-		Error en Z
+		Z Error
 	</text>
 	<text key="LAMOST_snr_u">
-		S/N U
+		SNR U
 	</text>
 	<text key="LAMOST_snr_g">
-		S/N G
+		SNR G
 	</text>
 	<text key="LAMOST_snr_r">
-		S/N R
+		SNR R
 	</text>
 	<text key="LAMOST_snr_i">
-		S/N I
+		SNR I
 	</text>
 	<text key="LAMOST_snr_z">
-		S/N Z
+		SNR Z
 	</text>
 	<text key="LAMOST_effective_temperature">
-		Temperatura efectiva &lt;i&gt;(K)&lt;/i&gt;
+		Effective Temperature &lt;i&gt;(K)&lt;/i&gt;
 	</text>
 	<text key="LAMOST_surface_gravity">
-		Gravedad superficial
+		Surface Gravity
 	</text>
 	<text key="LAMOST_metallicity">
-		Metalicidad
+		Metallicity
 	</text>
 	<text key="LAMOST_radial_velocity">
-		Velocidad radial  &lt;i&gt;(km/s)&lt;/i&gt;
+		Radial Velocity &lt;i&gt;(km/s)&lt;/i&gt;
 	</text>
 	<text key="LAMOST_mag">
-		magnitud
+		magnitude
 	</text>
 	<text key="AKARI_IRC_flux_s9w">
-		Flujo en S9W &lt;i&gt;(Jy)&lt;/i&gt;
+		Flux S9W &lt;i&gt;(Jy)&lt;/i&gt;
 	</text>
 	<text key="AKARI_IRC_flux_s9w_err">
-		Error del Flujo S9W &lt;i&gt;(Jy)&lt;/i&gt;
+		Flux S9W Error &lt;i&gt;(Jy)&lt;/i&gt;
 	</text>
 	<text key="AKARI_IRC_flux_l18w">
-		Flujo en L18W &lt;i&gt;(Jy)&lt;/i&gt;
+		Flux L18W &lt;i&gt;(Jy)&lt;/i&gt;
 	</text>
 	<text key="AKARI_IRC_flux_l18w_err">
-		Error del Flujo L18W &lt;i&gt;(Jy)&lt;/i&gt;
+		Flux L18W Error &lt;i&gt;(Jy)&lt;/i&gt;
 	</text>
 	<text key="AKARI_IRC_flag_s9w">
-		Indicador para S9W
+		Flag S9W
 	</text>
 	<text key="AKARI_IRC_flag_l18w">
-		Indicador para  L18W
+		Flag L18W
 	</text>
 	<text key="AKARI_IRC_extended_s9w_flag">
-		Indicador de objeto extendido para S9W
+		Extended S9W Flag
 	</text>
 	<text key="AKARI_IRC_extended_l18w_flag">
-		Indicador de objeto extendido para L18W
+		Extended L18W Flag
 	</text>
 	<text key="AKARI_IRC_num_sw09_events">
-		N&#250;mero de eventos en SW09
+		Number of SW09 Events
 	</text>
 	<text key="AKARI_IRC_num_l18w_events">
-		N&#250;mero de eventos en L18W
+		Number of L18W Events
 	</text>
 	<text key="AKARI_IRC_orderBy_flux_s9w">
-		Flujo en S9W
-	</text>
-	<text key="searchPanel_target">
-		Destino
+		Flux S9W
 	</text>
 
 </Internationalization>

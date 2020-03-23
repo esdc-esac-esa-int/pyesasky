@@ -3186,6 +3186,20 @@ HealpixCache = (function() {
         return HealpixCache.dynamicCache[nside].corners_nest(ipix, 1);
 
     };
+    
+     HealpixCache.getIndexByNside = function(nside){
+      if (nside == 8) {
+            return HealpixCache.staticCache;
+        }
+
+		if(!(nside in HealpixCache.dynamicCache)){
+			cache = new HealpixIndex(nside);
+            cache.init();
+            HealpixCache.dynamicCache[nside] = cache;
+		} 
+			
+        return HealpixCache.dynamicCache[nside];
+     }
 
     return HealpixCache;
 })();
@@ -6570,6 +6584,509 @@ Downloader = (function() {
     this.astro.FITS.HDU = HDU;
 
 }).call(this);
+
+
+
+/******************************************************************************
+ * 
+ * This class represents a Q3C implementation in javascript
+ * See original in c here: https://github.com/segasai/q3c/
+ *
+ * Using 32 bit implementation of the pixels instead of 64
+ *
+ *
+ * Author: Mattias Wångblad [ESDC]
+ * 
+ *****************************************************************************/
+
+var Q3C =(function() {
+	var instance;
+	var nbits = 16;
+	var nside = 1 << nbits - 2
+	Q3C = function(){
+	
+		if(instance){
+			return instance;
+		}
+		
+		xybits_size = 1 << nbits;
+		
+		xbits = []
+		ybits = []
+		
+		xbits[0] = 0;
+		xbits[1] = 1;
+		ybits[0] = 0;
+		ybits[1] = 2;
+		for(i = 2, m = 1; i < xybits_size; i++)
+		{
+			k = i / m;
+			if (k == 2)
+			{
+				xbits[i] = xbits[i / 2] * 4;
+				ybits[i] = 2 * xbits[i];
+				m *= 2;
+				continue;
+			}
+			else
+			{
+				xbits[i] = xbits[m] + xbits[i % m];
+				ybits[i] = 2 * xbits[i];
+				continue;
+			}
+		}
+		
+		this.xbits = xbits
+		this.ybits = ybits
+		
+		xbits1 = []
+		ybits1 = []
+		
+		xbits1[0] = 0;
+		xbits1[1] = 1;
+		
+		for(i = 2, m = 2, l = 2; i < xybits_size; i++){
+		
+			k = i / m;
+			
+			if (k < 2)
+			{
+				xbits1[i] = xbits1[i - m];
+			}
+			else
+			{
+				if (k == 4)
+				{
+					xbits1[i] = xbits1[0];
+					m *= 4;
+					l *= 2;
+				}
+				else
+					xbits1[i] = xbits1[i - 2 * m] + l;
+			}
+		}
+		this.xbits1 = xbits1;
+		ybits1[0] = 0; ybits1[1] = 0;
+	
+		for(i = 2, m = 1, l = 1; i < xybits_size; i++){
+			k = i / m;
+			if (k < 2)
+			{
+				ybits1[i] = ybits1[i - m];
+			}
+			else
+			{
+				if (k == 4)
+				{
+					ybits1[i] = ybits1[0];
+					m *= 4;
+					l *= 2;
+				}
+				else
+					ybits1[i] = ybits1[i - 2 * m] + l;
+			}
+		}
+			
+		this.ybits1 = ybits1;
+		
+		instance = this;
+		return instance;
+				
+	}
+	
+	Q3C.prototype.ipix2ang = function(order, ipix){
+	
+		Q3C_RADEG = 180 / Math.PI;
+		ii1 = 1 << nbits / 2;
+		q3c_i = 1 << nbits
+		var depth = (nbits * 2) - 4 - 2 * order 
+		
+		ipix = ipix << depth
+		var face_num = ipix >> (nbits * 2) - 4;
+		ipix1 = ipix % (nside * nside);
+		
+		i3 = ipix1 % q3c_i;
+		i2 = ipix1 >> nbits;
+		x0 = xbits1[i3];
+		y0 = ybits1[i3];
+		i3 = i2 % q3c_i;
+		x0 += xbits1[i3] * ii1;
+		y0 += ybits1[i3] * ii1;
+		
+		ix1 = x0;
+		iy1 = y0;
+			
+		x1 = (ix1 / nside) * 2 - 1;
+		y1 = (iy1 / nside) * 2 - 1;
+		var ra, dec;
+		
+		if ((face_num >= 1) && (face_num <= 4)){
+			
+			ra = Math.atan(x1);
+			dec = Q3C_RADEG * Math.atan(y1 * Math.cos(ra));
+			ra = ra * Q3C_RADEG + (face_num - 1) * 90;
+			if (ra < 0){
+				ra += 360;
+			}
+		}
+		else
+		{
+			if (face_num == 0)
+			{
+				ra = Q3C_RADEG * (Math.atan2(-x1, y1) + Math.PI);
+				dec = Q3C_RADEG * Math.atan( 1 / Math.sqrt(x1 * x1 + y1 * y1));
+			}
+			if (face_num == 5)
+			{
+						
+				ra = Q3C_RADEG * (Math.atan2(-x1, -y1) + Math.PI);
+				dec = -Q3C_RADEG * Math.atan( 1 / Math.sqrt(x1 * x1 + y1 * y1));
+			}		
+		}	
+		
+		return [ra,dec]
+	}
+	
+	Q3C.prototype.ipix2angCorners = function(order, ipix){
+	
+		Q3C_RADEG = 180 / Math.PI;
+		ii1 = 1 << nbits / 2;
+		var depth = (nbits * 2) - 4 - 2 * order 
+		q3c_i = 1 << nbits
+		
+		ipix = ipix << depth
+		var face_num = ipix >> (nbits * 2) - 4;
+		ipix1 = ipix % (nside * nside);
+		
+		i3 = ipix1 % q3c_i;
+		i2 = ipix1 >> nbits;
+		x0 = xbits1[i3];
+		y0 = ybits1[i3];
+		i3 = i2 % q3c_i;
+		x0 += xbits1[i3] * ii1;
+		y0 += ybits1[i3] * ii1;
+		
+		ix1 = x0;
+		iy1 = y0;
+		idx = 1 << depth / 2;
+		ix2 = ix1 + idx;
+		iy2 = iy1 + idx;
+	
+		x1 = (ix1 / nside) * 2 - 1;
+		y1 = (iy1 / nside) * 2 - 1;
+		x2 = (ix2 / nside) * 2 - 1;
+		y2 = (iy2 / nside) * 2 - 1;
+		
+		x = [x1, x2];
+		y = [y1, y2];
+		corners = [];
+		xIndexes = [0, 0, 1, 1];
+		yIndexes = [0, 1, 1, 0];
+		if ((face_num >= 1) && (face_num <= 4)){
+			
+			for(var i = 0 ; i < xIndexes.length ; i++){
+				ra = Math.atan(x[xIndexes[i]]);
+				dec = Q3C_RADEG * Math.atan(y[yIndexes[i]] * Math.cos(ra));
+				ra = ra * Q3C_RADEG + (face_num - 1) * 90;
+				if (ra < 0){
+					ra += 360;
+				}	
+				corners.push([ra,dec])
+			}
+		}
+		else
+		{
+			if (face_num == 0)
+			{
+				for(var i = 0 ; i < xIndexes.length ; i++){
+					
+					ra = Q3C_RADEG * (Math.atan2(-x[xIndexes[i]], y[yIndexes[i]]) + Math.PI);
+					dec = Q3C_RADEG * Math.atan( 1 / Math.sqrt(x[xIndexes[i]] * x[xIndexes[i]] + y[yIndexes[i]] * y[yIndexes[i]]));
+					corners.push([ra,dec])
+				}
+			}
+			if (face_num == 5)
+			{
+				for(var i = 0 ; i < xIndexes.length ; i++){
+						
+					ra = Q3C_RADEG * (Math.atan2(-x[xIndexes[i]], -y[yIndexes[i]]) + Math.PI);
+					dec = -Q3C_RADEG * Math.atan( 1 / Math.sqrt(x[xIndexes[i]] * x[xIndexes[i]] + y[yIndexes[i]] * y[yIndexes[i]]));
+					corners.push([ra,dec])
+				}
+			}		
+		}	
+		
+		return corners
+	}
+	
+	Q3C.prototype.approxSize = function(order){
+		depth = nbits - 2 - order 
+		return 90.0 / (nside >> depth)
+	}
+	
+	Q3C.prototype.ang2ipix = function(ra, dec, order){
+	
+		Q3C_DEGRA = Math.PI / 180;
+		
+		ra = (ra + 360) % 360 
+		dec = Math.min(Math.max(-90, dec), 90)
+		
+		face_num = ((ra + 45) / 90) % 4 | 0;
+		/* for equatorial pixels we'll have face_num from 1 to 4 */
+		ra1 = Q3C_DEGRA * (ra - 90 * face_num);
+		dec1 = Q3C_DEGRA * dec;
+		x0 = Math.tan(ra1);
+		y0 = Math.tan(dec1) / Math.cos(ra1);
+		face_num++;
+		
+		if (y0 > 1){
+			face_num = 0;
+			ra1 = Q3C_DEGRA * ra;
+			tmp0 = 1 / Math.tan(dec1);
+			x0 = Math.sin(ra1);
+			y0 = Math.cos(ra1)
+	
+			x0 *= tmp0;
+			y0 *= (-tmp0);
+		}
+		else if (y0 < -1)
+		{
+			face_num = 5;
+			ra1 = Q3C_DEGRA * ra;
+			tmp0 = 1 / Math.tan(dec1);
+			x0 = Math.sin(ra1);
+			y0 = Math.cos(ra1)
+	
+			x0 *= (-tmp0);
+			y0 *= (-tmp0);
+		}
+	
+		x0 = (x0 + 1) / 2;
+		y0 = (y0 + 1) / 2;
+			
+		/* Now I produce the final pixel value by converting x and y values
+		 * to bitfields and combining them by interleaving, using the
+		 * predefined arrays xbits and ybits
+		 */
+		
+		xi = x0 * nside | 0;
+		yi = y0 * nside | 0;
+	
+		/* This two following statements are written to handle the
+		 * case of upper right corner of base square */
+		if (xi == nside)
+		{
+			xi--;
+		}
+		if (yi == nside)
+		{
+	  		yi--;
+		}
+	
+		ipix = face_num * nside * nside + xbits[xi] + ybits[yi]
+
+		return ipix >> (nbits * 2) - 4 - 2 * order  
+	}
+});
+
+/******************************************************************************
+ * This class represents a Q3CMOC
+ * 
+ * Author: Mattias Wångblad [ESDC]
+ * 
+ *****************************************************************************/
+
+Q3CMOC = (function() {
+	Q3CMOC = function(options){
+	
+		options = options || {};
+        this.name = options.name || "Q3CMOC";
+        this.color = options.color || Color.getNextColor();
+        this.opacity = options.opacity || 1;
+        this.opacity = Math.max(0, Math.min(1, this.opacity)); // 0 <= this.opacity <= 1
+        this.lineWidth = options["lineWidth"] || 1;
+        this.isShowing = true
+        this.ready = false
+        this.q3c = new Q3C()
+        this.q3c = new Q3C()
+        this._mocs = new Q3CIpix(2,-1)
+        this._mocs = new Q3CIpix(2,-1)
+	}
+	
+	Q3CMOC.prototype._addPix = function(order, ipix) {
+	
+		this._mocs.addPixel(order, ipix)
+	}
+	
+	Q3CMOC.prototype.dataFromJSON = function(jsonMOC) {
+        var order, ipix;
+        for (var orderStr in jsonMOC) {
+            if (jsonMOC.hasOwnProperty(orderStr)) {
+                order = parseInt(orderStr);
+                for (var k = 0; k < jsonMOC[orderStr].length; k++) {
+                    ipix = jsonMOC[orderStr][k];
+                    this._addPix(order, ipix);
+                }
+            }
+        }
+        this.ready = true;
+        this.reportChange();
+    }
+    
+	Q3CMOC.prototype.draw = function(ctx, projection, viewFrame, width, height, largestDim, zoomFactor, fov) {
+        if (!this.isShowing || !this.ready) {
+            return;
+        }
+
+        this._drawCells(ctx, fov, projection, viewFrame, CooFrameEnum.J2000, width, height, largestDim, zoomFactor);
+    };
+
+    Q3CMOC.prototype._drawCells = function(ctx, fov, projection, viewFrame, surveyFrame, width, height, largestDim, zoomFactor) {
+        ctx.lineWidth = this.lineWidth;
+        // if opacity==1, we draw solid lines, else we fill each HEALPix cell
+        if (this.opacity == 1) {
+            ctx.strokeStyle = this.color;
+        } else {
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.opacity;
+        }
+
+
+        ctx.beginPath();
+
+        var counter = 0;
+        var mocCells;
+        for (key in this._mocs.children ) {
+           	ipix = this._mocs.children[key]
+           	ipix.draw(14, this.q3c, ctx, projection, viewFrame, width, height, largestDim, zoomFactor)
+        }
+
+
+        if (this.opacity == 1) {
+            ctx.stroke();
+        } else {
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = this.color;
+            ctx.stroke();
+        }
+    };
+
+    var drawCorners = function(ctx, xyCorners) {
+        ctx.moveTo(xyCorners[0].vx, xyCorners[0].vy);
+        ctx.lineTo(xyCorners[1].vx, xyCorners[1].vy);
+        ctx.lineTo(xyCorners[2].vx, xyCorners[2].vy);
+        ctx.lineTo(xyCorners[3].vx, xyCorners[3].vy);
+        ctx.lineTo(xyCorners[0].vx, xyCorners[0].vy);
+    }
+    
+    var raDecCorners2xy = function(raDecCorners, projection, currentFrame, width, height, largestDim, zoomFactor){
+    	var xyCorners = []
+    	for (var i = 0; i < raDecCorners.length; i++){
+    		corner = raDecCorners[i]
+    		proj = AladinUtils.radecToViewXy(corner[0], corner[1], projection, currentFrame, width, height, largestDim, zoomFactor)
+    		if(proj != null){
+  		  		xyCorners.push(proj)
+    		}else{	
+    			return null;
+			}
+    	}
+    	return xyCorners
+    }
+    
+    Q3CMOC.prototype.checkPix = function(breakOrder, ra, dec) {
+    	// 14 is the highest order.  
+    	highestOrder = 14
+    	ipix = this.q3c.ang2ipix(ra, dec, highestOrder)
+    	
+        return this._mocs.checkPixExists(highestOrder, ipix, breakOrder);
+    };
+    
+    Q3CMOC.prototype.setView = function(view) {
+        this.view = view;
+    };
+    
+ 	Q3CMOC.prototype.clearAll = function(){
+ 		this._mocs = new Q3CIpix(2,-1)
+ 	}
+ 	
+ 	Q3CMOC.prototype.reportChange = function() {
+        this.view && this.view.requestRedraw();
+    };
+    
+    Q3CIpix = (function() {
+		var children, order, ipix;
+		
+		Q3CIpix = function(order, ipix){
+			this.order = order
+			this.ipix = ipix
+			this.children = {}
+		}
+		
+		Q3CIpix.prototype.addPixel = function(order, ipix){
+			var currOrderIpix = ipix >> 2 * (order - this.order - 1)
+			if(this.children.hasOwnProperty(currOrderIpix)){
+				this.children[currOrderIpix].addPixel(order,ipix)
+			}else{
+				var child = new Q3CIpix(this.order + 1, currOrderIpix);
+				if(order > this.order + 1){
+					child.addPixel(order, ipix)
+				}
+				this.children[currOrderIpix] = child
+			}
+		}
+		
+		Q3CIpix.prototype.isInScreen = function(q3c, projection, currentFrame, width, height, largestDim, zoomFactor){
+			//Checking roughly if any part of the pixel is withing screen range
+			
+			raDec = q3c.ipix2ang(this.order, this.ipix);
+			proj = AladinUtils.radecToViewXy(raDec[0], raDec[1], projection, currentFrame, width, height, largestDim, zoomFactor)
+			size = q3c.approxSize(this.order)
+			
+			screenSize = 2 * size / 140 * zoomFactor * largestDim
+			
+			if(proj != null && proj.vx > - screenSize && proj.vx < width + screenSize && proj.vy > -screenSize && proj.vy < height + screenSize){
+				return true
+			}
+			return false
+    		
+		}
+		
+		Q3CIpix.prototype.draw = function(maxOrder, q3c, ctx, projection, currentFrame, width, height, largestDim, zoomFactor){
+			
+    		if(this.isInScreen(q3c, projection, currentFrame, width, height, largestDim, zoomFactor)){
+    			if(this.order < maxOrder && Object.keys(this.children).length > 0){
+    				for(key in this.children){
+    					this.children[key].draw(maxOrder, q3c, ctx, projection, currentFrame, width, height, largestDim, zoomFactor);
+    				}
+    			}
+    			
+    			else{
+    				raDecCorners = q3c.ipix2angCorners(this.order, this.ipix);
+	            	xyCorners = raDecCorners2xy(raDecCorners, projection, currentFrame, width, height, largestDim, zoomFactor);
+	                if (xyCorners) {
+	                    drawCorners(ctx, xyCorners);
+	                }
+    			}
+    		}
+				
+		}
+		
+		Q3CIpix.prototype.checkPixExists = function(pixOrder, ipix, maxOrder){
+			currPix = ipix >> 2 *(pixOrder - this.order - 1);
+			if(this.children.hasOwnProperty(currPix) && this.order < maxOrder){
+				return this.children[currPix].checkPixExists(pixOrder, ipix, maxOrder);
+			}else{
+				return [this.order, this.ipix]
+			}
+		}
+	});
+    
+})
+    
+    
+
+
 /******************************************************************************
  * Aladin Lite project
  * 
@@ -6645,10 +7162,54 @@ MOC = (function() {
         }
 
     }
+    
+    MOC.prototype.checkPix = function(highestOrder,ra, dec){
+
+        var order = this.currentOrder;
+        var hp = HealpixCache.getIndexByNside(Math.pow(2,order));
+        var a = Utils.radecToPolar(ra, dec)
+        var ipix = hp.ang2pix_nest(a.theta, a.phi)
+    	//var ipixOrder3 = Math.floor(ipix * Math.pow(4, (3 - order)));
+        var ipixOrder3 = ipix >>> (order - 3) * 2
+    	 
+    	if (order <= MOC.HIGHRES_MAXORDER) {
+    		for(order = order; order >= 3; order--){
+    		
+    			try{
+					for (i = 0; i < this._highResIndexOrder3[ipixOrder3][order].length; i++) {
+				        if (this._highResIndexOrder3[ipixOrder3][order][i] == ipix) {
+				            return [order, ipix];
+				        }
+			        }
+		        }catch(err){
+		        	//Catching empty arrays but not doing anything
+		        }
+		        ipix = ipix >>> 2;
+	        }
+	        return [-1, -1];
+	        
+		}else{
+		
+		 	degradedOrder = MOC.HIGHRES_MAXORDER;
+            degradedIpix = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
+            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)));
+            for(order = degradedOrder; order >= 3; order--){
+	            for (i = 0; i < this._highResIndexOrder3[degradedIpixOrder3][order].length; i++) {
+			        if (this._highResIndexOrder3[degradedIpixOrder3][order][i] == degradedIpix) {
+			            return [order, ipix];
+			        }
+		        }
+		        ipix = ipix >>> 2;
+	        }
+	        return [-1, -1];
+		}
+    }
 
     // add pixel (order, ipix)
     MOC.prototype._addPix = function(order, ipix) {
-        var ipixOrder3 = Math.floor(ipix * Math.pow(4, (3 - order)));
+    
+       // var ipixOrder3 = Math.floor(ipix * Math.pow(4, (3 - order)));
+        var ipixOrder3 = ipix >>> (order - 3) * 2
         // fill low and high level cells
         // 1. if order <= LOWRES_MAXORDER, just store value in low and high res cells
         if (order <= MOC.LOWRES_MAXORDER) {
@@ -6720,6 +7281,7 @@ MOC = (function() {
                 if (this.order === undefined || order > this.order) {
                     this.order = order;
                 }
+                this.currentOrder = order;
                 for (var k = 0; k < jsonMOC[orderStr].length; k++) {
                     ipix = jsonMOC[orderStr][k];
                     this._addPix(order, ipix);
@@ -7131,7 +7693,6 @@ CooGrid = (function() {
     };
 
     var NB_STEPS = 50;
-    var NB_LINES = 20;
 
     CooGrid.prototype.redraw = function(ctx, projection, cooFrame, width, height, largestDim, zoomFactor, viewCenter, fov) {
         ctx.save();
@@ -7277,7 +7838,7 @@ CooGrid = (function() {
             	}else{
                		ctx.lineTo(vxy.vx, vxy.vy);
            		}
-           		if (k == 9) {
+           		if (k == NB_STEPS / 2 - 5) {
 	                	if(dim1<textMin){
 	                		textCoor = dim1 + (textMax-textMin);
 	                	}else if(dim1>textMax){
@@ -9103,6 +9664,7 @@ cds.Catalog = (function() {
             }
             return true;
         } else {
+        	s.x = s.y = undefined;
             return false;
         }
 
@@ -12119,6 +12681,29 @@ View = (function() {
                     (typeof objClickedFunction === 'function') && objClickedFunction(null);
                 }
             }
+            
+           	var xy = AladinUtils.viewToXy(xymouse.x, xymouse.y, view.width, view.height, view.largestDim, view.zoomFactor);
+            try {
+                var lonlat = view.projection.unproject(xy.x, xy.y);
+                var radec;
+                if (view.cooFrame.system != CooFrameEnum.SYSTEMS.J2000) {
+                	radec = CooConversion.GalacticToJ2000([lonlat.ra, lonlat.dec])
+                }else{
+                	radec = [lonlat.ra, lonlat.dec]
+                }
+             	for(i = 0 ; i < view.mocs.length; i++){
+
+	                
+	                found = view.mocs[i].checkPix(14, radec[0], radec[1]);
+            		if(found[1] > 0){
+            			var fovChangedFn = view.aladin.callbacksByEventName['mocPixClicked'];
+                    	(typeof fovChangedFn === 'function') && fovChangedFn(found[0], found[1], xymouse.x, xymouse.y);
+            		}
+            	}
+            } catch (err) {
+            	 i = 1;
+            }
+            
 
             // call listener of 'click' event
             var onClickFunction = view.aladin.callbacksByEventName['click'];
@@ -14422,8 +15007,13 @@ Aladin = (function() {
         this.view.addOverlay(overlay);
     };
     
-     Aladin.prototype.createMOC = function(options) {
+ 	Aladin.prototype.createMOC = function(options) {
         return new MOC(options);
+    };
+    
+    Aladin.prototype.createQ3CMOC = function(options) {
+    	var b = new Q3CMOC(options);
+        return new Q3CMOC(options);
     };
     
     Aladin.prototype.addMOC = function(moc) {
@@ -14475,8 +15065,8 @@ Aladin = (function() {
     };
     
     //@api
-    Aladin.prototype.getVisibleNpix = function(norder){
-    	var cells = this.view.getVisibleCells(norder, CooFrameEnum.J2000);
+    Aladin.prototype.getVisibleNpix = function(order){
+    	var cells = this.view.getVisibleCells(order, CooFrameEnum.J2000);
     	var txt = "";
     	cells.forEach(myFunction); 
     	function myFunction(value) {
@@ -14484,6 +15074,14 @@ Aladin = (function() {
 		}
     	return txt;
 	}
+	//@api
+	Aladin.prototype.getIpixFromRaDec = function(ra, dec, norder){
+		var hp = HealpixCache.getIndexByNside(Math.pow(2,norder));
+        var a = Utils.radecToPolar(ra, dec)
+        var ipix = hp.ang2pix_nest(a.theta, a.phi)
+        return ipix;
+	}
+	
     //@api
     Aladin.prototype.triggerMouseWheelEvent = function(event){
     	var newEvent = new Event("wheel");
@@ -14643,7 +15241,7 @@ Aladin = (function() {
         return A.catalogFromURL(url, options, successCallback, false);
     };
 
-    Aladin.AVAILABLE_CALLBACKS = ['select', 'objectClicked', 'objectHovered', 'footprintClicked', 'footprintHovered', 'positionChanged', 'zoomChanged', 'click', 'mouseMove', 'fullScreenToggled', 'cooFrameChanged'];
+    Aladin.AVAILABLE_CALLBACKS = ['select', 'objectClicked', 'objectHovered', 'footprintClicked', 'footprintHovered', 'positionChanged', 'zoomChanged', 'click', 'mouseMove', 'fullScreenToggled', 'cooFrameChanged', 'mocPixClicked'];
     // API
     //
     // setting callbacks
