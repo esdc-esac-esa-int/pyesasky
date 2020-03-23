@@ -27,8 +27,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.2.10').tag(sync=True)
-    _model_module_version = Unicode('1.2.10').tag(sync=True)
+    _view_module_version = Unicode('1.3.0').tag(sync=True)
+    _model_module_version = Unicode('1.3.0').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
     
@@ -49,7 +49,12 @@ class ESASkyWidget(widgets.DOMWidget):
                 + "and Jupyter lab. \nMake sure to upgrade to the latest version of both \n" \
                 + "pip install --upgrade pyesasky \njupyter labextension install pyesasky@latest\n\n"\
                 + "Also make sure that jupyter lab manager is up to date with your current jupyter lab version\n"\
-                + "jupyter labextension install @jupyter-widgets/jupyterlab-manager")
+                + "jupyter labextension install @jupyter-widgets/jupyterlab-manager\n\n"\
+                + "It could also be another labextension that is not compatible with the current Jupyter lab version\n"\
+                + "that is causing the issue. You could try to uninstall some extension. \n"\
+                + "A more drastic way is to run $jupyter labextension clean --extensions \n"\
+                + "CAUTION!! This will remove all your extensions and you will need to reinstall them "\
+                + "one by one and check that it works.")
         
     def _waitGuiReady(self):
         self.guiReadyCallSent = True
@@ -173,6 +178,65 @@ class ESASkyWidget(widgets.DOMWidget):
         )
         return self._sendAvaitCallback(content)
     
+    def coneSearchObservations(self, missionId, ra, dec, radius):
+        """Overlays availabe observations within the specified cone for the specified mission on the sky
+         
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+
+        content = dict(
+                event = 'plotObservations',
+                content = dict(
+                    missionId=missionId,
+                    ra = ra,
+                    dec = dec,
+                    radius = radius
+                )
+        )
+        return self._sendAvaitCallback(content)
+
+    def coneSearchCatalogues(self, missionId, ra, dec, radius):
+        """Overlays availabe catalogues within the specified cone for the specified mission on the sky
+         
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+        content = dict(
+                event = 'plotCatalogues',
+                content = dict(
+                    missionId=missionId,
+                    ra = ra,
+                    dec = dec,
+                    radius = radius
+                )
+        )
+        return self._sendAvaitCallback(content)
+
+    def coneSearchSpectra(self, missionId, ra, dec, radius):
+        """Overlays availabe spectra within the specified cone for the specified mission on the sky
+         
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+
+        content = dict(
+                event = 'plotSpectra',
+                content = dict(
+                    missionId=missionId,
+                    ra = ra,
+                    dec = dec,
+                    radius = radius
+                )
+        )
+        return self._sendAvaitCallback(content)
+    
     def getObservationsCount(self):
         """Returns the number of observations per mission in the current view of the sky"""
         
@@ -217,6 +281,13 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
                 event = 'closeResultPanelTab',
                 content = dict(index=index)
+        )
+        return self._sendToFrontEnd(content)
+
+    def closeAllResultPanelTabs(self):
+        """Close all open result panel tabs"""
+        content = dict(
+                event = 'closeAllResultPanelTabs'
         )
         return self._sendToFrontEnd(content)
         
