@@ -1,6 +1,6 @@
 include LICENSE.txt
 include README.rst
-
+include README.md
 include setupbase.py
 include pytest.ini
 include .coverage.rc

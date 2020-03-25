@@ -33,6 +33,12 @@ class FootprintSet:
         else:
             currFootprint['id'] = int(id)
         
+        stcs = stcs.upper()
+        stcs = stcs.replace('ICRS','')
+        stcs = stcs.replace('J2000','')
+        stcs = stcs.replace('FK5','')
+        stcs = stcs.replace('POLYGON','POLYGON J2000')
+        stcs = stcs.replace('CIRCLE','CIRCLE J2000')
         currFootprint['stcs'] = stcs
 
         if not centralRADeg:

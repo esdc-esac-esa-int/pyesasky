@@ -27,8 +27,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.3.0').tag(sync=True)
-    _model_module_version = Unicode('1.3.0').tag(sync=True)
+    _view_module_version = Unicode('1.3.2').tag(sync=True)
+    _model_module_version = Unicode('1.3.2').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
     
@@ -597,6 +597,79 @@ class ESASkyWidget(widgets.DOMWidget):
             print(f'Processed {line_count} lines.')
             self.overlayFootprintsWithDetails(footprintSet)
 
+    def overlayFootprintsFromAstropyTable(self,footprintSetDescriptor, table):
+        i = 0
+
+        astropyFootprintSet = FootprintSet(footprintSetDescriptor.getDatasetName(), 'J2000', footprintSetDescriptor.getHistoColor(), footprintSetDescriptor.getLineWidth())
+             
+        while i < len(table.colnames):
+            
+            if table.colnames[i] == footprintSetDescriptor.getIdColumnName():
+                columnId = table.colnames[i]
+                print('{id} mapped to '+columnId)
+                if footprintSetDescriptor.getIdColumnName() == footprintSetDescriptor.getNameColumnName():
+                    columnName = columnId
+                    print('{name} mapped to '+columnName)
+            elif table.colnames[i] == footprintSetDescriptor.getNameColumnName():
+                columnName = table.colnames[i]
+                print('{name} mapped to '+columnName)
+            elif table.colnames[i] == footprintSetDescriptor.getStcsColumnName():
+                columnStcs = table.colnames[i]
+                print('{stcs} mapped to '+columnStcs)
+            elif table.colnames[i] == footprintSetDescriptor.getCentralRADegColumnName():
+                columnRaDeg = table.colnames[i]
+                print('{centerRaDeg} mapped to '+columnRaDeg)
+            elif table.colnames[i] == footprintSetDescriptor.getCentralDecDegColumnName():
+                columnDecDeg = table.colnames[i]
+                print('{centerDecDeg} mapped to '+columnDecDeg)
+            i += 1
+        
+        j = 0
+        currId = j
+        
+        while j < len(table):
+            currDetails = []
+            k = 0
+            while k < len(table.colnames):
+                currMetadata = {}
+                colName = table.colnames[k]
+                currValue = str(table[j][k])
+                
+                if colName == footprintSetDescriptor.getNameColumnName():
+                    currName = currValue
+                elif colName == footprintSetDescriptor.getStcsColumnName():
+                    currStcs = currValue
+                elif colName == footprintSetDescriptor.getCentralRADegColumnName():
+                    currRaDeg = currValue
+                elif colName == footprintSetDescriptor.getCentralDecDegColumnName():
+                    currDecDeg = currValue
+                else:
+                    currMetadata = {}
+                    found = False
+                    if len(footprintSetDescriptor.getMetadata()) > 0:
+                        l = 0
+                        while l < len(footprintSetDescriptor.getMetadata()):
+                            if footprintSetDescriptor.getMetadata()[j].getLabel() == colName:
+                                found = True
+                                currMetadata['name'] = footprintSetDescriptor.getMetadata()[j].getLabel()
+                                currMetadata['value'] = currValue
+                                currMetadata['type'] = footprintSetDescriptor.getMetadata()[j].getType()
+
+                                break
+                            l += 1
+                    elif not found:
+                        currMetadata['name'] = colName
+                        currMetadata['value'] = currValue
+                        currMetadata['type'] = MetadataType.STRING
+
+                    currDetails.append(currMetadata)
+                k += 1
+
+            j += 1
+            astropyFootprintSet.addFootprint(currName, currStcs, currId, currRaDeg, currDecDeg, currDetails)
+                    
+        print(f'Processed {j} lines.')
+        self.overlayFootprintsWithDetails(astropyFootprintSet)
 
     def overlayCatalogueFromAstropyTable(self, catalogueName, cooFrame, color, lineWidth, table, raColName, decColName, mainIdColName):
         
