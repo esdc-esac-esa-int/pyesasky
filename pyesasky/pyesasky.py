@@ -27,8 +27,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.3.3').tag(sync=True)
-    _model_module_version = Unicode('1.3.3').tag(sync=True)
+    _view_module_version = Unicode('1.3.4').tag(sync=True)
+    _model_module_version = Unicode('1.3.4').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
     
@@ -633,6 +633,10 @@ class ESASkyWidget(widgets.DOMWidget):
             while k < len(table.colnames):
                 currMetadata = {}
                 colName = table.colnames[k]
+                if type(table[j][k]) == bytes:
+                    currValue = str(table[j][k].decode("utf-8"))
+                else:
+                    currValue = str(table[j][k])
                 currValue = str(table[j][k])
                 currRaDeg = []
                 currDecDeg = []
@@ -724,7 +728,10 @@ class ESASkyWidget(widgets.DOMWidget):
             while k < len(table.colnames):
                 currMetadata = {}
                 colName = table.colnames[k]
-                currValue = str(table[j][k])
+                if type(table[j][k]) == bytes:
+                    currValue = str(table[j][k].decode("utf-8"))
+                else:
+                    currValue = str(table[j][k])
                                 
                 if colName == raColName:
                     currRaDeg = currValue
@@ -747,7 +754,6 @@ class ESASkyWidget(widgets.DOMWidget):
                 k += 1
                 
             currId = j
-            
             astropyCatalogue.addSource(currName, currRaDeg, currDecDeg, currId, currDetails)
             j += 1
             
