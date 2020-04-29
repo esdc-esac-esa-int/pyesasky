@@ -27,8 +27,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.3.4').tag(sync=True)
-    _model_module_version = Unicode('1.3.4').tag(sync=True)
+    _view_module_version = Unicode('1.3.5').tag(sync=True)
+    _model_module_version = Unicode('1.3.5').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
     
@@ -637,7 +637,6 @@ class ESASkyWidget(widgets.DOMWidget):
                     currValue = str(table[j][k].decode("utf-8"))
                 else:
                     currValue = str(table[j][k])
-                currValue = str(table[j][k])
                 currRaDeg = []
                 currDecDeg = []
 
