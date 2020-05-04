@@ -591,7 +591,7 @@ class ESASkyWidget(widgets.DOMWidget):
                         i += 1
 
                     
-                    footprintSet.addFootprint(currName, currStcs, currId, currRaDeg, currDecDeg, currDetails)
+                    footprintSet.addFootprint(currName, currStcs, currRaDeg, currDecDeg, currDetails)
                     
                     line_count += 1
             print(f'Processed {line_count} lines.')
@@ -671,7 +671,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 k += 1
 
             j += 1
-            astropyFootprintSet.addFootprint(currName, currStcs, currId, currRaDeg, currDecDeg, currDetails)
+            astropyFootprintSet.addFootprint(currName, currStcs, currRaDeg, currDecDeg, currDetails)
                     
         print(f'Processed {j} lines.')
         self.overlayFootprintsWithDetails(astropyFootprintSet)
@@ -719,7 +719,6 @@ class ESASkyWidget(widgets.DOMWidget):
         astropyCatalogue = Catalogue(catalogueName, cooFrame, color, lineWidth)
         
         j = 0
-        currId = j
         
         while j < len(table):
             currDetails = []
@@ -752,8 +751,7 @@ class ESASkyWidget(widgets.DOMWidget):
                         
                 k += 1
                 
-            currId = j
-            astropyCatalogue.addSource(currName, currRaDeg, currDecDeg, currId, currDetails)
+            astropyCatalogue.addSource(currName, currRaDeg, currDecDeg, currDetails)
             j += 1
             
         self.overlayCatalogueWithDetails(astropyCatalogue)

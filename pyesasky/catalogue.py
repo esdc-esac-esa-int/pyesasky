@@ -25,13 +25,10 @@ class Catalogue:
         
         self._lineWidth = lineWidth
    
-    def addSource(self, name, ra, dec, id=None, *details):
+    def addSource(self, name, ra, dec, *details):
         currSource = {}
         currSource['name'] = name
-        if not id:
-            currSource['id'] = len(self._sources)
-        else:
-            currSource['id'] = int(id)
+        
             
         currSource['ra'] = ra
         currSource['dec'] = dec

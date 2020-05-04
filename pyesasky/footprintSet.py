@@ -28,10 +28,6 @@ class FootprintSet:
         currFootprint = {}
 
         currFootprint['name'] = name
-        if not id:
-            currFootprint['id'] = len(self._footprints)
-        else:
-            currFootprint['id'] = int(id)
         
         stcs = stcs.upper()
         stcs = stcs.replace('ICRS','')
