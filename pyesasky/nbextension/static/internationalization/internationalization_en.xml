@@ -114,7 +114,7 @@
 	</text>
 
 	<!-- searchPanel -->
-	<text key="searchPanel_inputByTargetName ">
+	<text key="searchPanel_inputByTargetName">
 		Input examples by target name:
 	</text>
 	<text key="searchPanel_solarSystemObjects">
@@ -808,7 +808,6 @@
 		target="_blank"&gt;
 		More information
 		&lt;/a&gt; </text>
-		
 	<text
 		key="resultsPresenter_helpDescription_ASTRO_IMAGING_Herschel">
 		The available Herschel data include all public observations from
@@ -1943,9 +1942,6 @@
 	<text key="Herschel_HPPSC_ssocont_flag">
 		SSO Contaminator Flag
 	</text>
-	<text key="Submm">
-		Submillimeter
-	</text>
 	<text key="Herschel_HPPSC_extsrc_flag">
 		Extended Source Flag
 	</text>
@@ -2420,13 +2416,6 @@
 	</text>
 	<text key="AllWise_w4mpro_error">
 		&amp;Delta;W4 mag
-	</text>
-
-	<text key="Gaia_DR1_ra_error">
-		&amp;Delta;RA
-	</text>
-	<text key="Gaia_DR1_dec_error">
-		&amp;Delta;Dec
 	</text>
 	<text key="Gaia_DR2_parallax">
 		Parallax &lt;br&gt;&lt;i&gt;(mas)&lt;/i&gt; </text>
@@ -2933,24 +2922,18 @@
 		More information
 		&lt;/a&gt;
 	</text>
-	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
-		The AKARI IRC Point Source Catalogue Version 1.0 provides positions
-		and fluxes of 870,973 sources (844,649 sources in 9 micron band and
-		194,551 sources in 18 micron band) in the Mid-Infrared wavelengths.
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_LAMOST">
+		The Large Sky Area Multi-Object Fiber Spectroscopic Telescope (LAMOST) is a Chinese national scientific research facility operated by the National Astronomical Observatories, Chinese Academy of Sciences. It is a special reflecting Schmidt telescope with 4000 fibers in a field of view of 20 degrees. The LAMOST survey, initiated in 2012, provides flux- and wavelength-calibrated, sky-subtracted spectra in the wavelength range of 3690-9100 angstrom with a resolution of 1800 at the 5500 angstrom.for many types of astronomical objects.
 		&lt;br&gt;&lt;br&gt;
+		The fifth LAMOST data release (LAMOST DR5) includes observations until July 2017. The General Catalog contains 9,026,365 targets, of which 8,183,160 are stars, 152,863 galaxies, 52,453 QSO, and 637,889 unknown objects. There are 5,808,985 objects with g-band SNR larger than 10, 7,701,235 objects with i-band SNR larger than 10, and 5,734,239 objects with both g-band SNR larger than 10 and i-band SNR larger than 10.
 
-		The IRC scanned 96 / 97 percent of the entire sky in 9 / 18 micron
-		band twice or more during the 16 months of the cryogenic mission phase.
-		The Point Source Catalogue is the primary catalogue from the AKARI IRC
-		survey. The catalogue is designed to have a uniform detection limit over
-		the entire sky, based on the uniform source detection limit per scan observation.
-		Redundant observations are used to increase the reliability of the detection.
 		&lt;br&gt;&lt;br&gt;
 		&lt;a
-		href="https://www.cosmos.esa.int/web/esdc/esasky-catalogues#Akari"
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#LAMOST"
 		target="_blank"&gt;
 		More information
-		&lt;/a&gt; </text>
+		&lt;/a&gt;
+	</text>
 	<text key="resultsPresenter_helpDescription_ASTRO_IMAGING_AKARI">
 		ESASky serves all pointed observations taken with the InfraRed Camera (IRC) of this mission, which are directly downloaded from DARTS. The IRC consisted of three independent camera systems, NIR, MIR-S and MIR-L, which observed the wavelength bands of 1.7-5.5 μm, 5.8-14.1 μm, and 12.4-26.5 μm, respectively. Each camera system had three filters available. NIR and MIR-S covered the same field of view (FoV), while MIR-L had a different one, which did not overlap with the NIR/MIR-S FoV. A brief description of the instrument and data products is given in
 		&lt;a

@@ -3,7 +3,8 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="user-scalable=no, initial-scale=0.9, width=device-width">
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=0.9, width=device-width">
 <meta name="mobile-web-app-capable" content="no">
 <meta name="apple-mobile-web-app-capable" content="no">
 <meta name="theme-color" content="rgba(0, 0, 0, 0.65)">
@@ -14,97 +15,101 @@
 <link type="text/css" rel="stylesheet" href="css/sliderSelector.css">
 <link type="text/css" rel="stylesheet" href="css/datepicker.css">
 
-<title>ESASky 3.4.2-SNAPSHOT</title>
-
 <!-- See index.jsp for documentation about next line -->
-<!--#METATAGS#ESASky 3.4.2-SNAPSHOT#//sky.esa.int/images/fbESASky.png#//sky.esa.int/esasky-tap/skyimage#1200#630#-->
+<!--#METATAGS#ESASky 3.4.3#//sky.esa.int/images/fbESASky.png#//sky.esa.int/esasky-tap/skyimage#1200#630#-->
 
 <script type="text/javascript" src="js/config-nocache.js"></script>
 
-<script type="text/javascript" src="js/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+	src="js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
 
-<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
-<script type="text/javascript" src="js/highcharts/highcharts-more.js"></script>
-<script type="text/javascript" src="js/highcharts/treemap.js"></script>
-<script type="text/javascript" src="js/resizeEvents/ElementQueries.js"></script>
-<script type="text/javascript" src="js/resizeEvents/ResizeSensor.js"></script>
-<script type="text/javascript" src="js/colorpicker/colorpicker.js"></script>
-<script type="text/javascript" src="js/sliderSelector/sliderSelector.js"></script>
+<script type="text/javascript"
+	src="js/highcharts/5.0.12/highcharts-modified.js"></script>
+<script type="text/javascript"
+	src="js/highcharts/5.0.12/highcharts-more.js"></script>
+<script type="text/javascript"
+	src="js/highcharts/5.0.12/modules/treemap.js"></script>
+<script type="text/javascript"
+	src="js/resizeEvents/ElementQueries.js"></script>
+<script type="text/javascript"
+	src="js/resizeEvents/ResizeSensor.js"></script>
+<script type="text/javascript"
+	src="js/colorpicker/colorpicker.js"></script>
+<script type="text/javascript"
+	src="js/sliderSelector/sliderSelector.js"></script>
+<script type="text/javascript"
+	src="js/datepicker/datepicker.min.js"></script>
+<script type="text/javascript"
+	src="js/api/api.js"></script>
 <script type="text/javascript" src="js/filesaver/filesaver.min.js"></script>
 <script type="text/javascript" src="js/filesaver/canvas-toBlob.min.js"></script>
-<script type="text/javascript" src="js/datepicker/datepicker.min.js"></script>
-<script type="text/javascript" src="js/api/api.js"></script>
 
-<script type="text/javascript" src="js/esaskyweb/esaskyweb.nocache.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/esaskyweb343.nocache.js"></script>
 
-<script type="text/javascript" src="js/esaskyweb/firebugx.js"></script>
-<script type="text/javascript" src="js/esaskyweb/aladinESDC.js"></script>  
-<script type="text/javascript" src="js/esaskyweb/v2-latest-aladin.ext.js"></script>
-<script type="text/javascript" src="js/esaskyweb/aladin-addon.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/firebugx.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/aladinESDC.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/v2-latest-aladin.ext.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/aladin-addon.js"></script>
 
-<script type="text/javascript" src="js/esaskyweb/swfupload.js"></script>
-<script type="text/javascript" src="js/esaskyweb/swfupload.speed.js"></script>
-<script type="text/javascript" src="js/esaskyweb/samp-2.js"></script>
-<script type="text/javascript" src="js/esaskyweb/json2.js"></script>
-<script type="text/javascript" src="js/esaskyweb/flXHR.js"></script>
-<script type="text/javascript" src="js/esaskyweb/flensed.js"></script>
-<script type="text/javascript" src="js/esaskyweb/checkplayer.js"></script>
-<script type="text/javascript" src="js/esaskyweb/swfobject.js"></script>
-<script type="text/javascript" src="js/esaskyweb/esasky-samp.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/swfupload.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/swfupload.speed.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/samp-2.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/json2.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/flXHR.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/flensed.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/checkplayer.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/swfobject.js"></script>
+<script type="text/javascript"
+	src="esaskyweb/esasky-samp.js"></script>
 
-<script type="text/javascript" src="js/google-analytics-config.js"></script>
-
-<script type="text/javascript">
-
-var timer = setTimeout(tellUserAboutReload, 60000);
-
-function tellUserAboutReload(){
-
-	var reloadMessage = document.getElementById("reloadMessage");
-	if(reloadMessage != null){
-		reloadMessage.innerHTML = "<p style=\"color:white; font-family: Arial Unicode MS, Arial, sans-serif;\">This is taking longer than expected. If you have recently opened an earlier version of ESASky, please try a clean reload." 
-		+ "<br/>If you have already performed a clean reload, please wait while ESASky loads."
-		+ "<br/><br/>To perform a clean reload on a <b>PC</b>:"
-		+ "<br/>&#8226 Hold Ctrl and press F5"
-		+ "<br/><br/>On a <b>Mac</b>:"
-		+ "<br/>&#8226 Hold Shift and press the reload button"
-		+ "<br/><br/>On a <b>mobile device</b>:"
-		+ "<br/>&#8226 Please clear your browser cache."
-		+ "<br/>More information on how to clear your browser cache is <a target=\"_blank\" href=\"//www.refreshyourcache.com\" style=\"color:#AAAAFF\">available here</a></p>";
-	}
-}
-
-</script>
+<script defer type="text/javascript" src="js/matomo-config.js"></script>
 
 </head>
 <body oncontextmenu="return false;">
-    <!-- OPTIONAL: include this if you want history support -->
-    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-      style="position: absolute; width: 0; height: 0; border: 0"></iframe>
-    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
-    <noscript>
-      <div
-        style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Your web browser must have JavaScript enabled in order for this
-        application to display correctly.</div>        
-    </noscript>
-    <iframe id="__savingFrame" class="__savingFrame"
-         style="display: none;"></iframe>    
-    <iframe id="__printingFrame"
-         style="position: absolute;width: 0; height: 0; border: 0"></iframe>   
-    <div id="esa-logo">
-    	<img src="images/main-esa-logo.png" id="esa-logo-image"/>
-    	<br/>
-    	<br/>
-    	<div id="loading" style="color:white; font-family: Arial Unicode MS, Arial, sans-serif;">
-    		<div class="esasky__spinner"><div></div><div></div><div></div><div></div><div></div></div>
-    		&nbsp;&nbsp;Loading ESASky 3.4.2-SNAPSHOT
-    	</div>
-    	<div id="reloadMessage"></div>
-    </div>
-         
-	<input
-	 type="hidden" id="localeLanguage" value=navigator.language/>
+	<!-- OPTIONAL: include this if you want history support -->
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+	<noscript>
+		<div
+			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+			Your web browser must have JavaScript enabled in order for this
+			application to display correctly.</div>
+	</noscript>
+	<iframe id="__savingFrame" class="__savingFrame" style="display: none;"></iframe>
+	<iframe id="__printingFrame"
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+	<div id="esa-logo">
+		<img src="images/main-esa-logo.png" id="esa-logo-image" /> <br /> <br />
+		<div id="loading"
+			style="color: white; font-family: Arial Unicode MS, Arial, sans-serif;">
+			<div class="esasky__spinner">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+			&nbsp;&nbsp;Loading ESASky 3.4.3
+		</div>
+		<div id="reloadMessage"></div>
+	</div>
+
+	<input type="hidden" id="localeLanguage" value=navigator.language />
 </body>
-<script type="text/javascript" src="js/xregexp/xregexp.js"></script>
+<script type="text/javascript"
+	src="js/xregexp/xregexp.js"></script>
 </html>

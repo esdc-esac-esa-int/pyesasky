@@ -48,7 +48,7 @@
 	</text>
 
 	<!-- searchPanel -->
-	<text key="searchPanel_inputByTargetName ">
+	<text key="searchPanel_inputByTargetName">
 		Ejemplos de entrada por nombre de destino:
 	</text>
 	<text key="searchPanel_solarSystemObjects">
@@ -2816,6 +2816,17 @@
 		M&#225;s informaci&#243;n
 		&lt;/a&gt; 
 	</text>
+	<text key="resultsPresenter_helpDescription_ASTRO_SPECTRA_LAMOST">
+		El  Large Sky Area Multi-Object Fiber Spectroscopic Telescope (LAMOST) es una instalaci&#243;n cient&#237;fica china operada por los Observatorios Astron&#243;micos Nacionales de la Academia China de Ciencias. Se trata de un telescopio reflector Schmidt con 4000 fibras en un campo de visi&#243;n de 20 grados. El estudio LAMOST, iniciado en 2012, proporciona espectros calibrados en longitud de onda y flujo, sustra&#237;dos de cielo, en el rango  3690-9100 &#197;, con una resoluci&#243;n de 1800 a 5500 &#197;, para muchos tipos diferentes de objetos astron&#243;micos.
+		&lt;br&gt;&lt;br&gt;
+		La quinta edici&#243;n del estudio (LAMOST DR5) incluye observaciones hasta julio de 2017. El Cat&#225;logo General contiene 9.026.365 objetos, de los cuales 8.183.160 son estrellas, 152.863 galaxias, 52.453 qu&#225;sares, y 637.889 son de tipo desconocido. Se incluyen 5.808.985 objetos con una ratio se&#241;al-ruido (S/N) mayor que 10 en la banda g, 7.701.235 objetos con ratio se&#241;al-ruido mayor que 10 en la banda i, y 5.734.239 objetos con ratio se&#241;al-ruido mayor que 10 en ambas bandas.
+		&lt;br&gt;&lt;br&gt;
+		&lt;a
+		href="//www.cosmos.esa.int/web/esdc/esasky-catalogues#LAMOST"
+		target="_blank"&gt;
+		M&#225;s informaci&#243;n
+		&lt;/a&gt; 
+	</text>
 	
 	<text key="resultsPresenter_helpDescription_ASTRO_CATALOGUE_AKARI-IRC-SC">
 		La versi&#243;n 1.0 del cat&#225;logo IRC de fuentes puntuales de la 
@@ -3080,9 +3091,6 @@
 	</text>
 	<text key="Herschel_HPPSC_ssocont_flag">
 		SSO Contaminator Flag
-	</text>
-	<text key="Submm">
-		Submillimeter
 	</text>
 	<text key="Herschel_HPPSC_extsrc_flag">
 		Extended Source Flag
