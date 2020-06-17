@@ -40,23 +40,26 @@ package_data_spec = {
 
 data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky', nb_path, '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky', nb_path, '*.css*'),
     ('share/jupyter/nbextensions/pyesasky', nb_path, '*.html'),
     ('share/jupyter/nbextensions/pyesasky', pjoin(HERE, 'lib'),  'extension.js'),
     
     ('share/jupyter/nbextensions/pyesasky/js', pjoin(nb_path, 'js'), '*.js*'),
     
-    ('share/jupyter/nbextensions/pyesasky/js/jquery', pjoin(nb_path, 'js', 'jquery', '1.9.1'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/highcharts', pjoin(nb_path, 'js', 'highcharts', '5.0.12'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/highcharts', pjoin(nb_path, 'js', 'highcharts', '5.0.12','modules'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/jquery/1.9.1', pjoin(nb_path, 'js', 'jquery', '1.9.1'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/highcharts/5.0.12', pjoin(nb_path, 'js', 'highcharts', '5.0.12'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/highcharts/5.0.12/modules', pjoin(nb_path, 'js', 'highcharts', '5.0.12','modules'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/resizeEvents', pjoin(nb_path, 'js', 'resizeEvents'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/colorpicker', pjoin(nb_path, 'js', 'colorpicker'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/colorpicker', pjoin(nb_path, 'js', 'colorpicker'), '*.css'),
     ('share/jupyter/nbextensions/pyesasky/js/sliderSelector', pjoin(nb_path, 'js', 'sliderSelector'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/datepicker', pjoin(nb_path, 'js', 'datepicker'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/js/sliderSelector', pjoin(nb_path, 'js', 'sliderSelector'), '*.css'),
+    ('share/jupyter/nbextensions/pyesasky/js/datepicker', pjoin(nb_path, 'js', 'datepicker'), '*.*'),
     ('share/jupyter/nbextensions/pyesasky/js/xregexp', pjoin(nb_path, 'js', 'xregexp'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/api', pjoin(nb_path, 'js', 'api'), '*.js*'),
     ('share/jupyter/nbextensions/pyesasky/js/filesaver', pjoin(nb_path, 'js', 'filesaver'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb', pjoin(nb_path, 'js', 'esaskyweb'), '*.js*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb', pjoin(nb_path, 'esaskyweb'), '*.png'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/', pjoin(nb_path, 'esaskyweb'), '*.js*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb', pjoin(nb_path, 'esaskyweb'), '*.png'),
     
     ('share/jupyter/nbextensions/pyesasky/images', pjoin(nb_path, 'images'), '*.gif*'),
     ('share/jupyter/nbextensions/pyesasky/images', pjoin(nb_path, 'images'), '*.png*'),
@@ -68,11 +71,11 @@ data_files_spec = [
     ('share/jupyter/nbextensions/pyesasky/css/images', pjoin(nb_path, 'css', 'images'), '*.gif*'),
     ('share/jupyter/nbextensions/pyesasky/css/images', pjoin(nb_path, 'css', 'images'), '*.png*'),
     
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/aladinlite', pjoin(nb_path, 'js', 'esaskyweb','gwt','aladinlite'), '*.css*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/dark', pjoin(nb_path, 'js', 'esaskyweb','gwt','dark'), '*.css*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/dark/images', pjoin(nb_path, 'js', 'esaskyweb','gwt','dark','images'), '*.gif*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/dark/images', pjoin(nb_path, 'js', 'esaskyweb','gwt','dark','images'), '*.png*'),
-    ('share/jupyter/nbextensions/pyesasky/js/esaskyweb/gwt/dark/images', pjoin(nb_path, 'js', 'esaskyweb','gwt','dark','images'), '*.jpg*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/gwt/aladinlite', pjoin(nb_path, 'esaskyweb','gwt','aladinlite'), '*.css*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/gwt/dark', pjoin(nb_path, 'esaskyweb','gwt','dark'), '*.css*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/gwt/dark/images', pjoin(nb_path, 'esaskyweb','gwt','dark','images'), '*.gif*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/gwt/dark/images', pjoin(nb_path, 'esaskyweb','gwt','dark','images'), '*.png*'),
+    ('share/jupyter/nbextensions/pyesasky/esaskyweb/gwt/dark/images', pjoin(nb_path, 'esaskyweb','gwt','dark','images'), '*.jpg*'),
     
     
     #('share/jupyter/lab/extensions', lab_path, '*.tgz'),

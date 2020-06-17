@@ -1,6 +1,8 @@
 import ipywidgets as widgets
 from traitlets import Unicode, default, Float, Dict, List
 import requests
+import warnings
+import re
 import configparser
 from urllib3.exceptions import HTTPError
 
@@ -27,19 +29,34 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.3.5').tag(sync=True)
-    _model_module_version = Unicode('1.3.5').tag(sync=True)
+    _view_module_version = Unicode('1.4.0').tag(sync=True)
+    _model_module_version = Unicode('1.4.0').tag(sync=True)
+    _intended_server_version = "3.4.3"
+    _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
     
-    def __init__(self):
+    def __init__(self, lang = 'en'):
         super().__init__()
         self.messageTimeOut=20.0 #s
         self.initTimeOut=30.0
         self.msgId = 0
         self.guiReady = False
         self.guiReadyCallSent = False
-        time.sleep(0.2)
+        availableLanguages = ['en', 'es', 'zh']
+        
+        serverVersionResponse = requests.get("https://sky.esa.int/esasky-tap/version")
+        if(serverVersionResponse.status_code == 200):
+            serverVersion = re.match('\"(\d+\.?\d*\.?\d*).*',serverVersionResponse.text).group(1)
+            if(serverVersion > self._intended_server_version):
+                warnings.warn("The ESASky server has been updated since your installation of pyESASky.\n\n"\
+                            + "Some commands might malfunction. Please upgrade your installation if you experience any issue.\n\n" \
+                            + "$pip install --upgrade pyesasky \n\nand if you're using Jupyter Lab: \n\n$jupyter labextension install pyesasky@latest")
+
+        if lang.lower() in availableLanguages:
+           self._view_language = lang
+        else:
+            raise EnvironmentError("Wrong language code used. Available are " + str(availableLanguages).strip('[]'))
         for stream in self.comm.kernel.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
@@ -51,7 +68,6 @@ class ESASkyWidget(widgets.DOMWidget):
                 + "Also make sure that jupyter lab manager is up to date with your current jupyter lab version\n"\
                 + "jupyter labextension install @jupyter-widgets/jupyterlab-manager\n\n"\
                 + "It could also be another labextension that is not compatible with the current Jupyter lab version\n"\
-                + "that is causing the issue. You could try to uninstall some extension. \n"\
                 + "A more drastic way is to run $jupyter labextension clean --extensions \n"\
                 + "CAUTION!! This will remove all your extensions and you will need to reinstall them "\
                 + "one by one and check that it works.")
@@ -419,7 +435,7 @@ class ESASkyWidget(widgets.DOMWidget):
                             showAllInstruments=showAllInstruments
                         )
                         )
-        self._sendToFrontEnd(content)
+        self._sendAvaitCallback(content)
 
     def addJwstWithCoordinates(self, instrument, detector, showAllInstruments, ra, dec, rotation):
         """Adds specified instrument and detector to the specified coordinate
@@ -435,7 +451,7 @@ class ESASkyWidget(widgets.DOMWidget):
                             dec=dec,
                             rotation=rotation)
                        )
-        self._sendToFrontEnd(content)
+        self._sendAvaitCallback(content)
 
     def overlayCatalogue(self, catalogue):
         """Overlays a catalogue created by pyesasky.catalogue in the sky"""
