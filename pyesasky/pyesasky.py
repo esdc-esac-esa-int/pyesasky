@@ -29,8 +29,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.4.0').tag(sync=True)
-    _model_module_version = Unicode('1.4.0').tag(sync=True)
+    _view_module_version = Unicode('1.4.2').tag(sync=True)
+    _model_module_version = Unicode('1.4.2').tag(sync=True)
     _intended_server_version = "3.4.3"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
@@ -864,6 +864,61 @@ class ESASkyWidget(widgets.DOMWidget):
                     line_count += 1
             print(f'Processed {line_count} lines.')
             self.overlayCatalogueWithDetails(catalogue)
+
+    def overlayMOC(self, mocObject, name ='MOC', color = '', opacity = 0.2 ):
+        """Overlay HealPix Multi-Order Coverage map"""
+        mocString = '{'
+        if isinstance(mocObject, dict):
+            for order in mocObject.keys():
+                mocString += '\"' + order + '\":['
+                for val in mocObject[order]:
+                    if '-' in str(val):
+                        start = int(val.split('-')[0])
+                        end = int(val.split('-')[1])
+                        for i in range(start,end+1):
+                            mocString += str(i) + ","
+                    else:
+                        mocString += str(val) + ","
+                mocString = mocString[:-1] + "],"
+
+            mocString = mocString[:-1] + "}"
+        elif '/' in mocObject:
+            currOrder = ''
+            for currVal in mocObject.split(' '):
+                if '/' in currVal:
+                    if currOrder != '':
+                        mocString = mocString[:-1] + "],"
+                    currOrder = currVal.split('/')[0]
+                    mocString += '\"' + currOrder + '\":['
+                    currVal = currVal.split('/')[1] 
+                
+                if '-' in str(currVal):
+                    start = int(currVal.split('-')[0])
+                    end = int(currVal.split('-')[1])
+                    for i in range(start,end+1):
+                        mocString += str(i) + ","
+                else:
+                    mocString += str(currVal) + ","
+            mocString = mocString[:-1] + "]}"
+        else:
+            mocString = mocObject
+        content = dict(
+                event = 'addMOC',
+                content = dict(
+                    options="{\"color\":\"" + color + "\","
+                                + "\"opacity\":\"" + str(opacity) + "\"}",
+                    mocData = mocString,
+                    name = name
+                )
+        )
+        self._sendToFrontEnd(content)
+
+    def removeMOC(self, name ='MOC'):
+        content = dict(
+                event = 'removeMOC',
+                content = dict(name=name)
+        )
+        return self._sendToFrontEnd(content)
 
     def checkExtTapAvailability(self, tapService):
         """Returns the 1 if any data is availabe otherwise 0"""
