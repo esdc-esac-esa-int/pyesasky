@@ -151,7 +151,7 @@ setup_args = dict(
         'flask',
         'flask-cors',
         'six',
-        'request',
+        'requests',
         'configparser'
     ],    
     extras_require = {
