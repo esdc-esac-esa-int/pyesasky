@@ -29,9 +29,9 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.4.2').tag(sync=True)
-    _model_module_version = Unicode('1.4.2').tag(sync=True)
-    _intended_server_version = "3.4.3"
+    _view_module_version = Unicode('1.5.0').tag(sync=True)
+    _model_module_version = Unicode('1.5.0').tag(sync=True)
+    _intended_server_version = "3.5"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
@@ -118,7 +118,6 @@ class ESASkyWidget(widgets.DOMWidget):
             try:
                 msg = item[3][1][6]
                 msg = json.loads(str(msg))
-
                 if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
                     self.comm.kernel.msg_queue.task_done()
