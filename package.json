@@ -1,6 +1,6 @@
 {
 	"name": "pyesasky",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "ESASky Python wrapper",
 	"keywords": [
 		"jupyter",
