@@ -3,6 +3,7 @@ from traitlets import Unicode, default, Float, Dict, List
 import requests
 import warnings
 import re
+import sys
 import configparser
 from urllib3.exceptions import HTTPError
 
@@ -29,9 +30,9 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.7.1').tag(sync=True)
-    _model_module_version = Unicode('1.7.1').tag(sync=True)
-    _intended_server_version = "3.7.1"
+    _view_module_version = Unicode('1.8.0').tag(sync=True)
+    _model_module_version = Unicode('1.8.0').tag(sync=True)
+    _intended_server_version = "3.8.0"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
@@ -60,6 +61,7 @@ class ESASkyWidget(widgets.DOMWidget):
         for stream in self.comm.kernel.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
+            print(item)
             if "comm_close" in str(item[3][1][3]) and self.comm.comm_id in str(item[3][1][6]):
                 raise ConnectionError("Communication could not be established with widget. \n" \
                 + "Possible errors could be that installed version of PyESASky differs in python " \
@@ -75,7 +77,7 @@ class ESASkyWidget(widgets.DOMWidget):
     def _waitGuiReady(self):
         self.guiReadyCallSent = True
         startTime = time.time()
-        while time.time()-startTime<self.initTimeOut:
+        while time.time() - startTime < self.initTimeOut:
                 content = dict(event='initTest')
                 self._sendToFrontEnd(content)
                 time.sleep(1)
@@ -105,6 +107,8 @@ class ESASkyWidget(widgets.DOMWidget):
             if val is not None:
                 if val == "No return value":
                     return None
+                elif val == "success":
+                    return None
                 else:
                     return val
             time.sleep(0.1)
@@ -120,17 +124,28 @@ class ESASkyWidget(widgets.DOMWidget):
                 msg = json.loads(str(msg))
                 if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
-                    self.comm.kernel.msg_queue.task_done()
-                    if 'extras' in msg['data']['content'].keys():
+                    self.comm.kernel.msg_queue.task_done() 
+                    if 'error' in msg['data']['content'].keys():
+                        if 'message' in msg['data']['content']['error'].keys():
+                            print(msg['data']['content']['error']['message'])
+                        if 'available' in msg['data']['content']['error'].keys():
+                            print("Available options: ")
+                            print(msg['data']['content']['error']['available'])
+
+                    elif 'extras' in msg['data']['content'].keys():
                         if 'message' in msg['data']['content']['extras'].keys():
                             print(msg['data']['content']['extras']['message'])
 
                     if 'values' in msg['data']['content'].keys():
                         data = msg['data']['content']['values']
-                        if len(data.values()) == 1:
-                            return list(data.values())[0]
+                        if type(data) == list and len(data) == 1:
+                            return list(data)[0]
                         else:
                             return msg['data']['content']['values']
+
+                    elif 'success' in msg['data']['content'].keys():
+                        return "success"
+
                     else:
                         return "No return value"
             except:
@@ -864,7 +879,7 @@ class ESASkyWidget(widgets.DOMWidget):
             print(f'Processed {line_count} lines.')
             self.overlayCatalogueWithDetails(catalogue)
 
-    def overlayMOC(self, mocObject, name ='MOC', color = '', opacity = 0.2 ):
+    def overlayMOC(self, mocObject, name ='MOC', color = '', opacity = 0.2, mode = 'healpix' ):
         """Overlay HealPix Multi-Order Coverage map"""
         mocString = '{'
         if isinstance(mocObject, dict):
@@ -904,8 +919,9 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
                 event = 'addMOC',
                 content = dict(
-                    options="{\"color\":\"" + color + "\","
-                                + "\"opacity\":\"" + str(opacity) + "\"}",
+                    options= dict(color = color,
+                                opacity =  opacity,
+                                mode = mode),
                     mocData = mocString,
                     name = name
                 )
@@ -989,7 +1005,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
                     event = 'getNumberOfSkyRows'
                     )
-        return self._sendAvaitCallback(content)   
+        return self._sendAvaitCallback(content)
 
     def removeHiPS(self, index = -1):
         """Removes HiPS row in the skypanel either at "index"
