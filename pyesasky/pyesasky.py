@@ -30,8 +30,8 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.8.0').tag(sync=True)
-    _model_module_version = Unicode('1.8.0').tag(sync=True)
+    _view_module_version = Unicode('1.8.1').tag(sync=True)
+    _model_module_version = Unicode('1.8.1').tag(sync=True)
     _intended_server_version = "3.8.0"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)

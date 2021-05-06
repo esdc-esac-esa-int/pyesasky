@@ -1,4 +1,4 @@
-from ._version import version_info, __version__ # noqa
+from ._version import  __version__ # noqa
 from .pyesasky import ESASkyWidget # noqa
 from .catalogue import Catalogue # noqa
 from .catalogueDescriptor import CatalogueDescriptor # noqa
@@ -10,8 +10,13 @@ from .imgFormat import ImgFormat # noqa
 from .jupyter_server import load_jupyter_server_extension # noqa
 from .metadataDescriptor import MetadataDescriptor # noqa
 from .metadataType import MetadataType # noqa
+import json
+from pathlib import Path
 
+HERE = Path(__file__).parent.resolve()
 
+with (HERE / "labextension" / "package.json").open() as fid:
+    data = json.load(fid)
 # Jupyter Extension points
 def _jupyter_nbextension_paths():
     return [{'section': 'notebook',
@@ -25,3 +30,10 @@ def _jupyter_nbextension_paths():
 
 def _jupyter_server_extension_paths():
     return [{"module": "pyesasky"}]
+
+def _jupyter_labextension_paths():
+    return [{
+        "src": "labextension",
+        "dest": data["name"]
+    }]
+

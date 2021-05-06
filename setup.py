@@ -1,141 +1,80 @@
-from __future__ import print_function
+"""
+pyesasky setup
+"""
+import json
+from pathlib import Path
 
-import os
-from glob import glob
-from os.path import join as pjoin 
-
-from setupbase import (
-    create_cmdclass, install_npm, ensure_targets,
-    find_packages,  combine_commands, ensure_python, 
-    get_version, HERE
+from jupyter_packaging import (
+    wrap_installers,
+    npm_builder,
+    get_data_files
 )
+import setuptools
 
-from setuptools import setup
+HERE = Path(__file__).parent.resolve()
 
-name = 'pyesasky'
+# The name of the project
+name = "pyesasky"
 
-# Ensure a valid python version
-ensure_python('>=2.7')
-
-# Get our version
-version = get_version(pjoin(name, '_version.py'))
-
-nb_path = pjoin(HERE, name, 'nbextension', 'static')
-lab_path = pjoin(HERE, name, 'labextension') 
+lab_path = (HERE / name / "labextension")
 
 # Representative files that should exist after a successful build
-jstargets = [
-    pjoin(nb_path, 'index.js'),
-    pjoin(HERE, 'lib', 'plugin.js'),
-    pjoin(HERE, 'lib', 'extension.js'),
+ensured_targets = [
+    str(lab_path / "package.json"),
+    str(lab_path / "static/style.js")
 ]
 
-package_data_spec = {
-    'pyesasky': [
-        'nbextension/static/*.*js*',
-        'nbextension/static/*.html',
-        'labextension/*.tgz'
-    ]
-}
+labext_name = "pyesasky"
 
 data_files_spec = [
-    ('etc/jupyter/nbconfig/notebook.d' , os.path.join(HERE, 'jupyter.d', 'notebook.d'), 'pyesaky.json'),
-    ('etc/jupyter/jupyter_notebook_config.d' , os.path.join(HERE, 'jupyter.d', 'jupyter_notebook_config.d'), 'pyesaky.json')]
+    ("share/jupyter/labextensions/%s" % labext_name, str(lab_path), "**"),
+    ("share/jupyter/labextensions/%s" % labext_name, str(HERE), "install.json"),
+]
 
-
-cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
-    data_files_spec=data_files_spec)
-cmdclass['jsdeps'] = combine_commands(
-    install_npm(HERE, build_cmd='build:all'),
-    ensure_targets(jstargets),
+post_develop = npm_builder(
+    build_cmd="install:extension", source_dir="src", build_dir=lab_path
 )
+cmdclass = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
 
+long_description = (HERE / "README.md").read_text()
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
+# Get the package info from package.json
+pkg_json = json.loads((HERE / "package.json").read_bytes())
 
 setup_args = dict(
-    name                    = name,
-    description             = 'ESASky Python wrapper',
-    version                 = version,  
-    scripts                 = glob(pjoin('scripts', '*')),
-    cmdclass                = cmdclass,
-    long_description        = long_description,
-    long_description_content_type = "text/markdown",  
-    packages                = find_packages(),
-    author                  = 'Fabrizio Giordano <fgiordano@sciops.esa.int>, Mattias Wångblad <mattias@winterway.eu>, ESDC ', 
-    #author_email            = 'fgiordano@sciops.esa.int',
-    url                     = 'https://github.com/esdc-esac-esa-int/pyesasky',
-    license                 = 'GNU Lesser General Public License',
-    platforms               = 'Linux, Mac OS X, Windows',
-    keywords                = ['ipython','jupyter','widgets'],
-    classifiers             = [
-        'Development Status :: 5 - Production/Stable',
-        'Framework :: IPython',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'Topic :: Multimedia :: Graphics',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+    name=name,
+    version=pkg_json["version"],
+    url=pkg_json["homepage"],
+    author=pkg_json["author"]["name"],
+    author_email=pkg_json["author"]["email"],
+    description=pkg_json["description"],
+    license=pkg_json["license"],
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    cmdclass=cmdclass,
+    data_files=get_data_files(data_files_spec),
+    packages=setuptools.find_packages(),
+    install_requires=[
+        "jupyterlab~=3.0",
+        "jupyter_packaging~=0.9,<2"
     ],
-    include_package_data    = True,
-    data_files=[
-        # like `jupyter nbextension install --sys-prefix`
-        ("share/jupyter/nbextensions/pyesasky", [
-            "pyesasky/nbextension/static/index.js",
-        ]),
-        # like `jupyter nbextension enable --sys-prefix`
-        ("etc/jupyter/nbconfig/notebook.d", [
-            "jupyter.d/jupyter_notebook_config.d/pyesasky.json"
-        ]),
+    zip_safe=False,
+    include_package_data=True,
+    python_requires=">=3.6",
+    platforms="Linux, Mac OS X, Windows",
+    keywords=["Jupyter", "JupyterLab", "JupyterLab3"],
+    classifiers=[
+        "License :: OSI Approved :: BSD License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Framework :: Jupyter",
     ],
-    install_requires        = [
-        'numpy>=1.9',
-        'matplotlib>1.5',
-        'astropy>=1.0',
-        'requests',
-        'beautifulsoup4',
-        'python-dateutil',
-        'lxml',
-        'ipywidgets>=7.5.1',
-        'ipykernel>=5.0.0',
-        'ipyevents',
-        'traitlets',
-        'qtpy',
-        'flask',
-        'flask-cors',
-        'six',
-        'requests',
-        'configparser'
-    ],    
-    extras_require = {
-        'test': [
-            'pytest',
-            'pytest-cov',
-            'nbval',
-        ],
-        'examples': [
-            # Any requirements for the examples to run
-        ],
-        'docs': [
-            'sphinx>=1.5',
-            'recommonmark',
-            'sphinx_rtd_theme',
-            'nbsphinx>=0.2.13',
-            'jupyter_sphinx',
-            'nbsphinx-link',
-            'pytest_check_links',
-            'pypandoc',
-        ],
-    },
-    entry_points = {
-    },
-    zip_safe=False
 )
 
-if __name__ == '__main__':
-    setup(**setup_args)
+
+if __name__ == "__main__":
+    setuptools.setup(**setup_args)
