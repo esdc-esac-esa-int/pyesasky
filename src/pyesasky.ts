@@ -1,5 +1,5 @@
-import { DOMWidgetModel, DOMWidgetView } from "@jupyter-widgets/base";
-import { PageConfig } from "@jupyterlab/coreutils";
+import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
+import { PageConfig } from '@jupyterlab/coreutils';
 
 export class ESASkyJSModel extends DOMWidgetModel {
   initialize(
@@ -41,8 +41,10 @@ export class ESASkyJSView extends DOMWidgetView {
 
     //div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800' style='border: none;' src='" + this.base_url + "nbextensions/pyesasky/esasky.html?hide_welcome=true&hide_sci_switch=true&lang=" + lang + "'</iframe>";
     // div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800' style='border: none;' src='" + this.base_url + "nbextensions/pyesasky/esasky.html?hide_welcome=true&hide_sci_switch=true&log_level=DEBUG&lang=" + lang + "'</iframe>";
-    div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800' style='border: none;' src='https://sky.esa.int?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true'</iframe>";
+    div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800px' style='border: none;' src='https://sky.esa.int?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true'</iframe>";
     this.el.appendChild(div);
+    this.el.style.height = 'auto';
+    this.el.style.minHeight = '800px';
 
     this.model.on('msg:custom' , this.handle_custom_message, this);
     this.listenTo(this.model, 'change:view_height', this.height_changed);
@@ -69,7 +71,9 @@ export class ESASkyJSView extends DOMWidgetView {
     for (var i = modelIds.length-1; i >= 0; i--) {
       let currActiveId = modelIds[i]; 
       if(document.getElementById(currActiveId) != null){
-        document.getElementById(currActiveId).style.height = height;
+        let el = document.getElementById(currActiveId);
+        el.style.height = height;
+        el.parentElement.parentElement.style.height = height;
         break;
       }
     }

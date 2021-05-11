@@ -3,11 +3,13 @@ pyesasky setup
 """
 import json
 from pathlib import Path
+from os.path import join as pjoin 
 
 from jupyter_packaging import (
     wrap_installers,
     npm_builder,
-    get_data_files
+    get_data_files,
+    install_npm
 )
 import setuptools
 
@@ -17,23 +19,44 @@ HERE = Path(__file__).parent.resolve()
 name = "pyesasky"
 
 lab_path = (HERE / name / "labextension")
+nb_path = (HERE /name / 'nbextension')
+
+# Representative files that should exist after a successful build
+jstargets = [
+    pjoin(nb_path, 'index.js'),
+    pjoin(HERE, 'lib', 'plugin.js'),
+    pjoin(HERE, 'lib', 'extension.js'),
+]
 
 # Representative files that should exist after a successful build
 ensured_targets = [
     str(lab_path / "package.json"),
-    str(lab_path / "static/style.js")
+    str(lab_path / "static/style.js"),
+    pjoin(nb_path, 'index.js'),
+    pjoin(HERE, 'lib', 'plugin.js'),
+    pjoin(HERE, 'lib', 'extension.js'),
 ]
 
 labext_name = "pyesasky"
-
+package_data_spec = {
+    'pyesasky': [
+        'nbextension/static/*.*js*'
+    ]
+}
 data_files_spec = [
-    ("share/jupyter/labextensions/%s" % labext_name, str(lab_path), "**"),
-    ("share/jupyter/labextensions/%s" % labext_name, str(HERE), "install.json"),
+    ("share/jupyter/nbextensions/pyesasky", str(nb_path), "**"),
+    ("share/jupyter/labextensions/pyesasky", str(lab_path), "**"),
+    ("share/jupyter/labextensions/pyesasky", str(HERE), "install.json"),
+    ('etc/jupyter/nbconfig/notebook.d' , pjoin(HERE, 'jupyter.d', 'notebook.d'), 'pyesasky.json'),
+    ('etc/jupyter/jupyter_notebook_config.d' , pjoin(HERE, 'jupyter.d', 'jupyter_notebook_config.d'), 'pyesasky.json'),
 ]
 
 post_develop = npm_builder(
     build_cmd="install:extension", source_dir="src", build_dir=lab_path
 )
+
+# pre_develop = install_npm(HERE, npm=["yarn"], build_cmd='build:extensions')
+
 cmdclass = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
 
 long_description = (HERE / "README.md").read_text()
@@ -55,8 +78,9 @@ setup_args = dict(
     data_files=get_data_files(data_files_spec),
     packages=setuptools.find_packages(),
     install_requires=[
-        "jupyterlab~=3.0",
-        "jupyter_packaging~=0.9,<2"
+        'ipywidgets>=7.6.3',
+        'ipykernel>=5.0.0',
+        'requests>=2.5.1'
     ],
     zip_safe=False,
     include_package_data=True,

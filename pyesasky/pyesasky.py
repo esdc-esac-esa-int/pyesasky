@@ -1,4 +1,5 @@
 import ipywidgets as widgets
+from ipywidgets import register
 from traitlets import Unicode, default, Float, Dict, List
 import requests
 import warnings
@@ -6,6 +7,7 @@ import re
 import sys
 import configparser
 from urllib3.exceptions import HTTPError
+from ._version import  __version__ # noqa
 
 from traitlets import observe
 from .catalogue import Catalogue
@@ -23,15 +25,16 @@ import tornado.httpserver
 import time
 
 __all__ = ['ESASkyWidget']
-    
+
+@register    
 class ESASkyWidget(widgets.DOMWidget):
 
     _view_name = Unicode('ESASkyJSView').tag(sync=True)
     _model_name = Unicode('ESASkyJSModel').tag(sync=True)
     _view_module = Unicode('pyesasky').tag(sync=True)
     _model_module = Unicode('pyesasky').tag(sync=True)
-    _view_module_version = Unicode('1.8.1').tag(sync=True)
-    _model_module_version = Unicode('1.8.1').tag(sync=True)
+    _view_module_version = Unicode(__version__).tag(sync=True)
+    _model_module_version = Unicode(__version__).tag(sync=True)
     _intended_server_version = "3.8.0"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
@@ -61,7 +64,6 @@ class ESASkyWidget(widgets.DOMWidget):
         for stream in self.comm.kernel.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
-            print(item)
             if "comm_close" in str(item[3][1][3]) and self.comm.comm_id in str(item[3][1][6]):
                 raise ConnectionError("Communication could not be established with widget. \n" \
                 + "Possible errors could be that installed version of PyESASky differs in python " \
