@@ -113,7 +113,7 @@
     jquery "^3.1.1"
     lodash "^4.17.4"
 
-"@jupyterlab/application@^1.0|| ^2.0 || ^3.0.9":
+"@jupyterlab/application@^2.0 || ^3.0.9":
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/@jupyterlab/application/-/application-3.0.10.tgz#de9c9edcfb6aea71baf447aa8c6f05c7d4dc0f50"
   integrity sha512-ub4g8mu76gR/3uCa8jNVD4fqztLaDxypbIjl/xXDk1RRcb0Z1xyOW5U0MQzvYrPLYTjlPKo8BAkaO/ps+Mj1ng==
