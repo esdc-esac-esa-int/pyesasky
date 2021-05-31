@@ -35,7 +35,7 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_module = Unicode('pyesasky').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "3.8.0"
+    _intended_server_version = "3.8.1"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
@@ -61,6 +61,7 @@ class ESASkyWidget(widgets.DOMWidget):
            self._view_language = lang
         else:
             raise EnvironmentError("Wrong language code used. Available are " + str(availableLanguages).strip('[]'))
+        
         for stream in self.comm.kernel.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
@@ -1040,7 +1041,7 @@ class ESASkyWidget(widgets.DOMWidget):
         else:
             url = hipsURL
         patternUrl = url + "(.*)"
-        self.tornadoServer.add_handlers(r"localhost",[(str(patternUrl),self.FileHandler,dict(baseUrl=hipsURL))])
+        self.tornadoServer.add_handlers(r".*",[(str(patternUrl),self.FileHandler,dict(baseUrl=hipsURL))])
         return url
 
     def setHiPS(self, hipsName, hipsURL='default'):
@@ -1094,8 +1095,10 @@ class ESASkyWidget(widgets.DOMWidget):
             cooFrame = 'J2000'
         else:
             cooFrame = 'Galactic'
+        if hipsURL.endswith("/"):
+            hipsURL = hipsURL[:-1]
         userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
-        print('hipsURL '+ hipsURL)
+        print('hipsURL '+ hipsURL + '/index.html')
         print('imgFormat '+imgFormat[0])
         return userHiPS
 
@@ -1106,8 +1109,6 @@ class ESASkyWidget(widgets.DOMWidget):
         app = tornado.web.Application([
             tornado.web.url(r"dummy", DummyHandler),
         ])
-        #pool = ThreadPoolExecutor(max_workers=2)
-        #loop = tornado.ioloop.IOLoop()
         server = tornado.httpserver.HTTPServer(app)
         portStart = 8900
         portEnd = 8910
@@ -1119,8 +1120,6 @@ class ESASkyWidget(widgets.DOMWidget):
                     raise(os_error)
             else:
                 break
-        #fut = pool.submit(loop.start)
-
         self.httpserver = server
         self.tornadoServer = app
         self.httpServerPort = port
@@ -1134,6 +1133,7 @@ class ESASkyWidget(widgets.DOMWidget):
         
         def get(self, path):
             host=self.request.host
+            print(host)
             origin = host.split(':')[0]
             if not origin == 'localhost':
                 raise tornado.web.HTTPError(status_code=403)
