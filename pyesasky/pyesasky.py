@@ -23,6 +23,9 @@ import os.path
 import tornado.web
 import tornado.httpserver
 import time
+from ipykernel import __version__ as ipyKernelVersion
+import pandas as pd
+
 
 __all__ = ['ESASkyWidget']
 
@@ -35,7 +38,7 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_module = Unicode('pyesasky').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "3.8.1"
+    _intended_server_version = "3.9"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
@@ -48,6 +51,18 @@ class ESASkyWidget(widgets.DOMWidget):
         self.guiReady = False
         self.guiReadyCallSent = False
         availableLanguages = ['en', 'es', 'zh']
+
+        if ipyKernelVersion > '6.0':
+            self.msgLvl0Index = 2
+            self.msgLvl1Index = 0
+            self.msgLvl2Index = 6
+            self.shell_streams = [self.comm.kernel.shell_stream]
+        else:
+            self.msgLvl0Index = 3
+            self.msgLvl1Index = 1
+            self.msgLvl2Index = 6
+            self.shell_streams = self.comm.kernel.shell_streams
+
         
         serverVersionResponse = requests.get("https://sky.esa.int/esasky-tap/version")
         if(serverVersionResponse.status_code == 200):
@@ -62,7 +77,7 @@ class ESASkyWidget(widgets.DOMWidget):
         else:
             raise EnvironmentError("Wrong language code used. Available are " + str(availableLanguages).strip('[]'))
         
-        for stream in self.comm.kernel.shell_streams:
+        for stream in self.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
             if "comm_close" in str(item[3][1][3]) and self.comm.comm_id in str(item[3][1][6]):
@@ -119,11 +134,11 @@ class ESASkyWidget(widgets.DOMWidget):
 
 
     def _loopMessageQueue(self):
-        for stream in self.comm.kernel.shell_streams:
+        for stream in self.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
             try:
-                msg = item[3][1][6]
+                msg = item[self.msgLvl0Index][self.msgLvl1Index][self.msgLvl2Index]
                 msg = json.loads(str(msg))
                 if int(msg['data']['content']['msgId']) == self.msgId:
                     self.comm.kernel.msg_queue._queue.remove(item)
@@ -1063,7 +1078,7 @@ class ESASkyWidget(widgets.DOMWidget):
             return self._sendAvaitCallback(content)
     
     def addHiPS(self, hipsName, hipsURL='default'):
-        """Adds a new row win the skypanel witheither
+        """Adds a new row win the skypanel with either
         hipsName already existing in ESASky or adds a new name from specified URL  """
         if hipsURL != 'default':
             userHiPS = self.parseHiPSURL(hipsName, hipsURL)
@@ -1078,6 +1093,16 @@ class ESASkyWidget(widgets.DOMWidget):
                         content = dict(hipsName = hipsName)
                         )
             return self._sendAvaitCallback(content)
+
+    
+    def browseHips(self):
+        """Queries CDS for the global HiPS list and returns it as a pandas dataframe"""
+        urlString = "http://skyint.esac.esa.int/esasky-tap/global-hipslist"
+        columns = ["ID", "obs_title", "moc_order", "moc_sky_fraction", "em_min", "em_max", "hips_service_url"]
+        with requests.get(urlString, stream=True) as response:
+            df = pd.io.json.read_json(response.content)
+            return df[columns]
+
 
     def parseHiPSURL(self, hipsName, hipsURL):
         if not hipsURL.endswith("/"):
