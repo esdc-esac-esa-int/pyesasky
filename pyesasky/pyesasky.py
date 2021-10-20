@@ -38,7 +38,7 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_module = Unicode('pyesasky').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "3.9"
+    _intended_server_version = "4.0.3"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)

@@ -37,8 +37,6 @@ export class ESASkyJSView extends DOMWidgetView {
     var lang = this.model.get('_view_language');
     console.log(lang);
 
-    //div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800' style='border: none;' src='" + this.base_url + "nbextensions/pyesasky/esasky.html?hide_welcome=true&hide_sci_switch=true&lang=" + lang + "'</iframe>";
-    // div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800' style='border: none;' src='" + this.base_url + "nbextensions/pyesasky/esasky.html?hide_welcome=true&hide_sci_switch=true&log_level=DEBUG&lang=" + lang + "'</iframe>";
     div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800px' style='border: none;' src='https://sky.esa.int?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true'</iframe>";
     this.el.appendChild(div);
     let el = this.el;
