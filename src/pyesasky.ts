@@ -25,8 +25,11 @@ export class ESASkyJSView extends DOMWidgetView {
   modelId: string;
   oldMsgId: string;
   oldMsgIdToFront: string;
+  readonly apiAddr: string = "https://sky.esa.int"
+  //readonly apiAddr: string = "http://localhost:8080/esasky"
 
   render(): void {
+    let self = this;
     var div = document.createElement("div");
     this.base_url = PageConfig.getBaseUrl();
     this.base_url = PageConfig.getBaseUrl();
@@ -37,7 +40,20 @@ export class ESASkyJSView extends DOMWidgetView {
     var lang = this.model.get('_view_language');
     console.log(lang);
 
-    div.innerHTML = "<iframe id=" + this.modelId + " width='100%' height='800px' style='border: none;' src='https://sky.esa.int?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true'</iframe>";
+    var iframe = document.createElement("iframe");
+    iframe.setAttribute("id", this.modelId.toString());
+    iframe.setAttribute("width", "100%");
+    iframe.setAttribute("height", "800px");
+    iframe.setAttribute("style", "border: none");
+    iframe.setAttribute("src", this.apiAddr + "?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true");
+    iframe.onload = function() {
+      // Send init message so that esasky know of the pyesasky client and may initiate communication
+      iframe.contentWindow.postMessage({'event': 'initTest', 'origin': 'pyesasky'}, self.apiAddr)
+      console.log("Init message sent")
+    }
+
+    div.appendChild(iframe);
+  
     this.el.appendChild(div);
     let el = this.el;
     const observer = new MutationObserver(() => {
@@ -91,7 +107,7 @@ export class ESASkyJSView extends DOMWidgetView {
         this.oldMsgIdToFront = msg.msgId;
         console.log('Inside pyesasky.js');
         let iFrameElement = document.getElementById(this.modelId) as HTMLIFrameElement
-        iFrameElement.contentWindow.postMessage(msg, 'https://sky.esa.int')
+        iFrameElement.contentWindow.postMessage(msg, this.apiAddr)
       }
     }
   }
