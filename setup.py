@@ -80,7 +80,8 @@ setup_args = dict(
     install_requires=[
         'ipywidgets>=7.6.3',
         'ipykernel>=5.0.0',
-        'requests>=2.5.1'
+        'requests>=2.5.1',
+        'pandas'
     ],
     zip_safe=False,
     include_package_data=True,
