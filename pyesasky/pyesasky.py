@@ -25,7 +25,8 @@ import tornado.httpserver
 import time
 from ipykernel import __version__ as ipyKernelVersion
 import pandas as pd
-
+from tkinter import filedialog
+from tkinter import *
 
 __all__ = ['ESASkyWidget']
 
@@ -42,14 +43,21 @@ class ESASkyWidget(widgets.DOMWidget):
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
-    
+
     def __init__(self, lang = 'en'):
         super().__init__()
+        tk = Tk()
+        tk.withdraw()
+        tk.call('wm', 'attributes', '.', '-topmost', True)
+
+        self.guiReady = False
+        self.guiReadyCallSent = False
+
+        self.comm.on_msg(self._on_comm_message_received)
+   
         self.messageTimeOut=20.0 #s
         self.initTimeOut=30.0
         self.msgId = 0
-        self.guiReady = False
-        self.guiReadyCallSent = False
         availableLanguages = ['en', 'es', 'zh']
 
         if ipyKernelVersion > '6.0':
@@ -80,7 +88,7 @@ class ESASkyWidget(widgets.DOMWidget):
         for stream in self.shell_streams:
             stream.flush()
         for item in self.comm.kernel.msg_queue._queue:
-            if "comm_close" in str(item[3][1][3]) and self.comm.comm_id in str(item[3][1][6]):
+            if "comm_close" in str(item[self.msgLvl0Index][self.msgLvl1Index][3]) and self.comm.comm_id in str(item[self.msgLvl0Index][self.msgLvl1Index][self.msgLvl2Index]):
                 raise ConnectionError("Communication could not be established with widget. \n" \
                 + "Possible errors could be that installed version of PyESASky differs in python " \
                 + "and Jupyter lab. \nMake sure to upgrade to the latest version of both \n" \
@@ -91,7 +99,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 + "A more drastic way is to run $jupyter labextension clean --extensions \n"\
                 + "CAUTION!! This will remove all your extensions and you will need to reinstall them "\
                 + "one by one and check that it works.")
-        
+
     def _waitGuiReady(self):
         self.guiReadyCallSent = True
         startTime = time.time()
@@ -104,6 +112,47 @@ class ESASkyWidget(widgets.DOMWidget):
                     self.guiReady = True
                     return val
         raise(TimeoutError("Widget doesn't seem to have initialised properly"))
+
+    def _on_comm_message_received(self, msg):
+        """
+        Called when we receive a comms message.
+        """
+        
+        payload = msg['content']['data']
+
+        if 'content' in payload and 'type' in payload['content']:
+            content = payload.get('content')
+            type = content.get('type')
+            self._handle_comm_message(content, type)
+
+             
+
+    def _handle_comm_message(self, content, type):
+        if type == 'esasky_jupyter_download':
+            url = content.get('url')
+            response = requests.get(url.strip(), allow_redirects=True)
+            if response.status_code == 200:
+                filename = self._getFilenameFromContentDisposition(response)
+                f = filedialog.asksaveasfile(initialfile=filename, mode='wb')
+                if f is not None:  # asksaveasfile is "None" when Dialog is closed with "cancel"
+                    f.write(response.content)
+
+    def _getFilenameFromContentDisposition(self, response):
+        """
+        Get filename from response content-disposition
+        """
+        try:
+            with response as r:
+                fname = ''
+                if "Content-Disposition" in r.headers.keys():
+                    fname = re.findall("filename=(.+)", r.headers["Content-Disposition"])[0]
+                else:
+                    fname = r.url.split("?")[0].split("/")[-1]
+
+                return fname.replace("\"", "")
+        except Exception:
+            return "file.unknown"
+
 
     @default('layout')
     def _default_layout(self):
