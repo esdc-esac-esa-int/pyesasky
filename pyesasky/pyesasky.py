@@ -46,8 +46,13 @@ class ESASkyWidget(widgets.DOMWidget):
 
     def __init__(self, lang = 'en'):
         super().__init__()
-        Tk().withdraw()
-        
+        tk = Tk()
+        tk.withdraw()
+        tk.call('wm', 'attributes', '.', '-topmost', True)
+
+        self.guiReady = False
+        self.guiReadyCallSent = False
+
         self.comm.on_msg(self._on_comm_message_received)
    
         self.messageTimeOut=20.0 #s
@@ -95,6 +100,19 @@ class ESASkyWidget(widgets.DOMWidget):
                 + "CAUTION!! This will remove all your extensions and you will need to reinstall them "\
                 + "one by one and check that it works.")
 
+    def _waitGuiReady(self):
+        self.guiReadyCallSent = True
+        startTime = time.time()
+        while time.time() - startTime < self.initTimeOut:
+                content = dict(event='initTest')
+                self._sendToFrontEnd(content)
+                time.sleep(1)
+                val = self._loopMessageQueue()
+                if val is not None:
+                    self.guiReady = True
+                    return val
+        raise(TimeoutError("Widget doesn't seem to have initialised properly"))
+
     def _on_comm_message_received(self, msg):
         """
         Called when we receive a comms message.
@@ -141,6 +159,8 @@ class ESASkyWidget(widgets.DOMWidget):
         return widgets.Layout(height='400px', align_self='stretch')
 
     def _sendToFrontEnd(self,content):
+        if not (self.guiReady or self.guiReadyCallSent):
+            self._waitGuiReady()
         content['origin'] = 'pyesasky'
         self.msgId += 1
         content['msgId'] = self.msgId
