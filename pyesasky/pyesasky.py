@@ -39,16 +39,19 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_module = Unicode('pyesasky').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "4.0.3"
+    _intended_server_version = "4.1.2"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
 
     def __init__(self, lang = 'en'):
         super().__init__()
-        tk = Tk()
-        tk.withdraw()
-        tk.call('wm', 'attributes', '.', '-topmost', True)
+        try:
+            tk = Tk()
+            tk.withdraw()
+            tk.call('wm', 'attributes', '.', '-topmost', True)
+        except Exception:
+            print("Warning: Problem initialising tkinter which means that you want be able to download files on GUI clicks")
 
         self.guiReady = False
         self.guiReadyCallSent = False
@@ -1289,4 +1292,140 @@ class ESASkyWidget(widgets.DOMWidget):
                             color = color,
                             limit = limit
                         ))
+        self._sendToFrontEnd(content)
+
+    def saveSession(self, fileName = None):
+        """Saves the current ESASky session as a JSON file object with all settings, HiPS stack, datapanels etc. Returns the dict with settings 
+
+        Arguments:
+        fileName -- (String, Optional ) Filename or path to file where to save the settings. Won't save to file if empty
+        """
+        content = dict(event='saveState')
+        session = self._sendAvaitCallback(content)
+        if "session" in session:
+            session = session["session"]
+        if fileName:
+            outFile = open(fileName, 'w')
+            outFile.write(json.dumps(session))
+            outFile.close()
+        return session
+
+    def restoreSessionFromFile(self, fileName):
+        """Restores a ESASky session from a JSON file with all settings, HiPS stack, datapanels etc
+
+        Arguments:
+        fileName -- (String ) Filename or path to file where settings are saved  
+        """
+        file = open(fileName, 'r')
+        state = json.loads(file.read())
+        self.restoreSessionFromDict(state)
+
+    def restoreSessionFromDict(self, session):
+        """Restores a ESASky session from a dict with all settings, HiPS stack, datapanels etc
+
+        Arguments:
+        sessiont -- (Dict) Dictionary with the settings to restore  
+        """
+        content = dict(
+                        event='restoreState',
+                        content = dict(
+                            state = session
+                    ))
+        self._sendToFrontEnd(content)
+
+    def getGWIds(self):
+        """Returns the IDs of all available Gravitational Events in ESASky"""
+
+        content = dict(event='getGWIds')
+        return self._sendAvaitCallback(content)
+    
+    def getGWData(self):
+        """Returns the metadata of all available Gravitational Events in ESASky"""
+
+        content = dict(event='getAllGWData')
+        return self._sendAvaitCallback(content)
+    
+    def getNeutrinoEventData(self):
+        """Returns the metadata of all available Neutrino Events in ESASky"""
+
+        content = dict(event='getNeutrinoEventData')
+        return self._sendAvaitCallback(content)
+    
+    def showGWEvent(self, id:str):
+        """Shows the Gravitational Event by ID in ESASky
+        Arguments:
+        id -- (String) Grace ID of gravitational event to show
+        """
+
+        content = dict(
+                        event='showGWEvent',
+                        content = dict(
+                            id = id
+                    ))
+        self._sendToFrontEnd(content)
+
+    def openNeutrinoPanel(self):
+        """Opens the neutrino event panel"""
+
+        content = dict(event='openNeutrinoPanel')
+        return self._sendToFrontEnd(content)
+
+    def openGWPanel(self):
+        """Opens the Gravitational Wave event panel"""
+
+        content = dict(event='openGWPanel')
+        return self._sendToFrontEnd(content)
+    
+    def closeAlertPanel(self):
+        """Closes the alert/event panel"""
+
+        content = dict(event='closeAlertPanel')
+        return self._sendToFrontEnd(content)
+    
+    def showSearchToolPanel(self):
+        """Opens the search tool panel"""
+
+        content = dict(
+                        event='showSearchTool'
+        )
+        self._sendToFrontEnd(content)
+
+    def closeSearchToolPanel(self):
+        """Close the search tool panel"""
+
+        content = dict(
+                        event='closeSearchTool'
+        )
+        self._sendToFrontEnd(content)
+
+
+    def setConeSearchArea(self, ra, dec, radius):
+        """Create a cone search area"""
+
+        content = dict(
+                        event='setConeSearchArea',
+                        content = dict(
+                            ra = ra,
+                            dec = dec,
+                            radius = radius
+                        ))
+
+        self._sendToFrontEnd(content)
+
+    def setPolygonSearchArea(self, stcs):
+        """Create a polygon search area"""
+
+        content = dict(
+                        event='setPolygonSearchArea',
+                        content = dict(
+                            stcs = stcs
+                        ))
+
+        self._sendToFrontEnd(content)
+
+    def clearSearchArea(self):
+        """Clear the search area"""
+
+        content = dict(event='clearSearchArea')
+
         self._sendToFrontEnd(content)
