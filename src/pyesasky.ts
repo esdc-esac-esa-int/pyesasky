@@ -45,7 +45,7 @@ export class ESASkyJSView extends DOMWidgetView {
     iframe.setAttribute("width", "100%");
     iframe.setAttribute("height", "800px");
     iframe.setAttribute("style", "border: none");
-    iframe.setAttribute("src", this.apiAddr + "?hide_welcome=true&hide_sci_switch=true&hide_banner_info=true");
+    iframe.setAttribute("src", this.apiAddr + "?hide_welcome=true&hide_sci_switch=true&sci=true&hide_banner_info=true");
     iframe.onload = function() {
       // Send init message so that esasky know of the pyesasky client and may initiate communication
       iframe.contentWindow.postMessage({'event': 'initTest', 'origin': 'pyesasky'}, self.apiAddr)
