@@ -170,7 +170,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content['msgId'] = self.msgId
         super().send(content)
 
-    def _sendAvaitCallback(self, content):
+    def _sendAwaitCallback(self, content):
         self._sendToFrontEnd(content)
         startTime = time.time()
         while time.time()-startTime < self.messageTimeOut:
@@ -248,7 +248,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='getCenter',
             content=dict(cooFrame=cooFrame)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def plotObservations(self, missionId):
         """Overlays availabe observations for the specified mission on the sky"""
@@ -257,7 +257,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='plotObservations',
             content=dict(missionId=missionId)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def plotCatalogues(self, missionId):
         """Overlays availabe catalogues for the specified mission on the sky"""
@@ -266,7 +266,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='plotCatalogues',
             content=dict(missionId=missionId)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def plotSpectra(self, missionId):
         """Overlays availabe spectra for the specified mission on the sky"""
@@ -275,7 +275,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='plotSpectra',
             content=dict(missionId=missionId)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def coneSearchObservations(self, missionId, ra, dec, radius):
         """Overlays availabe observations within the specified cone for the specified mission on the sky
@@ -295,7 +295,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 radius=radius
             )
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def coneSearchCatalogues(self, missionId, ra, dec, radius):
         """Overlays availabe catalogues within the specified cone for the specified mission on the sky
@@ -314,7 +314,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 radius=radius
             )
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def coneSearchSpectra(self, missionId, ra, dec, radius):
         """Overlays availabe spectra within the specified cone for the specified mission on the sky
@@ -334,7 +334,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 radius=radius
             )
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getObservationsCount(self):
         """Returns the number of observations per mission in the current view of the sky"""
@@ -342,7 +342,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getObservationsCount'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getCataloguesCount(self):
         """Returns the number of catalogs per mission in the current view of the sky"""
@@ -350,7 +350,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getCataloguesCount'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getPublicationsCount(self):
         """Returns the number of publications in the current view of the sky"""
@@ -358,7 +358,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getPublicationsCount'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getSpectraCount(self):
         """Returns the number of spectra per mission in the current view of the sky"""
@@ -366,14 +366,14 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getSpectraCount'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getResultPanelData(self):
         """Returns the content of the currently active datapanel as a dictionary"""
         content = dict(
             event='getResultPanelData'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def closeResultPanelTab(self, index=-1):
         """Close the tab on index or current open if no argument"""
@@ -417,7 +417,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='getAvailableHiPS',
             content=dict(wavelength=wavelength)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def _parseHiPSJSON(self, HiPSJson):
         HiPSJson = json.loads(HiPSJson)
@@ -517,7 +517,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 showAllInstruments=showAllInstruments
             )
         )
-        self._sendAvaitCallback(content)
+        self._sendAwaitCallback(content)
 
     def addJwstWithCoordinates(self, instrument, detector, showAllInstruments, ra, dec, rotation):
         """Adds specified instrument and detector to the specified coordinate
@@ -533,7 +533,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 dec=dec,
                 rotation=rotation)
         )
-        self._sendAvaitCallback(content)
+        self._sendAwaitCallback(content)
 
     def overlayCatalogue(self, catalogue):
         """Overlays a catalogue created by pyesasky.catalogue in the sky"""
@@ -1021,7 +1021,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='extTapCount',
             content=dict(tapService=tapService)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getExtTapData(self, tapService):
         """Calls the external tap and try to recieve data in the current view"""
@@ -1030,7 +1030,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='extTap',
             content=dict(tapService=tapService)
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getExtTapDataWithDetails(self, tapServiceName, tapUrl, tapTable, adql):
         """Calls the external tap and try to recieve data in the current view"""
@@ -1044,7 +1044,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 adql=adql
             )
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def _readProperties(self, url):
         config = configparser.RawConfigParser(strict=False)
@@ -1085,7 +1085,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getNumberOfSkyRows'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def removeHiPS(self, index=-1):
         """Removes HiPS row in the skypanel either at "index"
@@ -1094,7 +1094,7 @@ class ESASkyWidget(widgets.DOMWidget):
             event='removeHips',
             content=dict(index=index)
         )
-        self._sendAvaitCallback(content)
+        self._sendAwaitCallback(content)
 
     def setHiPSSliderValue(self, value):
         """Sets the value of the HiPS slider to fade between
@@ -1138,7 +1138,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 event='changeHips',
                 content=dict(hipsName=hipsName)
             )
-            return self._sendAvaitCallback(content)
+            return self._sendAwaitCallback(content)
 
     def addHiPS(self, hipsName, hipsURL='default'):
         """Adds a new row win the skypanel with either
@@ -1155,7 +1155,7 @@ class ESASkyWidget(widgets.DOMWidget):
                 event='addHips',
                 content=dict(hipsName=hipsName)
             )
-            return self._sendAvaitCallback(content)
+            return self._sendAwaitCallback(content)
 
     def browseHips(self):
         """Queries CDS for the global HiPS list and returns it as a pandas dataframe"""
@@ -1238,7 +1238,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getAvailableTapServices'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getAllAvailableTapMissions(self):
         """Returns all the missions and dataproducts from the available predefined
@@ -1247,7 +1247,7 @@ class ESASkyWidget(widgets.DOMWidget):
         content = dict(
             event='getAllAvailableTapMissions'
         )
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getTapADQL(self, tapServiceName):
         """Returns the adql that will be run on this tapService"""
@@ -1257,7 +1257,7 @@ class ESASkyWidget(widgets.DOMWidget):
             content=dict(
                 tapService=tapServiceName
             ))
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getTapServiceCount(self, tapServiceName=''):
         """Returns the available data in the current sky for the named tapService"""
@@ -1267,7 +1267,7 @@ class ESASkyWidget(widgets.DOMWidget):
             content=dict(
                 tapService=tapServiceName
             ))
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def plotTapService(self, tapServiceName):
         """Plots data from selected mission in the an external TAP service"""
@@ -1277,7 +1277,7 @@ class ESASkyWidget(widgets.DOMWidget):
             content=dict(
                 tapService=tapServiceName
             ))
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def plotTapServiceWithDetails(self, name, tapUrl, ADQL, dataOnlyInView=True, color="", limit=-1, ):
         """Searches and plots data from specified TAP service
@@ -1310,7 +1310,7 @@ class ESASkyWidget(widgets.DOMWidget):
         fileName -- (String, Optional ) Filename or path to file where to save the settings. Won't save to file if empty
         """
         content = dict(event='saveState')
-        session = self._sendAvaitCallback(content)
+        session = self._sendAwaitCallback(content)
         if "session" in session:
             session = session["session"]
         if fileName:
@@ -1346,19 +1346,19 @@ class ESASkyWidget(widgets.DOMWidget):
         """Returns the IDs of all available Gravitational Events in ESASky"""
 
         content = dict(event='getGWIds')
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getGWData(self):
         """Returns the metadata of all available Gravitational Events in ESASky"""
 
         content = dict(event='getAllGWData')
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def getNeutrinoEventData(self):
         """Returns the metadata of all available Neutrino Events in ESASky"""
 
         content = dict(event='getNeutrinoEventData')
-        return self._sendAvaitCallback(content)
+        return self._sendAwaitCallback(content)
 
     def showGWEvent(self, id: str):
         """Shows the Gravitational Event by ID in ESASky
