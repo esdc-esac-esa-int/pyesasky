@@ -1,6 +1,6 @@
 {
 	"name": "pyesasky",
-	"version": "1.9.3",
+	"version": "1.9.4",
 	"description": "ESASky Python wrapper",
 	"keywords": [
 		"jupyter",
@@ -46,8 +46,8 @@
 		"watch:labextension": "jupyter labextension watch ."
 	},
 	"dependencies": {
-		"@jupyter-widgets/base": "^3.0.0||^4.0.0",
-		"@jupyterlab/application": "^2.0 || ^3.0.9",
+		"@jupyter-widgets/base": "^4.1.1",
+		"@jupyterlab/application": "^3.0.10",
 		"require": "^2.4.20"
 	},
 	"devDependencies": {
