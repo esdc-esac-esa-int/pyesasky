@@ -40,7 +40,6 @@ class ESASkyWidget(widgets.DOMWidget):
     _model_module = Unicode('pyesasky').tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "4.1.2"
     _view_language = Unicode('En').tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode('800px').tag(sync=True)
@@ -74,16 +73,6 @@ class ESASkyWidget(widgets.DOMWidget):
             self.msgLvl1Index = 1
             self.msgLvl2Index = 6
             self.shell_streams = self.comm.kernel.shell_streams
-
-        serverVersionResponse = requests.get(
-            "https://sky.esa.int/esasky-tap/version")
-        if (serverVersionResponse.status_code == 200):
-            serverVersion = re.match(
-                '\"(\d+\.?\d*\.?\d*).*', serverVersionResponse.text).group(1)
-            if (serverVersion > self._intended_server_version):
-                warnings.warn("The ESASky server has been updated since your installation of pyESASky.\n\n"
-                              + "Some commands might malfunction. Please upgrade your installation if you experience any issue.\n\n"
-                              + "$pip install --upgrade pyesasky \n\nand if you're using Jupyter Lab: \n\n$jupyter labextension install pyesasky@latest")
 
         if lang.lower() in availableLanguages:
             self._view_language = lang
