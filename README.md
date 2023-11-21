@@ -21,9 +21,9 @@ In some cases you might also have to run these 2 commands to enable PyESASky in 
 
 ```bash
 $ jupyter nbextension install --py pyesasky --sys-prefix
-$ jupyter nbextension enable --py pyeasky --sys-prefix
+$ jupyter nbextension enable --py pyesasky --sys-prefix
 ```
-In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
+In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ipywidgets by the following command:
 
 ```bash
 $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
