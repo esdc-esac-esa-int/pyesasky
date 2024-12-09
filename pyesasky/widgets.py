@@ -22,7 +22,6 @@ from pyesasky.log_utils import setup_accordion_logging, logger
 from pyesasky.exceptions import CommNotInitializedError
 from pyesasky.message_utils import create_message_output
 import pyesasky.constants as const
-
 from ._version import __version__  # noqa
 
 __all__ = ["ESASkyWidget"]
@@ -60,11 +59,17 @@ class ESASkyWidget(widgets.DOMWidget):
 
         self._check_server_version()
 
-        self.modal = NotebookModal()
+        self.modal = DownloadModal()
         self.modal.display()
 
+        self.spinner = SpinnerWidget()
+        self.spinner.display()
+
+
     def _check_server_version(self):
-        version_resp = requests.get("https://sky.esa.int/esasky-tap/version", timeout=10)
+        version_resp = requests.get(
+            "https://sky.esa.int/esasky-tap/version", timeout=10
+        )
         if version_resp.status_code != 200:
             return
 
@@ -74,17 +79,23 @@ class ESASkyWidget(widgets.DOMWidget):
             if server_version > self._intended_server_version:
                 display(HTML(const.VERSION_WARNING_HTML))
 
-    def _handle_comm_message(self, type, content):
-        logger.debug("recieved comm message of type: %s", type)
-        if type == const.MESSAGE_TYPE_DOWNLOAD:
-            url = content.get("url")
-            response = requests.get(url.strip(), allow_redirects=True, timeout=10)
+    def _handle_comm_message(self, msg_type, content):
+        logger.debug("recieved comm message of type: %s", msg_type)
+        try:
+            self.spinner.show()
+            if msg_type == const.MESSAGE_TYPE_DOWNLOAD:
+                url = content.get("url")
+                response = requests.get(url.strip(), allow_redirects=True, timeout=10)
 
-            if response.status_code == 200:
-                logger.debug("File fetched successfully")
-                self.modal.open(response)
-            else:
-                logger.debug("Failed to fetch file")
+                if response.status_code == 200:
+                    logger.debug("File fetched successfully")
+                    self.modal.show(response)
+                else:
+                    logger.debug("Failed to fetch file")
+        except:  # noqa
+            logger.error(("Error processing comm message"))
+        finally:
+            self.spinner.hide()
 
     @default("layout")
     def _default_layout(self):
@@ -1288,7 +1299,7 @@ class ESASkyWidget(widgets.DOMWidget):
         self._send_ignore(content)
 
 
-class NotebookModal:
+class DownloadModal:
     def __init__(self):
         self.response = None
 
@@ -1321,7 +1332,6 @@ class NotebookModal:
                 background_color="white",
                 padding="20px",
                 border_radius="8px",
-                width="300px",
                 text_align="center",
                 box_shadow="0px 4px 8px rgba(0,0,0,0.2)",
             ),
@@ -1330,17 +1340,17 @@ class NotebookModal:
         self.save_button = widgets.Button(
             description="Save",
             button_style="danger",
-            layout=widgets.Layout(margin="10px auto", width="80px"),
+            layout=widgets.Layout(width="80px"),
         )
         self.close_button = widgets.Button(
             description="Cancel",
             button_style="danger",
-            layout=widgets.Layout(margin="10px auto", width="80px"),
+            layout=widgets.Layout(width="80px"),
         )
 
         self.buttons_row = widgets.HBox(
             [self.save_button, self.close_button],
-            layout=widgets.Layout(justify_content="center"),
+            layout=widgets.Layout(justify_content="flex-start"),
         )
         # Assemble the modal
         self.modal_container.children = [self.fc, self.buttons_row]
@@ -1354,7 +1364,7 @@ class NotebookModal:
                 else logger.warning("No content to save")
             )
         )
-        self.close_button.on_click(self._close_modal)
+        self.close_button.on_click(self.hide)
 
     def _save_file(self, response):
         if self.fc.selected is not None:
@@ -1372,7 +1382,7 @@ class NotebookModal:
             except Exception as e:
                 logger.error(f"An unexpected error occurred: {e}")
 
-        self._close_modal()
+        self.hide()
 
     def _extract_file_name(self, response):
         """
@@ -1392,11 +1402,11 @@ class NotebookModal:
         except Exception:
             return "file.unknown"
 
-    def _close_modal(self, _=None):
+    def hide(self, _=None):
         """Hides the modal overlay."""
         self.overlay.layout.display = "none"
 
-    def open(self, response):
+    def show(self, response):
         """Displays the modal overlay."""
         self.overlay.layout.display = "flex"
         self.response = response
@@ -1404,3 +1414,67 @@ class NotebookModal:
     def display(self):
         """Displays the modal in the notebook."""
         display(self.overlay)
+
+
+class SpinnerWidget:
+    def __init__(self):
+        self.spinner_html = """
+        <div id="spinner-container" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;">
+            <div class="spinner" style="
+                border: 4px solid rgba(0, 0, 0, 0.1);
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                animation: spin 1s linear infinite;"></div>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+        """
+
+        self.spinner_out = widgets.Output()
+        display(HTML(self.spinner_html))
+
+    def show(self):
+        """Show the spinner by injecting the HTML into the notebook body."""
+        self.spinner_out.append_display_data(
+            Javascript(
+                """
+                var spinner = document.getElementById('spinner-container');
+                if (spinner) {
+                    document.getElementById('spinner-container').style.display = 'flex';
+                }
+                """
+            )
+        )
+
+    def hide(self):
+        """Hide the spinner by changing the display style."""
+        self.spinner_out.append_display_data(
+            Javascript(
+                """
+                var spinner = document.getElementById('spinner-container');
+                if (spinner) {
+                    spinner.style.display = 'none';
+                }
+                """
+            )
+        )
+
+    def display(self):
+        """Display the spinner widget in the notebook."""
+        display(self.spinner_out)
