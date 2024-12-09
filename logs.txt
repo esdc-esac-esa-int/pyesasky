@@ -1,7 +1,0 @@
-2024-12-06 12:14:56,928 - DEBUG - This is a debug message.
-2024-12-06 12:14:56,928 - INFO - This is an info message.
-2024-12-06 12:14:56,928 - WARNING - This is a warning message.
-2024-12-06 12:14:56,928 - ERROR - This is an error message.
-2024-12-06 12:14:56,930 - DEBUG - Starting new HTTPS connection (1): sky.esa.int:443
-2024-12-06 12:14:57,233 - DEBUG - https://sky.esa.int:443 "GET /esasky-tap/version HTTP/11" 200 7
-2024-12-06 12:15:00,233 - DEBUG - handle_msg[37535d4f25df4c35b0a9ca3827291324]({'header': {'date': datetime.datetime(2024, 12, 6, 11, 15, 0, 231000, tzinfo=tzutc()), 'msg_id': 'a04fcfa9-d8e9-4852-932c-c3adc7eb45dc', 'msg_type': 'comm_msg', 'session': '0e1b166d-c73d-4625-a28c-841dc6fade86', 'username': '', 'version': '5.2'}, 'msg_id': 'a04fcfa9-d8e9-4852-932c-c3adc7eb45dc', 'msg_type': 'comm_msg', 'parent_header': {}, 'metadata': {}, 'content': {'comm_id': '37535d4f25df4c35b0a9ca3827291324', 'data': {'method': 'custom', 'content': {'command': 'calculateSubFramePositioning', 'subFrameData': {'url': 'https://sky.esa.int/esasky/?target=215.6089349020639%20-44.1506126185128&hips=2MASS+color+JHK&fov=0.1&projection=SIN&cooframe=J2000&sci=true&lang=en', 'frameId': 128849018927, 'left': 378, 'top': 239.60000610351562, 'parentFrameIds': [0], 'subFrameDepth': 1}}}}, 'buffers': []})

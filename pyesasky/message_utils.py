@@ -26,6 +26,13 @@ def get_message_content(message):
         return None
 
 
+def get_nested_message_content(message):
+    try:
+        return get_message_content(message[const.MESSAGE_CONTENT])
+    except (KeyError, TypeError):
+        return None
+
+
 def get_message_id(message):
     try:
         return get_message_content(message)[const.MESSAGE_CONTENT_ID]

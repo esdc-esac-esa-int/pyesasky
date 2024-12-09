@@ -1,2 +1,0 @@
-Requirement already satisfied: nodejs in ./.venv/lib/python3.10/site-packages (0.1.1)
-Requirement already satisfied: optional-django==0.1.0 in ./.venv/lib/python3.10/site-packages (from nodejs) (0.1.0)

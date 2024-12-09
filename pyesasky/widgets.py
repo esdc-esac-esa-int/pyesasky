@@ -1,0 +1,1406 @@
+import re
+import configparser
+import logging
+import csv
+import json
+import os.path
+import time
+
+import requests
+import tornado.web
+import tornado.httpserver
+import pandas as pd
+import ipywidgets as widgets
+from ipywidgets import register
+from traitlets import Unicode, default, List
+from ipyfilechooser import FileChooser
+from IPython.display import display, HTML, Javascript
+
+from pyesasky.models import Catalogue, FootprintSet, MetadataType, HiPS
+from pyesasky.kernel_comm import KernelComm
+from pyesasky.log_utils import setup_accordion_logging, logger
+from pyesasky.exceptions import CommNotInitializedError
+from pyesasky.message_utils import create_message_output
+import pyesasky.constants as const
+
+from ._version import __version__  # noqa
+
+__all__ = ["ESASkyWidget"]
+
+
+@register
+class ESASkyWidget(widgets.DOMWidget):
+
+    _view_name = Unicode("IFrameView").tag(sync=True)
+    _model_name = Unicode("IFrameModel").tag(sync=True)
+    _view_module = Unicode("pyesasky").tag(sync=True)
+    _model_module = Unicode("pyesasky").tag(sync=True)
+    _view_module_version = Unicode(__version__).tag(sync=True)
+    _model_module_version = Unicode(__version__).tag(sync=True)
+    _intended_server_version = "7.0.4"
+    _view_language = Unicode("En").tag(sync=True)
+    _view_module_ids = List().tag(sync=True)
+    view_height = Unicode("800px").tag(sync=True)
+
+    def __init__(self, lang="en", enable_logs=False, log_level=logging.DEBUG):
+        super().__init__()
+        self.kernel_comm = KernelComm(self.comm, self._handle_comm_message)
+
+        if enable_logs:
+            setup_accordion_logging(log_level)
+
+        allowed_lang = ["en", "es", "zh"]
+        if lang.lower() in allowed_lang:
+            self._view_language = lang
+        else:
+            allowed_lang_str = ", ".join(allowed_lang)
+            raise ValueError(
+                f"Wrong language code used. Available languages are {allowed_lang_str}"
+            )
+
+        self._check_server_version()
+
+        self.modal = NotebookModal()
+        self.modal.display()
+
+    def _check_server_version(self):
+        version_resp = requests.get("https://sky.esa.int/esasky-tap/version", timeout=10)
+        if version_resp.status_code != 200:
+            return
+
+        match = re.match(r'"(\d+\.\d+\.\d+)', version_resp.text)
+        if match:
+            server_version = match.group(1)
+            if server_version > self._intended_server_version:
+                display(HTML(const.VERSION_WARNING_HTML))
+
+    def _handle_comm_message(self, type, content):
+        logger.debug("recieved comm message of type: %s", type)
+        if type == const.MESSAGE_TYPE_DOWNLOAD:
+            url = content.get("url")
+            response = requests.get(url.strip(), allow_redirects=True, timeout=10)
+
+            if response.status_code == 200:
+                logger.debug("File fetched successfully")
+                self.modal.open(response)
+            else:
+                logger.debug("Failed to fetch file")
+
+    @default("layout")
+    def _default_layout(self):
+        return widgets.Layout(height="400px", align_self="stretch")
+
+    def _send_ignore(self, content):
+        try:
+            self.kernel_comm.send_message(content)
+        except CommNotInitializedError:
+            return "Communication could not be established"
+
+    def _send_receive(self, content):
+        try:
+            comm_id = self.kernel_comm.send_message(content)
+            resp = self.kernel_comm.wait_message(comm_id)
+            return create_message_output(resp)
+        except TimeoutError:
+            return "Timed out waiting for response. Please try again"
+        except CommNotInitializedError:
+            return "Communication could not be established"
+
+    def setViewHeight(self, height):
+        """Sets the widget view height in pixels"""
+
+        height = str(height)
+        if not height.endswith("px"):
+            height = height + "px"
+        self.view_height = height
+
+    def showCoordinateGrid(self, show=True):
+        """Overlays a coordinate grid on the sky"""
+
+        content = dict(event="showCoordinateGrid", content=dict(show=show))
+        self._send_ignore(content)
+
+    def getCenter(self, cooFrame="J2000"):
+        """Returns the coordinate of the center of the screen
+        in specified coordinate Frame."""
+
+        if cooFrame not in ["J2000", "GALACTIC"]:
+            print("Coordinate frame must be J2000 or GALACTIC")
+            return
+        content = dict(event="getCenter", content=dict(cooFrame=cooFrame))
+        return self._send_receive(content)
+
+    def plotObservations(self, missionId):
+        """Overlays availabe observations for the specified mission on the sky"""
+
+        content = dict(event="plotObservations", content=dict(missionId=missionId))
+        return self._send_receive(content)
+
+    def plotCatalogues(self, missionId):
+        """Overlays availabe catalogues for the specified mission on the sky"""
+
+        content = dict(event="plotCatalogues", content=dict(missionId=missionId))
+        return self._send_receive(content)
+
+    def plotSpectra(self, missionId):
+        """Overlays availabe spectra for the specified mission on the sky"""
+
+        content = dict(event="plotSpectra", content=dict(missionId=missionId))
+        return self._send_receive(content)
+
+    def coneSearchObservations(self, missionId, ra, dec, radius):
+        """Overlays availabe observations within the specified cone for the specified mission on the sky
+
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+
+        content = dict(
+            event="plotObservations",
+            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+        )
+        return self._send_receive(content)
+
+    def coneSearchCatalogues(self, missionId, ra, dec, radius):
+        """Overlays availabe catalogues within the specified cone for the specified mission on the sky
+
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+        content = dict(
+            event="plotCatalogues",
+            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+        )
+        return self._send_receive(content)
+
+    def coneSearchSpectra(self, missionId, ra, dec, radius):
+        """Overlays availabe spectra within the specified cone for the specified mission on the sky
+
+         Arguments:
+        ra -- float or string in decimal format
+        dec -- float or string in decimal format
+        radius -- float or string in decimal degrees
+        """
+
+        content = dict(
+            event="plotSpectra",
+            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+        )
+        return self._send_receive(content)
+
+    def getObservationsCount(self):
+        """Returns the number of observations per mission in the current view of the sky"""
+
+        content = dict(event="getObservationsCount")
+        return self._send_receive(content)
+
+    def getCataloguesCount(self):
+        """Returns the number of catalogs per mission in the current view of the sky"""
+
+        content = dict(event="getCataloguesCount")
+        return self._send_receive(content)
+
+    def getPublicationsCount(self):
+        """Returns the number of publications in the current view of the sky"""
+
+        content = dict(event="getPublicationsCount")
+        return self._send_receive(content)
+
+    def getSpectraCount(self):
+        """Returns the number of spectra per mission in the current view of the sky"""
+
+        content = dict(event="getSpectraCount")
+        return self._send_receive(content)
+
+    def getResultPanelData(self):
+        """Returns the content of the currently active datapanel as a dictionary"""
+        content = dict(event="getResultPanelData")
+        return self._send_receive(content)
+
+    def closeResultPanelTab(self, index=-1):
+        """Close the tab on index or current open if no argument"""
+        content = dict(event="closeResultPanelTab", content=dict(index=index))
+        return self._send_ignore(content)
+
+    def closeAllResultPanelTabs(self):
+        """Close all open result panel tabs"""
+        content = dict(event="closeAllResultPanelTabs")
+        return self._send_ignore(content)
+
+    def getAvailableHiPS(self, wavelength=""):
+        """Returns available HiPS in ESASky
+        No argument for all available HiPS.
+        Specify wavelength for those available in that specific wavelength"""
+
+        response = requests.get("http://sky.esa.int/esasky-tap/hips-sources")
+        response.raise_for_status()
+        HiPSMap = self._parseHiPSJSON(response.text)
+        if len(wavelength) > 0:
+            if wavelength.upper() in HiPSMap.keys():
+                return HiPSMap[wavelength.upper()]
+            else:
+                print("No wavelength: " + wavelength + " in ESASky")
+                print("Available wavelengths are: ")
+                print(HiPSMap.keys())
+        else:
+            return HiPSMap
+
+    def getAvailableHiPSAPI(self, wavelength=""):
+        """Returns available HiPS in ESASky
+        No argument for all available HiPS.
+        Specify wavelength for those available in that specific wavelength"""
+
+        content = dict(event="getAvailableHiPS", content=dict(wavelength=wavelength))
+        return self._send_receive(content)
+
+    def _parseHiPSJSON(self, HiPSJson):
+        HiPSJson = json.loads(HiPSJson)
+        if "total" in HiPSJson.keys():
+            HiPSMap = dict()
+            for i in range(HiPSJson["total"]):
+                wavelength = HiPSJson["menuEntries"][i]
+                wavelengthMap = dict()
+                for j in range(wavelength["total"]):
+                    hips = wavelength["hips"][j]
+                    wavelengthMap[hips["surveyName"]] = hips
+                HiPSMap[wavelength["wavelength"]] = wavelengthMap
+            return HiPSMap
+
+    def goToRADec(self, ra, dec):
+        """Moves the center of the view to the specified coordinate
+        in current coordinate system
+
+        Arguments:
+        ra -- float or string in sexagesimal or decimal format
+        dec -- float or string in sexagesimal or decimal format
+        """
+
+        content = dict(event="goToRaDec", content=dict(ra=ra, dec=dec))
+        self._send_ignore(content)
+
+    def setGoToRADec(self, ra, dec):
+        self.goToRADec(ra, dec)
+
+    def goToTargetName(self, targetName):
+        """Moves to targetName resolved by SIMBAD"""
+
+        content = dict(event="goToTargetName", content=dict(targetName=targetName))
+        self._send_ignore(content)
+        # Add small sleeper to wait for simbad to react
+        time.sleep(1)
+
+    def setFoV(self, fovDeg):
+        """Sets the views Field of View in degrees"""
+
+        content = dict(event="setFov", content=dict(fov=fovDeg))
+        self._send_ignore(content)
+
+    def setHiPSColorPalette(self, colorPalette):
+        """Sets the colorpalette of the currently active sky to spcified value"""
+
+        content = dict(
+            event="setHipsColorPalette", content=dict(colorPalette=colorPalette)
+        )
+        self._send_ignore(content)
+
+    def closeJwstPanel(self):
+        """Closes the JWST observation planning tool panel"""
+
+        content = dict(event="closeJwstPanel")
+        self._send_ignore(content)
+
+    def openJwstPanel(self):
+        """Opens the JWST observation planning tool panel"""
+
+        content = dict(event="openJwstPanel")
+        self._send_ignore(content)
+
+    def clearJwstAll(self):
+        """Removes all rows in the JWST observation planning tool panel"""
+        content = dict(event="clearJwstAll")
+        self._send_ignore(content)
+
+    def addJwst(self, instrument, detector, showAllInstruments):
+        """Adds specified instrument and detector to the center of the screen
+        for the JWST observation planning tool panel"""
+
+        content = dict(
+            event="addJwst",
+            content=dict(
+                instrument=instrument,
+                detector=detector,
+                showAllInstruments=showAllInstruments,
+            ),
+        )
+        self._send_receive(content)
+
+    def addJwstWithCoordinates(
+        self, instrument, detector, showAllInstruments, ra, dec, rotation
+    ):
+        """Adds specified instrument and detector to the specified coordinate
+        for the JWST observation planning tool panel"""
+
+        content = dict(
+            event="addJwstWithCoordinates",
+            content=dict(
+                instrument=instrument,
+                detector=detector,
+                showAllInstruments=showAllInstruments,
+                ra=ra,
+                dec=dec,
+                rotation=rotation,
+            ),
+        )
+        self._send_receive(content)
+
+    def overlayCatalogue(self, catalogue):
+        """Overlays a catalogue created by pyesasky.catalogue in the sky"""
+
+        content = dict(event="overlayCatalogue", content=catalogue.toDict())
+        self._send_ignore(content)
+
+    def overlayCatalogueWithDetails(self, userCatalogue):
+        """Overlays a catalogue created by pyesasky.catalogue
+        in the sky and opens a datapanel showing the data"""
+
+        content = dict(
+            event="overlayCatalogueWithDetails", content=dict(userCatalogue.toDict())
+        )
+        self._send_ignore(content)
+
+    def clearCatalogue(self, catalogueName):
+        """Clears all objects in named visualised catalogue"""
+
+        content = dict(event="clearCatalogue", content=dict(overlayName=catalogueName))
+        self._send_ignore(content)
+
+    def deleteCatalogue(self, catalogueName):
+        """Deletes named visualised cataloge"""
+
+        content = dict(event="deleteCatalogue", content=dict(overlayName=catalogueName))
+        self._send_ignore(content)
+
+    def overlayFootprints(self, footprintSet):
+        """Overlays footprints created by pyesasky.footprint in the sky"""
+
+        content = dict(event="overlayFootprints", content=dict(footprintSet.toDict()))
+        self._send_ignore(content)
+
+    def overlayFootprintsWithDetails(self, footprintSet):
+        """Overlays footprints created by pyesasky.Footprint in the sky
+        and opens a datapanel showing the data"""
+
+        content = dict(
+            event="overlayFootprintsWithDetails", content=dict(footprintSet.toDict())
+        )
+        self._send_ignore(content)
+
+    def clearFootprintsOverlay(self, overlayName):
+        """Clears all objects in named visualised footprint table"""
+        content = dict(
+            event="clearFootprintsOverlay", content=dict(overlayName=overlayName)
+        )
+        self._send_ignore(content)
+
+    def deleteFootprintsOverlay(self, overlayName):
+        """Deletes named visualised footprint table"""
+
+        content = dict(
+            event="deleteFootprintsOverlay", content=dict(overlayName=overlayName)
+        )
+        self._send_ignore(content)
+
+    def overlayFootprintsFromCSV(
+        self, pathToFile, csvDelimiter, footprintSetDescriptor
+    ):
+        """Overlays footprints read from a csv file"""
+
+        footprintSet = FootprintSet(
+            footprintSetDescriptor.getDatasetName(),
+            "J2000",
+            footprintSetDescriptor.getHistoColor(),
+            footprintSetDescriptor.getLineWidth(),
+        )
+
+        # read colums
+        with open(pathToFile) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=csvDelimiter)
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    columns = row
+                    print(f'Columns identified: {", ".join(row)}')
+                    line_count += 1
+                    i = 0
+                    while i < len(columns):
+                        if columns[i] == footprintSetDescriptor.getIdColumnName():
+                            columnId = columns[i]
+                            print("{id} mapped to " + columnId)
+                            if (
+                                footprintSetDescriptor.getIdColumnName()
+                                == footprintSetDescriptor.getNameColumnName()
+                            ):
+                                columnName = columnId
+                                print("{name} mapped to " + columnName)
+                        elif columns[i] == footprintSetDescriptor.getNameColumnName():
+                            columnName = columns[i]
+                            print("{name} mapped to " + columnName)
+                        elif columns[i] == footprintSetDescriptor.getStcsColumnName():
+                            columnStcs = columns[i]
+                            print("{stcs} mapped to " + columnStcs)
+                        elif (
+                            columns[i]
+                            == footprintSetDescriptor.getCentralRADegColumnName()
+                        ):
+                            columnRaDeg = columns[i]
+                            print("{centerRaDeg} mapped to " + columnRaDeg)
+                        elif (
+                            columns[i]
+                            == footprintSetDescriptor.getCentralDecDegColumnName()
+                        ):
+                            columnDecDeg = columns[i]
+                            print("{centerDecDeg} mapped to " + columnDecDeg)
+                        i += 1
+                else:
+                    i = 0
+                    currDetails = []
+                    currId = ""
+                    currName = ""
+                    currStcs = ""
+                    currRaDeg = ""
+                    currDecDeg = ""
+
+                    while i < len(row):
+                        if columns[i] == footprintSetDescriptor.getIdColumnName():
+                            currId = row[i]
+                            if (
+                                footprintSetDescriptor.getIdColumnName()
+                                == footprintSetDescriptor.getNameColumnName()
+                            ):
+                                currName = currId
+                        elif columns[i] == footprintSetDescriptor.getNameColumnName():
+                            currName = row[i]
+                        elif columns[i] == footprintSetDescriptor.getStcsColumnName():
+                            currStcs = row[i]
+                        elif (
+                            columns[i]
+                            == footprintSetDescriptor.getCentralRADegColumnName()
+                        ):
+                            currRaDeg = row[i]
+                        elif (
+                            columns[i]
+                            == footprintSetDescriptor.getCentralDecDegColumnName()
+                        ):
+                            currDecDeg = row[i]
+                        else:
+                            currMetadata = {}
+                            found = False
+                            if len(footprintSetDescriptor.getMetadata()) > 0:
+                                j = 0
+                                while j < len(footprintSetDescriptor.getMetadata()):
+                                    if (
+                                        footprintSetDescriptor.getMetadata()[
+                                            j
+                                        ].getLabel()
+                                        == columns[i]
+                                    ):
+                                        found = True
+                                        currMetadata[
+                                            "name"
+                                        ] = footprintSetDescriptor.getMetadata()[
+                                            j
+                                        ].getLabel()
+                                        currMetadata["value"] = row[i]
+                                        currMetadata[
+                                            "type"
+                                        ] = footprintSetDescriptor.getMetadata()[
+                                            j
+                                        ].getType()
+
+                                        break
+                                    j += 1
+                            elif not found:
+                                currMetadata["name"] = columns[i]
+                                currMetadata["value"] = row[i]
+                                currMetadata["type"] = MetadataType.STRING
+
+                            currDetails.append(currMetadata)
+
+                        i += 1
+
+                    footprintSet.addFootprint(
+                        currName, currStcs, currId, currRaDeg, currDecDeg, currDetails
+                    )
+
+                    line_count += 1
+            print(f"Processed {line_count} lines.")
+            self.overlayFootprintsWithDetails(footprintSet)
+
+    def overlayFootprintsFromAstropyTable(self, footprintSetDescriptor, table):
+        i = 0
+
+        astropyFootprintSet = FootprintSet(
+            footprintSetDescriptor.getDatasetName(),
+            "J2000",
+            footprintSetDescriptor.getHistoColor(),
+            footprintSetDescriptor.getLineWidth(),
+        )
+
+        while i < len(table.colnames):
+
+            if table.colnames[i] == footprintSetDescriptor.getIdColumnName():
+                columnId = table.colnames[i]
+                print("{id} mapped to " + columnId)
+                if (
+                    footprintSetDescriptor.getIdColumnName()
+                    == footprintSetDescriptor.getNameColumnName()
+                ):
+                    columnName = columnId
+                    print("{name} mapped to " + columnName)
+            elif table.colnames[i] == footprintSetDescriptor.getNameColumnName():
+                columnName = table.colnames[i]
+                print("{name} mapped to " + columnName)
+            elif table.colnames[i] == footprintSetDescriptor.getStcsColumnName():
+                columnStcs = table.colnames[i]
+                print("{stcs} mapped to " + columnStcs)
+            elif (
+                table.colnames[i] == footprintSetDescriptor.getCentralRADegColumnName()
+            ):
+                columnRaDeg = table.colnames[i]
+                print("{centerRaDeg} mapped to " + columnRaDeg)
+            elif (
+                table.colnames[i] == footprintSetDescriptor.getCentralDecDegColumnName()
+            ):
+                columnDecDeg = table.colnames[i]
+                print("{centerDecDeg} mapped to " + columnDecDeg)
+            i += 1
+
+        j = 0
+        currId = j
+
+        while j < len(table):
+            currDetails = []
+            k = 0
+            while k < len(table.colnames):
+                currMetadata = {}
+                colName = table.colnames[k]
+                if type(table[j][k]) == bytes:
+                    currValue = str(table[j][k].decode("utf-8"))
+                else:
+                    currValue = str(table[j][k])
+                currRaDeg = []
+                currDecDeg = []
+
+                if colName == footprintSetDescriptor.getNameColumnName():
+                    currName = currValue
+                elif colName == footprintSetDescriptor.getStcsColumnName():
+                    currStcs = currValue
+                elif colName == footprintSetDescriptor.getCentralRADegColumnName():
+                    currRaDeg = currValue
+                elif colName == footprintSetDescriptor.getCentralDecDegColumnName():
+                    currDecDeg = currValue
+                else:
+                    currMetadata = {}
+                    found = False
+                    if len(footprintSetDescriptor.getMetadata()) > 0:
+                        l = 0
+                        while l < len(footprintSetDescriptor.getMetadata()):
+                            if (
+                                footprintSetDescriptor.getMetadata()[j].getLabel()
+                                == colName
+                            ):
+                                found = True
+                                currMetadata["name"] = (
+                                    footprintSetDescriptor.getMetadata()[j].getLabel()
+                                )
+                                currMetadata["value"] = currValue
+                                currMetadata["type"] = (
+                                    footprintSetDescriptor.getMetadata()[j].getType()
+                                )
+
+                                break
+                            l += 1
+                    elif not found:
+                        currMetadata["name"] = colName
+                        currMetadata["value"] = currValue
+                        currMetadata["type"] = MetadataType.STRING
+
+                    currDetails.append(currMetadata)
+                k += 1
+
+            j += 1
+            astropyFootprintSet.addFootprint(
+                currName, currStcs, currId, currRaDeg, currDecDeg, currDetails
+            )
+
+        print(f"Processed {j} lines.")
+        self.overlayFootprintsWithDetails(astropyFootprintSet)
+
+    def overlayCatalogueFromAstropyTable(
+        self,
+        catalogueName,
+        cooFrame,
+        color,
+        lineWidth,
+        table,
+        raColName,
+        decColName,
+        mainIdColName,
+    ):
+
+        raColNameUserInput = True
+        decColNameUserInput = True
+        mainIdColNameUserInput = True
+
+        if not raColName:
+            raColName = ""
+            raColNameUserInput = False
+
+        if not decColName:
+            decColName = ""
+            decColNameUserInput = False
+
+        if not mainIdColName:
+            mainIdColName = ""
+            mainIdColNameUserInput = False
+
+        i = 0
+
+        if (
+            not raColNameUserInput
+            and not decColNameUserInput
+            and not mainIdColNameUserInput
+        ):
+
+            while i < len(table.colnames):
+
+                colName = table.colnames[i]
+
+                if len(table[colName].meta) > 0:
+                    metaType = table[colName].meta["ucd"]
+                    if "pos.eq.ra;meta.main" in metaType and not raColNameUserInput:
+                        raColName = colName
+                    elif "pos.eq.dec;meta.main" in metaType and not decColNameUserInput:
+                        decColName = colName
+                    elif "meta.id;meta.main" in metaType and not mainIdColNameUserInput:
+                        mainIdColName = colName
+                i += 1
+
+        if not lineWidth:
+            lineWidth = 5
+
+        astropyCatalogue = Catalogue(catalogueName, cooFrame, color, lineWidth)
+
+        j = 0
+        currId = j
+
+        while j < len(table):
+            currDetails = []
+            k = 0
+            while k < len(table.colnames):
+                currMetadata = {}
+                colName = table.colnames[k]
+                if type(table[j][k]) == bytes:
+                    currValue = str(table[j][k].decode("utf-8"))
+                else:
+                    currValue = str(table[j][k])
+
+                if colName == raColName:
+                    currRaDeg = currValue
+
+                elif colName == decColName:
+                    currDecDeg = currValue
+
+                elif colName == mainIdColName:
+                    currName = currValue
+
+                else:
+                    currMetadata["name"] = colName
+                    currMetadata["value"] = currValue
+                    if "ucd" in table[colName].meta:
+                        currMetadata["type"] = self.convertTapType2ESASky(
+                            table[colName].meta["ucd"]
+                        )
+                    else:
+                        currMetadata["type"] = "STRING"
+                    currDetails.append(currMetadata)
+
+                k += 1
+
+            currId = j
+            astropyCatalogue.addSource(
+                currName, currRaDeg, currDecDeg, currId, currDetails
+            )
+            j += 1
+
+        self.overlayCatalogueWithDetails(astropyCatalogue)
+
+    def convertTapType2ESASky(self, tapType):
+        if tapType == "meta.number":
+            return "DOUBLE"
+        else:
+            return "STRING"
+
+    def parseValue(self, valueObj, colName):
+        if type(valueObj) == "<class 'bytes'>":
+            return valueObj.decode("utf-8")
+        else:
+            return valueObj
+
+    def overlayCatalogueFromCSV(
+        self, pathToFile, csvDelimiter, catalogueDescriptor, cooFrame
+    ):
+        """Overlays catalogue read from a csv file"""
+
+        catalogue = Catalogue(
+            catalogueDescriptor.getDatasetName(),
+            cooFrame,
+            catalogueDescriptor.getHistoColor(),
+            catalogueDescriptor.getLineWidth(),
+        )
+
+        # read colums
+        with open(pathToFile) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=csvDelimiter)
+            line_count = 0
+            for row in csv_reader:
+                if line_count == 0:
+                    columns = row
+                    print(f'Column identified: {", ".join(row)}')
+                    line_count += 1
+                    i = 0
+                    while i < len(columns):
+                        if columns[i] == catalogueDescriptor.getIdColumnName():
+                            columnId = columns[i]
+                            print("{id} column identified: " + columnId)
+                            if (
+                                catalogueDescriptor.getIdColumnName()
+                                == catalogueDescriptor.getNameColumnName()
+                            ):
+                                columnName = columnId
+                                print("{name} column identified: " + columnName)
+                        elif columns[i] == catalogueDescriptor.getNameColumnName():
+                            columnName = columns[i]
+                            print("{name} column identified: " + columnName)
+                        elif columns[i] == catalogueDescriptor.getRADegColumnName():
+                            columnRaDeg = columns[i]
+                            print("{centerRaDeg} column identified: " + columnRaDeg)
+                        elif columns[i] == catalogueDescriptor.getDecDegColumnName():
+                            columnDecDeg = columns[i]
+                            print("{currDecDeg} column identified: " + columnDecDeg)
+                        i += 1
+                else:
+                    i = 0
+                    currDetails = []
+                    currId = ""
+                    currName = ""
+                    currRaDeg = ""
+                    currDecDeg = ""
+
+                    while i < len(row):
+                        if columns[i] == catalogueDescriptor.getIdColumnName():
+                            currId = row[i]
+                            if (
+                                catalogueDescriptor.getIdColumnName()
+                                == catalogueDescriptor.getNameColumnName()
+                            ):
+                                currName = currId
+                        elif columns[i] == catalogueDescriptor.getNameColumnName():
+                            currName = row[i]
+                        elif columns[i] == catalogueDescriptor.getRADegColumnName():
+                            currRaDeg = row[i]
+                        elif columns[i] == catalogueDescriptor.getDecDegColumnName():
+                            currDecDeg = row[i]
+                        else:
+                            currMetadata = {}
+                            found = False
+                            if len(catalogueDescriptor.getMetadata()) > 0:
+                                j = 0
+                                while j < len(catalogueDescriptor.getMetadata()):
+                                    if (
+                                        catalogueDescriptor.getMetadata()[j].getLabel()
+                                        == columns[i]
+                                    ):
+                                        found = True
+                                        currMetadata[
+                                            "name"
+                                        ] = catalogueDescriptor.getMetadata()[
+                                            j
+                                        ].getLabel()
+                                        currMetadata["value"] = row[i]
+                                        currMetadata[
+                                            "type"
+                                        ] = catalogueDescriptor.getMetadata()[
+                                            j
+                                        ].getType()
+                                        break
+                                    j += 1
+                            elif not found:
+                                currMetadata["name"] = columns[i]
+                                currMetadata["value"] = row[i]
+                                currMetadata["type"] = MetadataType.STRING
+
+                            currDetails.append(currMetadata)
+
+                        i += 1
+
+                    catalogue.addSource(
+                        currName, currRaDeg, currDecDeg, currId, currDetails
+                    )
+                    line_count += 1
+            print(f"Processed {line_count} lines.")
+            self.overlayCatalogueWithDetails(catalogue)
+
+    def overlayMOC(self, mocObject, name="MOC", color="", opacity=0.2, mode="healpix"):
+        """Overlay HealPix Multi-Order Coverage map"""
+        mocString = "{"
+        if isinstance(mocObject, dict):
+            for order in mocObject.keys():
+                mocString += '"' + order + '":['
+                for val in mocObject[order]:
+                    if "-" in str(val):
+                        start = int(val.split("-")[0])
+                        end = int(val.split("-")[1])
+                        for i in range(start, end + 1):
+                            mocString += str(i) + ","
+                    else:
+                        mocString += str(val) + ","
+                mocString = mocString[:-1] + "],"
+
+            mocString = mocString[:-1] + "}"
+        elif "/" in mocObject:
+            currOrder = ""
+            for currVal in mocObject.split(" "):
+                if "/" in currVal:
+                    if currOrder != "":
+                        mocString = mocString[:-1] + "],"
+                    currOrder = currVal.split("/")[0]
+                    mocString += '"' + currOrder + '":['
+                    currVal = currVal.split("/")[1]
+
+                if "-" in str(currVal):
+                    start = int(currVal.split("-")[0])
+                    end = int(currVal.split("-")[1])
+                    for i in range(start, end + 1):
+                        mocString += str(i) + ","
+                else:
+                    mocString += str(currVal) + ","
+            mocString = mocString[:-1] + "]}"
+        else:
+            mocString = mocObject
+        content = dict(
+            event="addMOC",
+            content=dict(
+                options=dict(color=color, opacity=opacity, mode=mode),
+                mocData=mocString,
+                name=name,
+            ),
+        )
+        self._send_ignore(content)
+
+    def removeMOC(self, name="MOC"):
+        content = dict(event="removeMOC", content=dict(name=name))
+        return self._send_ignore(content)
+
+    def checkExtTapAvailability(self, tapService):
+        """Returns the 1 if any data is availabe otherwise 0"""
+
+        content = dict(event="extTapCount", content=dict(tapService=tapService))
+        return self._send_receive(content)
+
+    def getExtTapData(self, tapService):
+        """Calls the external tap and try to recieve data in the current view"""
+
+        content = dict(event="extTap", content=dict(tapService=tapService))
+        return self._send_receive(content)
+
+    def getExtTapDataWithDetails(self, tapServiceName, tapUrl, tapTable, adql):
+        """Calls the external tap and try to recieve data in the current view"""
+
+        content = dict(
+            event="newExtTapService",
+            content=dict(
+                name=tapServiceName, tapUrl=tapUrl, tapTable=tapTable, adql=adql
+            ),
+        )
+        return self._send_receive(content)
+
+    def _readProperties(self, url):
+        config = configparser.RawConfigParser(strict=False)
+        if not url.startswith("http"):
+            text = "[Dummy section]\n"
+            try:
+                with open(url + "properties", "r") as f:
+                    text += f.read() + "\n"
+                config.read_string(text)
+                return config
+            except FileNotFoundError as fnf_error:
+                print(
+                    url
+                    + " not found or missing properties file.\n Did you mean http://"
+                    + url
+                )
+                raise (fnf_error)
+        else:
+            response = requests.get(url + "properties")
+            response.raise_for_status()
+            text = "[Dummy section]\n" + response.text
+            config.read_string(text)
+            return config
+
+    def openSkyPanel(self):
+        """Opens the sky selector panel"""
+        content = dict(event="openSkyPanel")
+        self._send_ignore(content)
+
+    def closeSkyPanel(self):
+        """Closes the sky selector panel"""
+        content = dict(event="closeSkyPanel")
+        self._send_ignore(content)
+
+    def getNumberOfSkyRows(self):
+        """Returns the number of rows in the sky panel"""
+        content = dict(event="getNumberOfSkyRows")
+        return self._send_receive(content)
+
+    def removeHiPS(self, index=-1):
+        """Removes HiPS row in the skypanel either at "index"
+        or no argument for all except the first"""
+        content = dict(event="removeHips", content=dict(index=index))
+        self._send_receive(content)
+
+    def setHiPSSliderValue(self, value):
+        """Sets the value of the HiPS slider to fade between
+        the HiPS in the skypanel.
+        Valid values are 0 to nSkyRows - 1"""
+        content = dict(event="setHipsSliderValue", content=dict(value=value))
+        self._send_ignore(content)
+
+    def addLocalHiPS(self, hipsURL):
+        """Starts a tornado server which will supply the widget with
+        HiPS from a local source on client machine"""
+        if not hasattr(self, "tornadoServer"):
+            self.startTornado()
+        drive, tail = os.path.splitdrive(hipsURL)
+        if drive:
+            # Windows
+            url = tail.replace("\\", "/")
+        else:
+            url = hipsURL
+        patternUrl = url + "(.*)"
+        self.tornadoServer.add_handlers(
+            r".*", [(str(patternUrl), self.FileHandler, dict(baseUrl=hipsURL))]
+        )
+        return url
+
+    def setHiPS(self, hipsName, hipsURL="default"):
+        """Sets the currently active row in the skypanel to either
+        hipsName already existing in ESASky or adds a new name from specified URL
+        """
+        if hipsURL != "default":
+            userHiPS = self.parseHiPSURL(hipsName, hipsURL)
+            content = dict(
+                event="changeHipsWithParams", content=dict(userHiPS.toDict())
+            )
+            self._send_ignore(content)
+        else:
+            content = dict(event="changeHips", content=dict(hipsName=hipsName))
+            return self._send_receive(content)
+
+    def addHiPS(self, hipsName, hipsURL="default"):
+        """Adds a new row win the skypanel with either
+        hipsName already existing in ESASky or adds a new name from specified URL"""
+        if hipsURL != "default":
+            userHiPS = self.parseHiPSURL(hipsName, hipsURL)
+            content = dict(event="addHipsWithParams", content=dict(userHiPS.toDict()))
+            self._send_ignore(content)
+        else:
+            content = dict(event="addHips", content=dict(hipsName=hipsName))
+            return self._send_receive(content)
+
+    def browseHips(self):
+        """Queries CDS for the global HiPS list and returns it as a pandas dataframe"""
+        urlString = "http://skyint.esac.esa.int/esasky-tap/global-hipslist"
+        columns = [
+            "ID",
+            "obs_title",
+            "moc_order",
+            "moc_sky_fraction",
+            "em_min",
+            "em_max",
+            "hips_service_url",
+        ]
+        with requests.get(urlString, stream=True) as response:
+            df = pd.io.json.read_json(response.content)
+            return df[columns]
+
+    def parseHiPSURL(self, hipsName, hipsURL):
+        if not hipsURL.endswith("/"):
+            hipsURL += "/"
+        config = self._readProperties(hipsURL)
+        if not hipsURL.startswith("http"):
+            url = self.addLocalHiPS(hipsURL)
+            port = self.httpServerPort
+            hipsURL = "http://localhost:" + str(port) + url
+
+        maxNorder = config.get("Dummy section", "hips_order")
+        imgFormat = config.get("Dummy section", "hips_tile_format").split()
+        cooFrame = config.get("Dummy section", "hips_frame")
+        if cooFrame == "equatorial":
+            cooFrame = "J2000"
+        else:
+            cooFrame = "Galactic"
+        if hipsURL.endswith("/"):
+            hipsURL = hipsURL[:-1]
+        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
+        print("hipsURL " + hipsURL + "/index.html")
+        print("imgFormat " + imgFormat[0])
+        return userHiPS
+
+    def startTornado(self):
+        class DummyHandler(tornado.web.RequestHandler):
+            pass
+
+        app = tornado.web.Application(
+            [
+                tornado.web.url(r"dummy", DummyHandler),
+            ]
+        )
+        server = tornado.httpserver.HTTPServer(app)
+        portStart = 8900
+        portEnd = 8910
+        for port in range(portStart, portEnd + 1):
+            try:
+                server.listen(port)
+            except OSError as os_error:
+                if port is portEnd:
+                    raise (os_error)
+            else:
+                break
+        self.httpserver = server
+        self.tornadoServer = app
+        self.httpServerPort = port
+
+    class FileHandler(tornado.web.RequestHandler):
+        def initialize(self, baseUrl):
+            self.baseUrl = baseUrl
+
+        def set_default_headers(self):
+            self.set_header("Access-Control-Allow-Origin", "*")
+
+        def get(self, path):
+            host = self.request.host
+            print(host)
+            origin = host.split(":")[0]
+            if not origin == "localhost":
+                raise tornado.web.HTTPError(status_code=403)
+            file_location = os.path.abspath(os.path.join(self.baseUrl, path))
+            if not os.path.isfile(file_location):
+                raise tornado.web.HTTPError(status_code=404)
+            with open(file_location, "rb") as source_file:
+                self.write(source_file.read())
+
+    """ External TAP Services"""
+
+    def getAvailableTapServices(self):
+        """Returns the available predefined External TAP Services in ESASky"""
+
+        content = dict(event="getAvailableTapServices")
+        return self._send_receive(content)
+
+    def getAllAvailableTapMissions(self):
+        """Returns all the missions and dataproducts from the available predefined
+        External TAP Services in ESASky"""
+
+        content = dict(event="getAllAvailableTapMissions")
+        return self._send_receive(content)
+
+    def getTapADQL(self, tapServiceName):
+        """Returns the adql that will be run on this tapService"""
+
+        content = dict(event="getTapADQL", content=dict(tapService=tapServiceName))
+        return self._send_receive(content)
+
+    def getTapServiceCount(self, tapServiceName=""):
+        """Returns the available data in the current sky for the named tapService"""
+
+        content = dict(
+            event="getTapServiceCount", content=dict(tapService=tapServiceName)
+        )
+        return self._send_receive(content)
+
+    def plotTapService(self, tapServiceName):
+        """Plots data from selected mission in the an external TAP service"""
+
+        content = dict(event="plotTapService", content=dict(tapService=tapServiceName))
+        return self._send_receive(content)
+
+    def plotTapServiceWithDetails(
+        self,
+        name,
+        tapUrl,
+        ADQL,
+        dataOnlyInView=True,
+        color="",
+        limit=-1,
+    ):
+        """Searches and plots data from specified TAP service
+
+        Arguments:
+        name -- (String) Name that will be shown on the screen
+        tapUrl -- (String) URL to the tap service
+        ADQL -- (String) The ADQL that will be used for retrieving the data
+        dataOnlyInView -- (Boolean, default:True) Adds a WHERE statement to only retrieve data in the current view
+        color -- (String, default: preset list) Color for display in RGB format (e.g. #FF0000 for red)
+        limit -- (Int, default: 3000) Limit for amount of results to display
+        """
+
+        content = dict(
+            event="plotTapServiceWithDetails",
+            content=dict(
+                name=name,
+                tapUrl=tapUrl,
+                dataOnlyInView=dataOnlyInView,
+                adql=ADQL,
+                color=color,
+                limit=limit,
+            ),
+        )
+        self._send_ignore(content)
+
+    def saveSession(self, fileName=None):
+        """Saves the current ESASky session as a JSON file object with all settings, HiPS stack, datapanels etc. Returns the dict with settings
+
+        Arguments:
+        fileName -- (String, Optional ) Filename or path to file where to save the settings. Won't save to file if empty
+        """
+        content = dict(event="saveState")
+        session = self._send_receive(content)
+        if "session" in session:
+            session = session["session"]
+        if fileName:
+            outFile = open(fileName, "w")
+            outFile.write(json.dumps(session))
+            outFile.close()
+        return session
+
+    def restoreSessionFromFile(self, fileName):
+        """Restores a ESASky session from a JSON file with all settings, HiPS stack, datapanels etc
+
+        Arguments:
+        fileName -- (String ) Filename or path to file where settings are saved
+        """
+        file = open(fileName, "r")
+        state = json.loads(file.read())
+        self.restoreSessionFromDict(state)
+
+    def restoreSessionFromDict(self, session):
+        """Restores a ESASky session from a dict with all settings, HiPS stack, datapanels etc
+
+        Arguments:
+        sessiont -- (Dict) Dictionary with the settings to restore
+        """
+        content = dict(event="restoreState", content=dict(state=session))
+        self._send_ignore(content)
+
+    def getGWIds(self):
+        """Returns the IDs of all available Gravitational Events in ESASky"""
+
+        content = dict(event="getGWIds")
+        return self._send_receive(content)
+
+    def getGWData(self):
+        """Returns the metadata of all available Gravitational Events in ESASky"""
+
+        content = dict(event="getAllGWData")
+        return self._send_receive(content)
+
+    def getNeutrinoEventData(self):
+        """Returns the metadata of all available Neutrino Events in ESASky"""
+
+        content = dict(event="getNeutrinoEventData")
+        return self._send_receive(content)
+
+    def showGWEvent(self, id: str):
+        """Shows the Gravitational Event by ID in ESASky
+        Arguments:
+        id -- (String) Grace ID of gravitational event to show
+        """
+
+        content = dict(event="showGWEvent", content=dict(id=id))
+        self._send_ignore(content)
+
+    def openNeutrinoPanel(self):
+        """Opens the neutrino event panel"""
+
+        content = dict(event="openNeutrinoPanel")
+        return self._send_ignore(content)
+
+    def openGWPanel(self):
+        """Opens the Gravitational Wave event panel"""
+
+        content = dict(event="openGWPanel")
+        return self._send_ignore(content)
+
+    def closeAlertPanel(self):
+        """Closes the alert/event panel"""
+
+        content = dict(event="closeAlertPanel")
+        return self._send_ignore(content)
+
+    def showSearchToolPanel(self):
+        """Opens the search tool panel"""
+
+        content = dict(event="showSearchTool")
+        self._send_ignore(content)
+
+    def closeSearchToolPanel(self):
+        """Close the search tool panel"""
+
+        content = dict(event="closeSearchTool")
+        self._send_ignore(content)
+
+    def setConeSearchArea(self, ra, dec, radius):
+        """Create a cone search area"""
+
+        content = dict(
+            event="setConeSearchArea", content=dict(ra=ra, dec=dec, radius=radius)
+        )
+
+        self._send_ignore(content)
+
+    def setPolygonSearchArea(self, stcs):
+        """Create a polygon search area"""
+
+        content = dict(event="setPolygonSearchArea", content=dict(stcs=stcs))
+
+        self._send_ignore(content)
+
+    def clearSearchArea(self):
+        """Clear the search area"""
+
+        content = dict(event="clearSearchArea")
+
+        self._send_ignore(content)
+
+
+class NotebookModal:
+    def __init__(self):
+        self.response = None
+
+        self.fc = FileChooser(
+            title="Select directory for download",
+            show_only_dirs=True,
+            dir_icon_append=True,
+            select_default=True,
+        )
+
+        # Create widgets for modal components
+        self.overlay = widgets.Box(
+            [],
+            layout=widgets.Layout(
+                position="fixed",
+                top="0",
+                left="0",
+                width="100%",
+                height="100%",
+                background_color="rgba(0, 0, 0, 0.5)",
+                justify_content="center",
+                align_items="center",
+                display="none",
+                z_index="1000",
+            ),
+        )
+        self.modal_container = widgets.VBox(
+            [],
+            layout=widgets.Layout(
+                background_color="white",
+                padding="20px",
+                border_radius="8px",
+                width="300px",
+                text_align="center",
+                box_shadow="0px 4px 8px rgba(0,0,0,0.2)",
+            ),
+        )
+
+        self.save_button = widgets.Button(
+            description="Save",
+            button_style="danger",
+            layout=widgets.Layout(margin="10px auto", width="80px"),
+        )
+        self.close_button = widgets.Button(
+            description="Cancel",
+            button_style="danger",
+            layout=widgets.Layout(margin="10px auto", width="80px"),
+        )
+
+        self.buttons_row = widgets.HBox(
+            [self.save_button, self.close_button],
+            layout=widgets.Layout(justify_content="center"),
+        )
+        # Assemble the modal
+        self.modal_container.children = [self.fc, self.buttons_row]
+        self.overlay.children = [self.modal_container]
+
+        # Attach event handlers
+        self.save_button.on_click(
+            lambda _: (
+                self._save_file(self.response)
+                if self.response
+                else logger.warning("No content to save")
+            )
+        )
+        self.close_button.on_click(self._close_modal)
+
+    def _save_file(self, response):
+        if self.fc.selected is not None:
+            try:
+                file_name = self._extract_file_name(response)
+                content = response.content
+                with open(f"{self.fc.selected}/{file_name}", "wb") as f:
+                    f.write(content)
+            except (AttributeError, KeyError) as e:
+                logger.error(f"Attribute error or missing key: {e}")
+            except FileNotFoundError as e:
+                logger.error(f"File path not found: {e}")
+            except OSError as e:
+                logger.error(f"Error opening/writing the file: {e}")
+            except Exception as e:
+                logger.error(f"An unexpected error occurred: {e}")
+
+        self._close_modal()
+
+    def _extract_file_name(self, response):
+        """
+        Get filename from response content-disposition
+        """
+        try:
+            with response as r:
+                fname = ""
+                if "Content-Disposition" in r.headers.keys():
+                    fname = re.findall(
+                        "filename=(.+)", r.headers["Content-Disposition"]
+                    )[0]
+                else:
+                    fname = r.url.split("?")[0].split("/")[-1]
+
+                return fname.replace('"', "")
+        except Exception:
+            return "file.unknown"
+
+    def _close_modal(self, _=None):
+        """Hides the modal overlay."""
+        self.overlay.layout.display = "none"
+
+    def open(self, response):
+        """Displays the modal overlay."""
+        self.overlay.layout.display = "flex"
+        self.response = response
+
+    def display(self):
+        """Displays the modal in the notebook."""
+        display(self.overlay)

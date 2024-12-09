@@ -21,3 +21,28 @@ MESSAGE_EXTRAS_MESSAGE: Final = "message"
 
 # Message types
 MESSAGE_TYPE_DOWNLOAD: Final = "esasky_jupyter_download"
+
+
+VERSION_WARNING_HTML: Final = """
+    <div style="    background-color: #fff3cd;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 5px;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    ">
+        <strong>Warning:</strong> The ESASky server has been updated since your
+        installation of pyESASky.
+        </br></br>
+        Some commands might malfunction. Please upgrade your installation if
+        you experience any issues
+        </br></br>
+        To upgrade, run:
+        </br>
+        <code>$ pip install --upgrade pyesasky </code>
+        </br>
+    </div>
+    """

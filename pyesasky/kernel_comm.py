@@ -146,9 +146,7 @@ class KernelComm:
     def _handle_unsolicited_message(self, message):
         if not self.widget_on_msg:
             return
-
-        content = m.get_message_content(message)
-
+        content = m.get_nested_message_content(message)
         if content and const.MESSAGE_CONTENT_TYPE in content:
             msg_type = content[const.MESSAGE_CONTENT_TYPE]
             self.widget_on_msg(msg_type, content)
