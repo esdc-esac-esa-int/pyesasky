@@ -23,6 +23,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
+        "ipyfilechooser==0.6.0",
+        "pandas>=2.2.3",
+        "jupyterlab>=4.0"
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 

@@ -58,7 +58,7 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
         self.spinner = SpinnerWidget()
         self.spinner.display()
 
-    def setViewHeight(self, height):
+    def set_view_height(self, height):
         """Sets the widget view height in pixels"""
 
         height = str(height)
