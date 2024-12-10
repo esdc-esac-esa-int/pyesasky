@@ -127,3 +127,6 @@ dmypy.json
 
 # Venv
 .venv
+
+# Ignore test result reports
+junit.xml
