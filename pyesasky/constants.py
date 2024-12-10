@@ -19,10 +19,13 @@ MESSAGE_ERROR_AVAILABLE: Final = "available"
 
 MESSAGE_EXTRAS_MESSAGE: Final = "message"
 
+MESSAGE_INIT_ID_FLAG: Final = "__init__"
+
 # Message types
 MESSAGE_TYPE_DOWNLOAD: Final = "esasky_jupyter_download"
 
 
+# NOTICES
 VERSION_WARNING_HTML: Final = """
     <div style="    background-color: #fff3cd;
     background-color: #fff3cd;

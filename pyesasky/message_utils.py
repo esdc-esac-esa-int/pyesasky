@@ -35,6 +35,9 @@ def get_nested_message_content(message):
 
 def get_message_id(message):
     try:
+        if is_init_message(message):
+            return const.MESSAGE_INIT_ID_FLAG
+        
         return get_message_content(message)[const.MESSAGE_CONTENT_ID]
     except (KeyError, TypeError):
         return None

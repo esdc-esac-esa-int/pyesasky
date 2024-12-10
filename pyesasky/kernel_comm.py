@@ -75,14 +75,12 @@ class KernelComm:
                 message = self._poll_for_message(stream)
                 if message:
                     parsed_msg = self._parse_message(message)
-
                     if parsed_msg and m.is_init_message(parsed_msg):
                         logger.debug("Comms established")
                         self.comm_established = True
-                        return parsed_msg
-
+                        
                     if parsed_msg and m.get_message_id(parsed_msg) == msg_id:
-                        logger.debug(f"Message recieved {parsed_msg}")
+                        logger.debug("Message recieved %s", parsed_msg)
                         return parsed_msg
             except zmq.Again:
                 continue  # No message received, continue polling
@@ -129,8 +127,8 @@ class KernelComm:
 
     def _initialize_comm(self, buffers):
         try:
-            message_id = self._send_message({"event": "initTest"}, buffers)
-            self.wait_message(message_id, self.default_timeout)
+            self._send_message({"event": "initTest"}, buffers)
+            self.wait_message(const.MESSAGE_INIT_ID_FLAG, self.default_timeout)
             self.comm_established = True
             time.sleep(0.5)
             return True

@@ -14,7 +14,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     console.log('JupyterLab extension pyesasky is activated!');
     registry.registerWidget({
       name: 'pyesasky',
-      version: '0.1.0',
+      version: '2.0.0',
       exports: { IFrameModel, IFrameView }
     });
   }
