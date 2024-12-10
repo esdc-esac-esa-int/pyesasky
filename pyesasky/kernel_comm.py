@@ -117,6 +117,7 @@ class KernelComm:
         content[const.MESSAGE_ORIGIN] = "pyesasky"
 
         if self._valid_widget_comm(self.widget_comm):
+            logger.debug('Sending message %s', content)
             self.widget_comm.send(
                 data={const.MESSAGE_METHOD: "custom", const.MESSAGE_CONTENT: content},
                 buffers=buffers,

@@ -73,7 +73,6 @@ def create_message_output(message):
 
     err = get_message_error(message)
     extras = get_message_extras(message)
-    values = get_message_values(message)
 
     if err is not None:
         if const.MESSAGE_ERROR_MESSAGE in err:
@@ -85,10 +84,13 @@ def create_message_output(message):
     elif extras is not None and const.MESSAGE_EXTRAS_MESSAGE in extras:
         result.append(extras[const.MESSAGE_EXTRAS_MESSAGE])
 
-    if values is not None:
-        if type(values) is list and len(values) > 0:
-            result.append(values[0])
-        else:
-            result.append(values)
-
     return "\n".join(str(item) for item in result)
+
+
+def create_message_result(message):
+    values = get_message_values(message)
+    if values is not None:
+        if isinstance(values, list) and len(values) > 0:
+            return values[0]
+        else:
+            return values

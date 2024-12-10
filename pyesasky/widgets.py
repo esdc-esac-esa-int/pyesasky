@@ -12,7 +12,7 @@ from IPython.display import display, HTML, Javascript
 from pyesasky.kernel_comm import KernelComm
 from pyesasky.log_utils import setup_accordion_logging, logger
 from pyesasky.exceptions import CommNotInitializedError
-from pyesasky.message_utils import create_message_output
+from pyesasky.message_utils import create_message_output, create_message_result
 from pyesasky.legacy_api_interactions import LegacyApiInteractionsMixin
 import pyesasky.constants as const
 from ._version import __version__  # noqa
@@ -50,6 +50,7 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
                 f"Wrong language code used. Available languages are {allowed_lang_str}"
             )
 
+        self.message_timeout = 10
         self._check_server_version()
 
         self.modal = DownloadModal()
@@ -68,7 +69,7 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
 
     def _check_server_version(self):
         version_resp = requests.get(
-            "https://sky.esa.int/esasky-tap/version", timeout=10
+            "https://sky.esa.int/esasky-tap/version", timeout=self.message_timeout
         )
         if version_resp.status_code != 200:
             return
@@ -85,7 +86,9 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
             self.spinner.show()
             if msg_type == const.MESSAGE_TYPE_DOWNLOAD:
                 url = content.get("url")
-                response = requests.get(url.strip(), allow_redirects=True, timeout=10)
+                response = requests.get(
+                    url.strip(), allow_redirects=True, timeout=self.message_timeout
+                )
 
                 if response.status_code == 200:
                     logger.debug("File fetched successfully")
@@ -110,13 +113,18 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
     def _send_receive(self, content):
         try:
             comm_id = self.kernel_comm.send_message(content)
-            resp = self.kernel_comm.wait_message(comm_id)
-            return create_message_output(resp)
+            resp = self.kernel_comm.wait_message(comm_id, self.message_timeout)
+
+            output = create_message_output(resp)
+            if output:
+                print(output)
+
+            return create_message_result(resp)
         except TimeoutError:
             return "Timed out waiting for response. Please try again"
         except CommNotInitializedError:
             return "Communication could not be established"
-    
+
 
 class DownloadModal:
     def __init__(self):
