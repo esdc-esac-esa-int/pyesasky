@@ -273,8 +273,8 @@ class SpinnerWidget:
         """
 
         self.spinner_out = widgets.Output()
-        display(HTML(self.spinner_html))
-
+        self.spinner_out.append_display_data(HTML(self.spinner_html))
+    
     def show(self):
         """Show the spinner by injecting the HTML into the notebook body."""
         self.spinner_out.append_display_data(
@@ -283,6 +283,8 @@ class SpinnerWidget:
                 var spinner = document.getElementById('spinner-container');
                 if (spinner) {
                     document.getElementById('spinner-container').style.display = 'flex';
+                } else {
+                    console.error('Spinner not found.');
                 }
                 """
             )
@@ -296,6 +298,8 @@ class SpinnerWidget:
                 var spinner = document.getElementById('spinner-container');
                 if (spinner) {
                     spinner.style.display = 'none';
+                } else {
+                    console.error('Spinner not found.');
                 }
                 """
             )
