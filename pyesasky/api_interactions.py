@@ -156,16 +156,16 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
             "http://sky.esa.int/esasky-tap/hips-sources", timeout=self.message_timeout
         )
         response.raise_for_status()
-        HiPSMap = self._parse_hips_json(response.text)
+        hips_map = self._parse_hips_json(response.text)
         if len(wavelength) > 0:
-            if wavelength.upper() in HiPSMap.keys():
-                return HiPSMap[wavelength.upper()]
+            if wavelength.upper() in hips_map.keys():
+                return hips_map[wavelength.upper()]
             else:
                 print("No wavelength: " + wavelength + " in ESASky")
                 print("Available wavelengths are: ")
-                print(HiPSMap.keys())
+                print(hips_map.keys())
         else:
-            return HiPSMap
+            return hips_map
 
     def get_available_hips(self, wavelength=""):
         """Returns available HiPS in ESASky
@@ -315,10 +315,10 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         """Overlays footprints read from a csv file"""
 
         footprint_set = FootprintSet(
-            descriptor.getDatasetName(),
+            descriptor.get_dataset_name(),
             "J2000",
-            descriptor.getHistoColor(),
-            descriptor.getLineWidth(),
+            descriptor.get_histo_color(),
+            descriptor.get_line_width(),
         )
 
         # read colums
@@ -332,25 +332,25 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
                     line_count += 1
                     i = 0
                     while i < len(columns):
-                        if columns[i] == descriptor.getIdColumnName():
+                        if columns[i] == descriptor.get_id_col():
                             col_id = columns[i]
                             print("{id} mapped to " + col_id)
                             if (
-                                descriptor.getIdColumnName()
-                                == descriptor.getNameColumnName()
+                                descriptor.get_id_col()
+                                == descriptor.get_name_col()
                             ):
                                 col_name = col_id
                                 print("{name} mapped to " + col_name)
-                        elif columns[i] == descriptor.getNameColumnName():
+                        elif columns[i] == descriptor.get_name_col():
                             col_name = columns[i]
                             print("{name} mapped to " + col_name)
-                        elif columns[i] == descriptor.getStcsColumnName():
+                        elif columns[i] == descriptor.get_stcs_col():
                             col_stcs = columns[i]
                             print("{stcs} mapped to " + col_stcs)
-                        elif columns[i] == descriptor.getCentralRADegColumnName():
+                        elif columns[i] == descriptor.get_ra_center_col():
                             col_ra = columns[i]
                             print("{centerRaDeg} mapped to " + col_ra)
-                        elif columns[i] == descriptor.getCentralDecDegColumnName():
+                        elif columns[i] == descriptor.get_dec_center_col():
                             col_dec = columns[i]
                             print("{centerDecDeg} mapped to " + col_dec)
                         i += 1
@@ -364,39 +364,39 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
                     c_deg = ""
 
                     while i < len(row):
-                        if columns[i] == descriptor.getIdColumnName():
+                        if columns[i] == descriptor.get_id_col():
                             c_id = row[i]
                             if (
-                                descriptor.getIdColumnName()
-                                == descriptor.getNameColumnName()
+                                descriptor.get_id_col()
+                                == descriptor.get_name_col()
                             ):
                                 c_name = c_id
-                        elif columns[i] == descriptor.getNameColumnName():
+                        elif columns[i] == descriptor.get_name_col():
                             c_name = row[i]
-                        elif columns[i] == descriptor.getStcsColumnName():
+                        elif columns[i] == descriptor.get_stcs_col():
                             c_stcs = row[i]
-                        elif columns[i] == descriptor.getCentralRADegColumnName():
+                        elif columns[i] == descriptor.get_ra_center_col():
                             c_ra = row[i]
-                        elif columns[i] == descriptor.getCentralDecDegColumnName():
+                        elif columns[i] == descriptor.get_dec_center_col():
                             c_deg = row[i]
                         else:
                             c_meta = {}
                             found = False
-                            if len(descriptor.getMetadata()) > 0:
+                            if len(descriptor.get_metadata()) > 0:
                                 j = 0
-                                while j < len(descriptor.getMetadata()):
+                                while j < len(descriptor.get_metadata()):
                                     if (
-                                        descriptor.getMetadata()[j].getLabel()
+                                        descriptor.get_metadata()[j].get_label()
                                         == columns[i]
                                     ):
                                         found = True
-                                        c_meta["name"] = descriptor.getMetadata()[
+                                        c_meta["name"] = descriptor.get_metadata()[
                                             j
-                                        ].getLabel()
+                                        ].get_label()
                                         c_meta["value"] = row[i]
-                                        c_meta["type"] = descriptor.getMetadata()[
+                                        c_meta["type"] = descriptor.get_metadata()[
                                             j
-                                        ].getType()
+                                        ].get_col_type()
 
                                         break
                                     j += 1
@@ -415,36 +415,36 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
 
                     line_count += 1
             print(f"Processed {line_count} lines.")
-            self.overlayFootprintsWithDetails(footprint_set)
+            self.overlay_footprints(footprint_set, show_data=True)
 
     def overlay_footprints_astropy(self, descriptor, table):
         i = 0
 
         footprint_set = FootprintSet(
-            descriptor.getDatasetName(),
+            descriptor.get_dataset_name(),
             "J2000",
-            descriptor.getHistoColor(),
-            descriptor.getLineWidth(),
+            descriptor.get_histo_color(),
+            descriptor.get_line_width(),
         )
 
         while i < len(table.colnames):
 
-            if table.colnames[i] == descriptor.getIdColumnName():
+            if table.colnames[i] == descriptor.get_id_col():
                 col_id = table.colnames[i]
                 print("{id} mapped to " + col_id)
-                if descriptor.getIdColumnName() == descriptor.getNameColumnName():
+                if descriptor.get_id_col() == descriptor.get_name_col():
                     col_name = col_id
                     print("{name} mapped to " + col_name)
-            elif table.colnames[i] == descriptor.getNameColumnName():
+            elif table.colnames[i] == descriptor.get_name_col():
                 col_name = table.colnames[i]
                 print("{name} mapped to " + col_name)
-            elif table.colnames[i] == descriptor.getStcsColumnName():
+            elif table.colnames[i] == descriptor.get_stcs_col():
                 col_stcs = table.colnames[i]
                 print("{stcs} mapped to " + col_stcs)
-            elif table.colnames[i] == descriptor.getCentralRADegColumnName():
+            elif table.colnames[i] == descriptor.get_ra_center_col():
                 col_ra = table.colnames[i]
                 print("{centerRaDeg} mapped to " + col_ra)
-            elif table.colnames[i] == descriptor.getCentralDecDegColumnName():
+            elif table.colnames[i] == descriptor.get_dec_center_col():
                 col_dec = table.colnames[i]
                 print("{centerDecDeg} mapped to " + col_dec)
             i += 1
@@ -456,52 +456,54 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
             c_details = []
             k = 0
             while k < len(table.colnames):
-                c_meta = {}
-                c_name = table.colnames[k]
-                if type(table[j][k]) is bytes:
-                    c_val = str(table[j][k].decode("utf-8"))
+                col_meta = {}
+                col_name = table.colnames[k]
+                if isinstance(table[j][k], bytes):
+                    col_val = str(table[j][k].decode("utf-8"))
                 else:
-                    c_val = str(table[j][k])
+                    col_val = str(table[j][k])
                 c_ra = []
                 c_dec = []
 
-                if c_name == descriptor.getNameColumnName():
-                    currName = c_val
-                elif c_name == descriptor.getStcsColumnName():
-                    currStcs = c_val
-                elif c_name == descriptor.getCentralRADegColumnName():
-                    c_ra = c_val
-                elif c_name == descriptor.getCentralDecDegColumnName():
-                    c_dec = c_val
+                if col_name == descriptor.get_name_col():
+                    c_name = col_val
+                elif col_name == descriptor.get_stcs_col():
+                    c_stcs = col_val
+                elif col_name == descriptor.get_ra_center_col():
+                    c_ra = col_val
+                elif col_name == descriptor.get_dec_center_col():
+                    c_dec = col_val
                 else:
-                    c_meta = {}
+                    col_meta = {}
                     found = False
-                    if len(descriptor.getMetadata()) > 0:
+                    if len(descriptor.get_metadata()) > 0:
                         index = 0
-                        while index < len(descriptor.getMetadata()):
-                            if descriptor.getMetadata()[j].getLabel() == c_name:
+                        while index < len(descriptor.get_metadata()):
+                            if descriptor.get_metadata()[j].get_label() == col_name:
                                 found = True
-                                c_meta["name"] = descriptor.getMetadata()[j].getLabel()
-                                c_meta["value"] = c_val
-                                c_meta["type"] = descriptor.getMetadata()[j].getType()
+                                col_meta["name"] = descriptor.get_metadata()[
+                                    j
+                                ].get_label()
+                                col_meta["value"] = col_val
+                                col_meta["type"] = descriptor.get_metadata()[
+                                    j
+                                ].get_col_type()
 
                                 break
                             index += 1
                     elif not found:
-                        c_meta["name"] = c_name
-                        c_meta["value"] = c_val
-                        c_meta["type"] = MetadataType.STRING
+                        col_meta["name"] = col_name
+                        col_meta["value"] = col_val
+                        col_meta["type"] = MetadataType.STRING
 
-                    c_details.append(c_meta)
+                    c_details.append(col_meta)
                 k += 1
 
             j += 1
-            footprint_set.add_footprint(
-                currName, currStcs, c_id, c_ra, c_dec, c_details
-            )
+            footprint_set.add_footprint(c_name, c_stcs, c_id, c_ra, c_dec, c_details)
 
         print(f"Processed {j} lines.")
-        self.overlayFootprintsWithDetails(footprint_set)
+        self.overlay_footprints(footprint_set, show_data=True)
 
     def overlay_cat_astropy(
         self,
@@ -605,10 +607,10 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         """Overlays catalogue read from a csv file"""
 
         catalogue = Catalogue(
-            descriptor.getDatasetName(),
+            descriptor.get_dataset_name(),
             cooframe,
-            descriptor.getHistoColor(),
-            descriptor.getLineWidth(),
+            descriptor.get_histo_color(),
+            descriptor.get_line_width(),
         )
 
         # read colums
@@ -622,22 +624,19 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
                     line_count += 1
                     i = 0
                     while i < len(columns):
-                        if columns[i] == descriptor.getIdColumnName():
+                        if columns[i] == descriptor.get_id_col():
                             col_id = columns[i]
                             print("{id} column identified: " + col_id)
-                            if (
-                                descriptor.getIdColumnName()
-                                == descriptor.getNameColumnName()
-                            ):
+                            if descriptor.get_id_col() == descriptor.get_name_col():
                                 col_name = col_id
                                 print("{name} column identified: " + col_name)
-                        elif columns[i] == descriptor.getNameColumnName():
+                        elif columns[i] == descriptor.get_name_col():
                             col_name = columns[i]
                             print("{name} column identified: " + col_name)
-                        elif columns[i] == descriptor.getRADegColumnName():
+                        elif columns[i] == descriptor.get_ra_col():
                             col_ra = columns[i]
                             print("{centerRaDeg} column identified: " + col_ra)
-                        elif columns[i] == descriptor.getDecDegColumnName():
+                        elif columns[i] == descriptor.get_dec_col():
                             col_dec = columns[i]
                             print("{currDecDeg} column identified: " + col_dec)
                         i += 1
@@ -650,37 +649,34 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
                     dec = ""
 
                     while i < len(row):
-                        if columns[i] == descriptor.getIdColumnName():
+                        if columns[i] == descriptor.get_id_col():
                             col_id = row[i]
-                            if (
-                                descriptor.getIdColumnName()
-                                == descriptor.getNameColumnName()
-                            ):
+                            if descriptor.get_id_col() == descriptor.get_name_col():
                                 name = col_id
-                        elif columns[i] == descriptor.getNameColumnName():
+                        elif columns[i] == descriptor.get_name_col():
                             name = row[i]
-                        elif columns[i] == descriptor.getRADegColumnName():
+                        elif columns[i] == descriptor.get_ra_col():
                             ra = row[i]
-                        elif columns[i] == descriptor.getDecDegColumnName():
+                        elif columns[i] == descriptor.get_dec_col():
                             dec = row[i]
                         else:
                             meta = {}
                             found = False
-                            if len(descriptor.getMetadata()) > 0:
+                            if len(descriptor.get_metadata()) > 0:
                                 j = 0
-                                while j < len(descriptor.getMetadata()):
+                                while j < len(descriptor.get_metadata()):
                                     if (
-                                        descriptor.getMetadata()[j].getLabel()
+                                        descriptor.get_metadata()[j].get_label()
                                         == columns[i]
                                     ):
                                         found = True
-                                        meta["name"] = descriptor.getMetadata()[
+                                        meta["name"] = descriptor.get_metadata()[
                                             j
-                                        ].getLabel()
+                                        ].get_label()
                                         meta["value"] = row[i]
-                                        meta["type"] = descriptor.getMetadata()[
+                                        meta["type"] = descriptor.get_metadata()[
                                             j
-                                        ].getType()
+                                        ].get_col_type()
                                         break
                                     j += 1
                             elif not found:
@@ -889,13 +885,13 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
             ]
         )
         server = tornado.httpserver.HTTPServer(app)
-        portStart = 8900
-        portEnd = 8910
-        for port in range(portStart, portEnd + 1):
+        port_start = 8900
+        port_end = 8910
+        for port in range(port_start, port_end + 1):
             try:
                 server.listen(port)
             except OSError as os_error:
-                if port is portEnd:
+                if port is port_end:
                     raise (os_error)
             else:
                 break
@@ -961,7 +957,7 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         self,
         name,
         tap_url,
-        ADQL,
+        adql,
         data_in_view=True,
         color="",
         limit=-1,
@@ -985,7 +981,7 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
                 name=name,
                 tapUrl=tap_url,
                 dataOnlyInView=data_in_view,
-                adql=ADQL,
+                adql=adql,
                 color=color,
                 limit=limit,
             ),
