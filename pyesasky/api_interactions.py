@@ -1,6 +1,7 @@
 from abc import abstractmethod
 import json
 import configparser
+from io import StringIO
 import csv
 import os.path
 import time
@@ -828,7 +829,8 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
             "hips_service_url",
         ]
         with requests.get(url, stream=True, timeout=self.message_timeout) as response:
-            df = pd.io.json.read_json(response.content)
+            response_content = StringIO(response.content.decode("utf-8"))
+            df = pd.io.json.read_json(response_content)
             return df[columns]
 
     def _read_properties(self, url):
