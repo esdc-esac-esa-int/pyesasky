@@ -1,73 +1,77 @@
-class CatalogueDescriptor:
+from pyesasky.legacy.legacy_descriptors import (
+    LCatalogueDescriptor,
+    LFootprintSetDescriptor,
+    LMetadataDescriptor,
+)
 
-    _idColumnName = ""
-    _nameColumnName = ""
-    # _stcsColumnName  = ''
-    _centralRADegColumnName = ""
-    _centralDecDegColumnName = ""
-    _datasetName = ""
-    _lineWidth = 5
-    _histoColor = "green"
+
+class CatalogueDescriptor(LCatalogueDescriptor):
+
+    _id_col = ""
+    _name_col = ""
+    _dataset_name = ""
+    _line_width = 5
+    _histo_color = "green"
     _metadata = []
 
     def __init__(
         self,
-        datasetName,
+        dataset_name,
         color,
-        lineWidth,
-        idColumnName,
-        nameColumnName,
-        RADegColumnName,
-        decDegColumnName,
+        line_width,
+        id_col,
+        name_col,
+        ra_col,
+        dec_col,
         metadata,
     ):
-        self._datasetName = datasetName
-        self._histoColor = color
-        self._lineWidth = lineWidth
+        self._dataset_name = dataset_name
+        self._histo_color = color
+        self._line_width = line_width
 
-        self._idColumnName = idColumnName
-        self._nameColumnName = nameColumnName
-        self._RADegColumnName = RADegColumnName
-        self._decDegColumnName = decDegColumnName
+        self._id_col = id_col
+        self._name_col = name_col
+        self._ra_col = ra_col
+        self._dec_col = dec_col
 
         self._metadata = metadata
 
-    def getDatasetName(self):
-        return self._datasetName
+    def get_dataset_name(self):
+        return self._dataset_name
 
-    def getHistoColor(self):
-        return self._histoColor
+    def get_histo_color(self):
+        return self._histo_color
 
-    def getLineWidth(self):
-        return self._lineWidth
+    def get_line_width(self):
+        return self._line_width
 
-    def getIdColumnName(self):
-        return self._idColumnName
+    def get_id_col(self):
+        return self._id_col
 
-    def getNameColumnName(self):
-        return self._nameColumnName
+    def get_name_col(self):
+        return self._name_col
 
-    def getRADegColumnName(self):
-        return self._RADegColumnName
+    def get_ra_col(self):
+        return self._ra_col
 
-    def getDecDegColumnName(self):
-        return self._decDegColumnName
+    def get_dec_col(self):
+        return self._dec_col
 
-    def getMetadata(self):
+    def get_metadata(self):
         return self._metadata
 
-    def addMetadataDefinition(self, metadataDescriptor):
+    def add_metadata(self, metadataDescriptor):
         self._metadata.append(metadataDescriptor)
 
-    def toDict(self):
+    def to_dict(self):
 
         content = dict(
-            mission=self._datasetName,
+            mission=self._dataset_name,
             tapTable="",
             countColumn="",
-            guiShortName=self._guiShortName,
-            guiLongName=self._guiLongName,
-            histoColor=self._histoColor,
+            guiShortName=self._dataset_name,
+            guiLongName=self._dataset_name,
+            histoColor=self._histo_color,
             countFovLimit=360,
             fovLimit=90.0,
             archiveURL="",
@@ -77,100 +81,100 @@ class CatalogueDescriptor:
             sourceLimit=100000,
             sourceLimitDescription="",
             posTapColumn="pos",
-            polygonRaTapColumn=self._polygonRaTapColumn,
-            polygonDecTapColumn=self._polygonDecTapColumn,
-            polygonNameTapColumn=self._polygonNameTapColumn,
+            polygonRaTapColumn=self._ra_col,
+            polygonDecTapColumn=self._dec_col,
+            polygonNameTapColumn=self._name_col,
             orderBy="",
             metadata=self._metadata,
         )
         return content
 
 
-class FootprintSetDescriptor:
+class FootprintSetDescriptor(LFootprintSetDescriptor):
 
-    _idColumnName = ""
-    _nameColumnName = ""
-    _stcsColumnName = ""
-    _centralRADegColumnName = ""
-    _centralDecDegColumnName = ""
-    _datasetName = ""
-    _lineWidth = 5
-    _histoColor = "green"
+    _id_col = ""
+    _name_col = ""
+    _stcs_col = ""
+    _ra_center_col = ""
+    _dec_center_col = ""
+    _dataset_name = ""
+    _line_width = 5
+    _histo_color = "green"
     _metadata = []
 
     def __init__(
         self,
-        datasetName,
+        dataset_name,
         color,
-        lineWidth,
-        idColumnName,
-        nameColumnName,
-        stcsColumnName,
-        centralRADegColumnName,
-        centralDecDegColumnName,
+        line_width,
+        id_col,
+        name_col,
+        stcs_col,
+        ra_center_col,
+        dec_center_col,
         metadata,
     ):
-        self._datasetName = datasetName
-        self._histoColor = color
-        self._lineWidth = lineWidth
+        self._dataset_name = dataset_name
+        self._histo_color = color
+        self._line_width = line_width
 
-        self._idColumnName = idColumnName
-        self._nameColumnName = nameColumnName
-        self._stcsColumnName = stcsColumnName
-        self._centralRADegColumnName = centralRADegColumnName
-        self._centralDecDegColumnName = centralDecDegColumnName
+        self._id_col = id_col
+        self._name_col = name_col
+        self._stcs_col = stcs_col
+        self._ra_center_col = ra_center_col
+        self._dec_center_col = dec_center_col
 
         self._metadata = metadata
 
-    def getDatasetName(self):
-        return self._datasetName
+    def get_dataset_name(self):
+        return self._dataset_name
 
-    def getHistoColor(self):
-        return self._histoColor
+    def get_histo_color(self):
+        return self._histo_color
 
-    def getLineWidth(self):
-        return self._lineWidth
+    def get_line_width(self):
+        return self._line_width
 
-    def getIdColumnName(self):
-        return self._idColumnName
+    def get_id_col(self):
+        return self._id_col
 
-    def getNameColumnName(self):
-        return self._nameColumnName
+    def get_name_col(self):
+        return self._name_col
 
-    def getStcsColumnName(self):
-        return self._stcsColumnName
+    def get_stcs_col(self):
+        return self._stcs_col
 
-    def getCentralRADegColumnName(self):
-        return self._centralRADegColumnName
+    def get_ra_center_col(self):
+        return self._ra_center_col
 
-    def getCentralDecDegColumnName(self):
-        return self._centralDecDegColumnName
+    def get_dec_center_col(self):
+        return self._dec_center_col
 
-    def getMetadata(self):
+    def get_metadata(self):
         return self._metadata
 
-    def addMetadataDefinition(self, metadataDescriptor):
+    def add_metadata(self, metadataDescriptor):
         self._metadata.append(metadataDescriptor)
 
 
-class MetadataDescriptor:
+class MetadataDescriptor(LMetadataDescriptor):
 
-    _tapName = ""
+    _tap_name = ""
     _label = ""
     _visible = True
     _type = ""
     _index = 0
-    _maxDecimalDigits = 4
+    _max_decimals = 4
 
-    def __init__(self, label, columnType, maxDecimalDigits):
-        self._tapName = label
+    def __init__(self, label, col_type, max_decimals):
+        self._tap_name = label
         self._label = label
-        self._type = columnType
-        if maxDecimalDigits:
-            self._maxDecimalDigits = maxDecimalDigits
+        self._type = col_type
+        if max_decimals:
+            self._max_decimals = max_decimals
 
-    def getLabel(self):
-        return self._tapName
+    def get_label(self):
+        return self._tap_name
 
-    def getColumnType(self):
+    def get_col_type(self):
         return self._type

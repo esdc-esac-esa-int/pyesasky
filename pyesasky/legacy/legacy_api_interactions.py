@@ -1,41 +1,7 @@
-from pyesasky.api_interactions import ApiInteractionsMixin
-from IPython.display import display, HTML
+from pyesasky.legacy.legacy_utils import deprecated
 
 
-def deprecated(new_method_name):
-    def decorator(func):
-        def wrapper(self, *args, **kwargs):
-            # Get the deprecated method name
-            method_name = func.__name__
-
-            # Display a custom HTML warning
-            warning_html = f"""
-            <div style="background-color: #fff3cd;
-                        color: #856404;
-                        border: 1px solid #ffeeba;
-                        border-radius: 5px;
-                        padding: 12px;
-                        margin: 10px 0;
-                        font-size: 10px;
-                        font-family: Arial, sans-serif;">
-                <strong>Warning:</strong> '{method_name}' is deprecated. 
-                Please use '{new_method_name}' instead.
-            </div>
-            """
-            display(HTML(warning_html))
-
-            # Get the corresponding method in the superclass
-            super_method = getattr(super(self.__class__, self), new_method_name)
-
-            # Call the corresponding method in the superclass
-            return super_method(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
-
-
-class LegacyApiInteractionsMixin(ApiInteractionsMixin):
+class LApiInteractionsMixin:
 
     @deprecated("show_coo_grid")
     def showCoordinateGrid(self, show=True):

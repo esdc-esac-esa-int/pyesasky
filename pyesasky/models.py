@@ -1,15 +1,25 @@
+from pyesasky.legacy.legacy_models import LCatalogue, LFootprintSet, LHiPS
+
+
 class CooFrame:
 
     FRAME_J2000 = "J2000"
 
     FRAME_GALACTIC = "Galactic"
 
+    @classmethod
+    def all(cls):
+        return {cls.FRAME_J2000, cls.FRAME_GALACTIC}
+
 
 class ImgFormat:
 
     JPEG = "jpeg"
-
     PNG = "png"
+
+    @classmethod
+    def all(cls):
+        return {cls.JPEG, cls.PNG}
 
 
 class MetadataType:
@@ -19,54 +29,52 @@ class MetadataType:
     RA_DEG = "RA"
     DEC_DEG = "DEC"
 
+    @classmethod
+    def all(cls):
+        return {cls.STRING, cls.DOUBLE, cls.RA_DEG, cls.DEC_DEG}
 
-class Catalogue:
+
+class Catalogue(LCatalogue):
 
     def __init__(self, catalogue_name, cooframe, color, line_width):
 
         self._catalogue_name = ""
         self._cooframe = CooFrame.FRAME_J2000
-        self._color = "#aa2345"
-        self._line_width = 10
+        self._color = color if color else "#aa2345"
+        self._line_width = line_width if line_width else 10
         self._sources = []
 
         self._catalogue_name = catalogue_name
 
-        if cooframe == CooFrame.FRAME_J2000 or cooframe == CooFrame.FRAME_GALACTIC:
+        if cooframe in CooFrame.all():
             self._cooframe = cooframe
         else:
             print(
-                "coordinates frame "
-                + cooframe
-                + " not recognized. Possible options are J2000 and Galactic. Applied J2000 by default."
+                f"""coordinates frame {cooframe} not recognized.
+                Possible options are J2000 and Galactic.Applied J2000 by default"""
             )
 
-        if color:
-            self._color = color
-
-        self._line_width = line_width
-
-    def addSource(self, name, ra, dec, id=None, *details):
-        currSource = {}
-        currSource["name"] = name
+    def add_source(self, name, ra, dec, id=None, *details):
+        source = {}
+        source["name"] = name
         if not id:
-            currSource["id"] = len(self._sources)
+            source["id"] = len(self._sources)
         else:
-            currSource["id"] = int(id)
+            source["id"] = int(id)
 
-        currSource["ra"] = ra
-        currSource["dec"] = dec
+        source["ra"] = ra
+        source["dec"] = dec
 
-        currSource["data"] = []
+        source["data"] = []
 
-        if len(details[0]) > 0:
+        if details and len(details[0]) > 0:
             i = 0
             while i < len(details[0]):
-                currSource["data"].append(details[0][i])
+                source["data"].append(details[0][i])
                 i += 1
-        self._sources.append(currSource)
+        self._sources.append(source)
 
-    def toDict(self):
+    def to_dict(self):
 
         content = dict(
             overlaySet=dict(
@@ -81,40 +89,34 @@ class Catalogue:
         return content
 
 
-class FootprintSet:
+class FootprintSet(LFootprintSet):
 
-    def __init__(self, footprintSetName, cooframe, color, lineWidth):
-        self._footprintSetName = ""
+    def __init__(self, name, cooframe, color, line_width):
+        self._name = ""
         self._cooframe = "J2000"
-        self._color = "#aa2345"
-        self._lineWidth = 10
+        self._color = color if color else "#aa2345"
+        self._line_width = line_width if line_width else 10
         self._footprints = []
 
-        self._footprintSetName = footprintSetName
+        self._name = name
 
-        if cooframe == "J2000" or cooframe == "Galactic":
+        if cooframe in CooFrame.all():
             self._cooframe = cooframe
         else:
             print(
-                "coordinates frame "
-                + cooframe
-                + " not recognized. Possible options are J2000 and Galactic. Applied J2000 by default."
+                f"""Coordinates frame {cooframe} is not recognized.
+                Possible options are J2000 and Galactic. Applied J2000 by default"""
             )
 
-        if color:
-            self._color = color
-
-        self._lineWidth = lineWidth
-
     # details is a dictionary d = {'banana': 3, 'apple': 4, 'pear': 1, 'orange': 2}
-    def addFootprint(self, name, stcs, id, centralRADeg=[], centralDecDeg=[], *details):
-        currFootprint = {}
+    def add_footprint(self, name, stcs, id, ra_col, dec_col, *details):
+        footprint = {}
 
-        currFootprint["name"] = name
+        footprint["name"] = name
         if not id:
-            currFootprint["id"] = len(self._footprints)
+            footprint["id"] = len(self._footprints)
         else:
-            currFootprint["id"] = int(id)
+            footprint["id"] = int(id)
 
         stcs = stcs.upper()
         stcs = stcs.replace("ICRS", "")
@@ -122,96 +124,80 @@ class FootprintSet:
         stcs = stcs.replace("FK5", "")
         stcs = stcs.replace("POLYGON", "POLYGON J2000")
         stcs = stcs.replace("CIRCLE", "CIRCLE J2000")
-        currFootprint["stcs"] = stcs
+        footprint["stcs"] = stcs
 
-        if not centralRADeg:
+        if not ra_col:
             # we take the first ra coord in the stcs, just after POLYGON J2000
-            currFootprint["ra_deg"] = stcs.split()[2]
+            footprint["ra_deg"] = stcs.split()[2]
         else:
-            currFootprint["ra_deg"] = centralRADeg
+            footprint["ra_deg"] = ra_col
 
-        if not centralDecDeg:
+        if not dec_col:
             # we take the first dec coord in the stcs, just after POLYGON J2000
-            currFootprint["dec_deg"] = stcs.split()[3]
+            footprint["dec_deg"] = stcs.split()[3]
         else:
-            currFootprint["dec_deg"] = centralDecDeg
+            footprint["dec_deg"] = dec_col
 
-        currFootprint["data"] = []
+        footprint["data"] = []
         if len(details[0]) > 0:
             i = 0
             while i < len(details[0]):
-                currFootprint["data"].append(details[0][i])
+                footprint["data"].append(details[0][i])
                 i += 1
 
-        self._footprints.append(currFootprint)
+        self._footprints.append(footprint)
 
-    def toDict(self):
+    def to_dict(self):
 
         content = dict(
             overlaySet=dict(
                 type="FootprintListOverlay",
-                overlayName=self._footprintSetName,
+                overlayName=self._name,
                 cooframe=self._cooframe,
                 color=self._color,
-                lineWidth=self._lineWidth,
+                lineWidth=self._line_width,
                 skyObjectList=self._footprints,
             )
         )
         return content
 
 
-class HiPS:
+class HiPS(LHiPS):
 
-    def __init__(self, name, url, cooframe, maxNorder, imgFormat):
+    def __init__(self, name, url, cooframe, max_order, img_format):
         self._name = name
         self._url = url
         self._cooframe = cooframe
-        self._maxNorder = maxNorder
-        self._imgFormat = imgFormat
+        self._max_order = max_order
+        self._img_format = img_format
 
-        if (
-            cooframe.lower() == CooFrame.FRAME_J2000.lower()
-            or cooframe.lower() == CooFrame.FRAME_GALACTIC.lower()
-        ):
+        if cooframe in CooFrame.all():
             self._cooframe = cooframe
         else:
             print(
-                "coordinates frame "
-                + cooframe
-                + " not recognized. Possible options are "
-                + CooFrame.FRAME_J2000
-                + " and "
-                + CooFrame.FRAME_GALACTIC
-                + ". Applied "
-                + CooFrame.FRAME_J2000
-                + " by default."
+                f"""Coordinates frame {cooframe} is not recognized.
+                Possible options are J2000 and Galactic. Applied J2000 by default"""
             )
             self._cooframe = CooFrame.FRAME_J2000
 
-        if imgFormat == ImgFormat.PNG or imgFormat == ImgFormat.JPEG:
-            self._imgFormat = imgFormat
+        if img_format in ImgFormat.all():
+            self._img_format = img_format
         else:
             print(
-                "image format "
-                + imgFormat
-                + " not recognized. Possible options are "
-                + ImgFormat.PNG
-                + " and "
-                + ImgFormat.JPEG
-                + ". Applied "
-                + ImgFormat.PNG
-                + " by default."
+                f"""Image format {img_format} is not recognized.
+                Possible options are {', '.join(ImgFormat.all())}"""
             )
-            self._imgFormat = ImgFormat.PNG
 
-    def toDict(self):
+            self._img_format = ImgFormat.PNG
+
+    def to_dict(self):
         content = dict(
             hips=dict(
                 name=self._name,
                 url=self._url,
                 cooframe=self._cooframe,
-                maxnorder=self._maxNorder,
-                imgformat=self._imgFormat,
+                maxnorder=self._max_order,
+                imgformat=self._img_format,
             )
         )
         return content

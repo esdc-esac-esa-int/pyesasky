@@ -9,9 +9,13 @@ import tornado.web
 import pandas as pd
 import requests
 from pyesasky.models import Catalogue, FootprintSet, MetadataType, HiPS
+from pyesasky.legacy.legacy_api_interactions import LApiInteractionsMixin
 
 
-class ApiInteractionsMixin:
+class ApiInteractionsMixin(LApiInteractionsMixin):
+    def __init__(self):
+        super().__init__()
+        self.message_timeout = 10
 
     @abstractmethod
     def _send_ignore(self, content):
@@ -27,35 +31,35 @@ class ApiInteractionsMixin:
         content = dict(event="showCoordinateGrid", content=dict(show=show))
         self._send_ignore(content)
 
-    def get_center(self, cooFrame="J2000"):
+    def get_center(self, cooframe="J2000"):
         """Returns the coordinate of the center of the screen
         in specified coordinate Frame."""
 
-        if cooFrame not in ["J2000", "GALACTIC"]:
+        if cooframe not in ["J2000", "GALACTIC"]:
             print("Coordinate frame must be J2000 or GALACTIC")
             return
-        content = dict(event="getCenter", content=dict(cooFrame=cooFrame))
+        content = dict(event="getCenter", content=dict(cooFrame=cooframe))
         return self._send_receive(content)
 
-    def plot_obs(self, missionId):
+    def plot_obs(self, mission_id):
         """Overlays availabe observations for the specified mission on the sky"""
 
-        content = dict(event="plotObservations", content=dict(missionId=missionId))
+        content = dict(event="plotObservations", content=dict(missionId=mission_id))
         return self._send_receive(content)
 
-    def plot_cat(self, missionId):
+    def plot_cat(self, mission_id):
         """Overlays availabe catalogues for the specified mission on the sky"""
 
-        content = dict(event="plotCatalogues", content=dict(missionId=missionId))
+        content = dict(event="plotCatalogues", content=dict(missionId=mission_id))
         return self._send_receive(content)
 
-    def plot_spec(self, missionId):
+    def plot_spec(self, mission_id):
         """Overlays availabe spectra for the specified mission on the sky"""
 
-        content = dict(event="plotSpectra", content=dict(missionId=missionId))
+        content = dict(event="plotSpectra", content=dict(missionId=mission_id))
         return self._send_receive(content)
 
-    def cs_obs(self, missionId, ra, dec, radius):
+    def cs_obs(self, mission_id, ra, dec, radius):
         """Overlays availabe observations within the specified cone for
         the specified mission on the sky
 
@@ -67,11 +71,11 @@ class ApiInteractionsMixin:
 
         content = dict(
             event="plotObservations",
-            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+            content=dict(missionId=mission_id, ra=ra, dec=dec, radius=radius),
         )
         return self._send_receive(content)
 
-    def cs_cat(self, missionId, ra, dec, radius):
+    def cs_cat(self, mission_id, ra, dec, radius):
         """Overlays availabe catalogues within the specified cone for the
         specified mission on the sky
 
@@ -82,11 +86,11 @@ class ApiInteractionsMixin:
         """
         content = dict(
             event="plotCatalogues",
-            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+            content=dict(missionId=mission_id, ra=ra, dec=dec, radius=radius),
         )
         return self._send_receive(content)
 
-    def cs_spec(self, missionId, ra, dec, radius):
+    def cs_spec(self, mission_id, ra, dec, radius):
         """Overlays availabe spectra within the specified cone for the
         specified mission on the sky
 
@@ -98,12 +102,12 @@ class ApiInteractionsMixin:
 
         content = dict(
             event="plotSpectra",
-            content=dict(missionId=missionId, ra=ra, dec=dec, radius=radius),
+            content=dict(missionId=mission_id, ra=ra, dec=dec, radius=radius),
         )
         return self._send_receive(content)
 
     def get_obs_count(self):
-        """Returns the number of observations per mission in the current 
+        """Returns the number of observations per mission in the current
         view of the sky"""
 
         content = dict(event="getObservationsCount")
@@ -147,7 +151,9 @@ class ApiInteractionsMixin:
         No argument for all available HiPS.
         Specify wavelength for those available in that specific wavelength"""
 
-        response = requests.get("http://sky.esa.int/esasky-tap/hips-sources", timeout=10)
+        response = requests.get(
+            "http://sky.esa.int/esasky-tap/hips-sources", timeout=self.message_timeout
+        )
         response.raise_for_status()
         HiPSMap = self._parse_hips_json(response.text)
         if len(wavelength) > 0:
@@ -193,18 +199,18 @@ class ApiInteractionsMixin:
         content = dict(event="goToRaDec", content=dict(ra=ra, dec=dec))
         self._send_ignore(content)
 
-    def go_to_target(self, targetName):
+    def go_to_target(self, target_name):
         """Moves to targetName resolved by SIMBAD"""
 
-        content = dict(event="goToTargetName", content=dict(targetName=targetName))
+        content = dict(event="goToTargetName", content=dict(targetName=target_name))
         self._send_ignore(content)
         # Add small sleeper to wait for simbad to react
         time.sleep(1)
 
-    def set_fov(self, fovDeg):
+    def set_fov(self, fov_deg):
         """Sets the views Field of View in degrees"""
 
-        content = dict(event="setFov", content=dict(fov=fovDeg))
+        content = dict(event="setFov", content=dict(fov=fov_deg))
         self._send_ignore(content)
 
     def set_hips_color(self, color_palette):
@@ -307,7 +313,7 @@ class ApiInteractionsMixin:
     def overlay_footprints_csv(self, path, delimiter, descriptor):
         """Overlays footprints read from a csv file"""
 
-        footprintSet = FootprintSet(
+        footprint_set = FootprintSet(
             descriptor.getDatasetName(),
             "J2000",
             descriptor.getHistoColor(),
@@ -340,16 +346,10 @@ class ApiInteractionsMixin:
                         elif columns[i] == descriptor.getStcsColumnName():
                             col_stcs = columns[i]
                             print("{stcs} mapped to " + col_stcs)
-                        elif (
-                            columns[i]
-                            == descriptor.getCentralRADegColumnName()
-                        ):
+                        elif columns[i] == descriptor.getCentralRADegColumnName():
                             col_ra = columns[i]
                             print("{centerRaDeg} mapped to " + col_ra)
-                        elif (
-                            columns[i]
-                            == descriptor.getCentralDecDegColumnName()
-                        ):
+                        elif columns[i] == descriptor.getCentralDecDegColumnName():
                             col_dec = columns[i]
                             print("{centerDecDeg} mapped to " + col_dec)
                         i += 1
@@ -374,15 +374,9 @@ class ApiInteractionsMixin:
                             c_name = row[i]
                         elif columns[i] == descriptor.getStcsColumnName():
                             c_stcs = row[i]
-                        elif (
-                            columns[i]
-                            == descriptor.getCentralRADegColumnName()
-                        ):
+                        elif columns[i] == descriptor.getCentralRADegColumnName():
                             c_ra = row[i]
-                        elif (
-                            columns[i]
-                            == descriptor.getCentralDecDegColumnName()
-                        ):
+                        elif columns[i] == descriptor.getCentralDecDegColumnName():
                             c_deg = row[i]
                         else:
                             c_meta = {}
@@ -391,21 +385,15 @@ class ApiInteractionsMixin:
                                 j = 0
                                 while j < len(descriptor.getMetadata()):
                                     if (
-                                        descriptor.getMetadata()[
-                                            j
-                                        ].getLabel()
+                                        descriptor.getMetadata()[j].getLabel()
                                         == columns[i]
                                     ):
                                         found = True
-                                        c_meta[
-                                            "name"
-                                        ] = descriptor.getMetadata()[
+                                        c_meta["name"] = descriptor.getMetadata()[
                                             j
                                         ].getLabel()
                                         c_meta["value"] = row[i]
-                                        c_meta[
-                                            "type"
-                                        ] = descriptor.getMetadata()[
+                                        c_meta["type"] = descriptor.getMetadata()[
                                             j
                                         ].getType()
 
@@ -420,18 +408,18 @@ class ApiInteractionsMixin:
 
                         i += 1
 
-                    footprintSet.addFootprint(
+                    footprint_set.add_footprint(
                         c_name, c_stcs, c_id, c_ra, c_deg, c_details
                     )
 
                     line_count += 1
             print(f"Processed {line_count} lines.")
-            self.overlayFootprintsWithDetails(footprintSet)
+            self.overlayFootprintsWithDetails(footprint_set)
 
     def overlay_footprints_astropy(self, descriptor, table):
         i = 0
 
-        astropyFootprintSet = FootprintSet(
+        footprint_set = FootprintSet(
             descriptor.getDatasetName(),
             "J2000",
             descriptor.getHistoColor(),
@@ -443,10 +431,7 @@ class ApiInteractionsMixin:
             if table.colnames[i] == descriptor.getIdColumnName():
                 col_id = table.colnames[i]
                 print("{id} mapped to " + col_id)
-                if (
-                    descriptor.getIdColumnName()
-                    == descriptor.getNameColumnName()
-                ):
+                if descriptor.getIdColumnName() == descriptor.getNameColumnName():
                     col_name = col_id
                     print("{name} mapped to " + col_name)
             elif table.colnames[i] == descriptor.getNameColumnName():
@@ -455,14 +440,10 @@ class ApiInteractionsMixin:
             elif table.colnames[i] == descriptor.getStcsColumnName():
                 col_stcs = table.colnames[i]
                 print("{stcs} mapped to " + col_stcs)
-            elif (
-                table.colnames[i] == descriptor.getCentralRADegColumnName()
-            ):
+            elif table.colnames[i] == descriptor.getCentralRADegColumnName():
                 col_ra = table.colnames[i]
                 print("{centerRaDeg} mapped to " + col_ra)
-            elif (
-                table.colnames[i] == descriptor.getCentralDecDegColumnName()
-            ):
+            elif table.colnames[i] == descriptor.getCentralDecDegColumnName():
                 col_dec = table.colnames[i]
                 print("{centerDecDeg} mapped to " + col_dec)
             i += 1
@@ -497,18 +478,11 @@ class ApiInteractionsMixin:
                     if len(descriptor.getMetadata()) > 0:
                         index = 0
                         while index < len(descriptor.getMetadata()):
-                            if (
-                                descriptor.getMetadata()[j].getLabel()
-                                == c_name
-                            ):
+                            if descriptor.getMetadata()[j].getLabel() == c_name:
                                 found = True
-                                c_meta["name"] = (
-                                    descriptor.getMetadata()[j].getLabel()
-                                )
+                                c_meta["name"] = descriptor.getMetadata()[j].getLabel()
                                 c_meta["value"] = c_val
-                                c_meta["type"] = (
-                                    descriptor.getMetadata()[j].getType()
-                                )
+                                c_meta["type"] = descriptor.getMetadata()[j].getType()
 
                                 break
                             index += 1
@@ -521,12 +495,12 @@ class ApiInteractionsMixin:
                 k += 1
 
             j += 1
-            astropyFootprintSet.addFootprint(
+            footprint_set.add_footprint(
                 currName, currStcs, c_id, c_ra, c_dec, c_details
             )
 
         print(f"Processed {j} lines.")
-        self.overlayFootprintsWithDetails(astropyFootprintSet)
+        self.overlayFootprintsWithDetails(footprint_set)
 
     def overlay_cat_astropy(
         self,
@@ -540,112 +514,105 @@ class ApiInteractionsMixin:
         id_col,
     ):
 
-        raColNameUserInput = True
-        decColNameUserInput = True
-        mainIdColNameUserInput = True
+        is_user_ra_col = True
+        is_user_dec_col = True
+        is_user_id_col = True
 
         if not ra_col:
             ra_col = ""
-            raColNameUserInput = False
+            is_user_ra_col = False
 
         if not dec_col:
             dec_col = ""
-            decColNameUserInput = False
+            is_user_dec_col = False
 
         if not id_col:
             id_col = ""
-            mainIdColNameUserInput = False
+            is_user_id_col = False
 
         i = 0
 
-        if (
-            not raColNameUserInput
-            and not decColNameUserInput
-            and not mainIdColNameUserInput
-        ):
+        if not is_user_ra_col and not is_user_dec_col and not is_user_id_col:
 
             while i < len(table.colnames):
 
-                colName = table.colnames[i]
+                col_name = table.colnames[i]
 
-                if len(table[colName].meta) > 0:
-                    metaType = table[colName].meta["ucd"]
-                    if "pos.eq.ra;meta.main" in metaType and not raColNameUserInput:
-                        ra_col = colName
-                    elif "pos.eq.dec;meta.main" in metaType and not decColNameUserInput:
-                        dec_col = colName
-                    elif "meta.id;meta.main" in metaType and not mainIdColNameUserInput:
-                        id_col = colName
+                if len(table[col_name].meta) > 0:
+                    meta_type = table[col_name].meta["ucd"]
+                    if "pos.eq.ra;meta.main" in meta_type and not is_user_ra_col:
+                        ra_col = col_name
+                    elif "pos.eq.dec;meta.main" in meta_type and not is_user_dec_col:
+                        dec_col = col_name
+                    elif "meta.id;meta.main" in meta_type and not is_user_id_col:
+                        id_col = col_name
                 i += 1
 
         if not line_width:
             line_width = 5
 
-        astropyCatalogue = Catalogue(name, frame, color, line_width)
+        cat = Catalogue(name, frame, color, line_width)
 
-        j = 0
-        currId = j
-
+        source_id, j = 0
         while j < len(table):
-            currDetails = []
+            details = []
+            ra, dec = None
             k = 0
             while k < len(table.colnames):
-                currMetadata = {}
-                colName = table.colnames[k]
-                if type(table[j][k]) is bytes:
-                    currValue = str(table[j][k].decode("utf-8"))
+                meta = {}
+                col_name = table.colnames[k]
+                if isinstance(table[j][k], bytes):
+                    value = str(table[j][k].decode("utf-8"))
                 else:
-                    currValue = str(table[j][k])
+                    value = str(table[j][k])
 
-                if colName == ra_col:
-                    currRaDeg = currValue
+                if col_name == ra_col:
+                    ra = value
 
-                elif colName == dec_col:
-                    currDecDeg = currValue
+                elif col_name == dec_col:
+                    dec = value
 
-                elif colName == id_col:
-                    currName = currValue
+                elif col_name == id_col:
+                    name = value
 
                 else:
-                    currMetadata["name"] = colName
-                    currMetadata["value"] = currValue
-                    if "ucd" in table[colName].meta:
-                        currMetadata["type"] = self._ucd_type_to_esasky(
-                            table[colName].meta["ucd"]
+                    meta["name"] = col_name
+                    meta["value"] = value
+                    if "ucd" in table[col_name].meta:
+                        meta["type"] = self._ucd_type_to_esasky(
+                            table[col_name].meta["ucd"]
                         )
                     else:
-                        currMetadata["type"] = "STRING"
-                    currDetails.append(currMetadata)
+                        meta["type"] = "STRING"
+                    details.append(meta)
 
                 k += 1
 
-            currId = j
-            astropyCatalogue.addSource(
-                currName, currRaDeg, currDecDeg, currId, currDetails
-            )
+            source_id = j
+            cat.add_source(name, ra, dec, source_id, details)
             j += 1
 
-        self.overlayCatalogueWithDetails(astropyCatalogue)
+        self.overlay_cat(cat)
 
-    def _ucd_type_to_esasky(self, tapType):
-        if tapType == "meta.number":
+    def _ucd_type_to_esasky(self, tap_type):
+        if tap_type == "meta.number":
             return "DOUBLE"
         else:
             return "STRING"
 
-    def overlay_cat_csv(self, pathToFile, csvDelimiter, catalogueDescriptor, cooFrame):
+    def overlay_cat_csv(self, file_path, delimiter, descriptor, cooframe):
         """Overlays catalogue read from a csv file"""
 
         catalogue = Catalogue(
-            catalogueDescriptor.getDatasetName(),
-            cooFrame,
-            catalogueDescriptor.getHistoColor(),
-            catalogueDescriptor.getLineWidth(),
+            descriptor.getDatasetName(),
+            cooframe,
+            descriptor.getHistoColor(),
+            descriptor.getLineWidth(),
         )
 
         # read colums
-        with open(pathToFile) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=csvDelimiter)
+        with open(file_path) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=delimiter)
             line_count = 0
             for row in csv_reader:
                 if line_count == 0:
@@ -654,129 +621,123 @@ class ApiInteractionsMixin:
                     line_count += 1
                     i = 0
                     while i < len(columns):
-                        if columns[i] == catalogueDescriptor.getIdColumnName():
-                            columnId = columns[i]
-                            print("{id} column identified: " + columnId)
+                        if columns[i] == descriptor.getIdColumnName():
+                            col_id = columns[i]
+                            print("{id} column identified: " + col_id)
                             if (
-                                catalogueDescriptor.getIdColumnName()
-                                == catalogueDescriptor.getNameColumnName()
+                                descriptor.getIdColumnName()
+                                == descriptor.getNameColumnName()
                             ):
-                                columnName = columnId
-                                print("{name} column identified: " + columnName)
-                        elif columns[i] == catalogueDescriptor.getNameColumnName():
-                            columnName = columns[i]
-                            print("{name} column identified: " + columnName)
-                        elif columns[i] == catalogueDescriptor.getRADegColumnName():
-                            columnRaDeg = columns[i]
-                            print("{centerRaDeg} column identified: " + columnRaDeg)
-                        elif columns[i] == catalogueDescriptor.getDecDegColumnName():
-                            columnDecDeg = columns[i]
-                            print("{currDecDeg} column identified: " + columnDecDeg)
+                                col_name = col_id
+                                print("{name} column identified: " + col_name)
+                        elif columns[i] == descriptor.getNameColumnName():
+                            col_name = columns[i]
+                            print("{name} column identified: " + col_name)
+                        elif columns[i] == descriptor.getRADegColumnName():
+                            col_ra = columns[i]
+                            print("{centerRaDeg} column identified: " + col_ra)
+                        elif columns[i] == descriptor.getDecDegColumnName():
+                            col_dec = columns[i]
+                            print("{currDecDeg} column identified: " + col_dec)
                         i += 1
                 else:
                     i = 0
-                    currDetails = []
-                    currId = ""
-                    currName = ""
-                    currRaDeg = ""
-                    currDecDeg = ""
+                    details = []
+                    col_id = ""
+                    name = ""
+                    ra = ""
+                    dec = ""
 
                     while i < len(row):
-                        if columns[i] == catalogueDescriptor.getIdColumnName():
-                            currId = row[i]
+                        if columns[i] == descriptor.getIdColumnName():
+                            col_id = row[i]
                             if (
-                                catalogueDescriptor.getIdColumnName()
-                                == catalogueDescriptor.getNameColumnName()
+                                descriptor.getIdColumnName()
+                                == descriptor.getNameColumnName()
                             ):
-                                currName = currId
-                        elif columns[i] == catalogueDescriptor.getNameColumnName():
-                            currName = row[i]
-                        elif columns[i] == catalogueDescriptor.getRADegColumnName():
-                            currRaDeg = row[i]
-                        elif columns[i] == catalogueDescriptor.getDecDegColumnName():
-                            currDecDeg = row[i]
+                                name = col_id
+                        elif columns[i] == descriptor.getNameColumnName():
+                            name = row[i]
+                        elif columns[i] == descriptor.getRADegColumnName():
+                            ra = row[i]
+                        elif columns[i] == descriptor.getDecDegColumnName():
+                            dec = row[i]
                         else:
-                            currMetadata = {}
+                            meta = {}
                             found = False
-                            if len(catalogueDescriptor.getMetadata()) > 0:
+                            if len(descriptor.getMetadata()) > 0:
                                 j = 0
-                                while j < len(catalogueDescriptor.getMetadata()):
+                                while j < len(descriptor.getMetadata()):
                                     if (
-                                        catalogueDescriptor.getMetadata()[j].getLabel()
+                                        descriptor.getMetadata()[j].getLabel()
                                         == columns[i]
                                     ):
                                         found = True
-                                        currMetadata[
-                                            "name"
-                                        ] = catalogueDescriptor.getMetadata()[
+                                        meta["name"] = descriptor.getMetadata()[
                                             j
                                         ].getLabel()
-                                        currMetadata["value"] = row[i]
-                                        currMetadata[
-                                            "type"
-                                        ] = catalogueDescriptor.getMetadata()[
+                                        meta["value"] = row[i]
+                                        meta["type"] = descriptor.getMetadata()[
                                             j
                                         ].getType()
                                         break
                                     j += 1
                             elif not found:
-                                currMetadata["name"] = columns[i]
-                                currMetadata["value"] = row[i]
-                                currMetadata["type"] = MetadataType.STRING
+                                meta["name"] = columns[i]
+                                meta["value"] = row[i]
+                                meta["type"] = MetadataType.STRING
 
-                            currDetails.append(currMetadata)
+                            details.append(meta)
 
                         i += 1
 
-                    catalogue.addSource(
-                        currName, currRaDeg, currDecDeg, currId, currDetails
-                    )
+                    catalogue.add_source(name, ra, dec, col_id, details)
                     line_count += 1
             print(f"Processed {line_count} lines.")
-            self.overlayCatalogueWithDetails(catalogue)
+            self.overlay_cat(catalogue, show_data=True)
 
-    def overlay_moc(self, mocObject, name="MOC", color="", opacity=0.2, mode="healpix"):
+    def overlay_moc(self, moc_obj, name="MOC", color="", opacity=0.2, mode="healpix"):
         """Overlay HealPix Multi-Order Coverage map"""
-        mocString = "{"
-        if isinstance(mocObject, dict):
-            for order in mocObject.keys():
-                mocString += '"' + order + '":['
-                for val in mocObject[order]:
+        moc_str = "{"
+        if isinstance(moc_obj, dict):
+            for order in moc_obj.keys():
+                moc_str += '"' + order + '":['
+                for val in moc_obj[order]:
                     if "-" in str(val):
                         start = int(val.split("-")[0])
                         end = int(val.split("-")[1])
                         for i in range(start, end + 1):
-                            mocString += str(i) + ","
+                            moc_str += str(i) + ","
                     else:
-                        mocString += str(val) + ","
-                mocString = mocString[:-1] + "],"
+                        moc_str += str(val) + ","
+                moc_str = moc_str[:-1] + "],"
 
-            mocString = mocString[:-1] + "}"
-        elif "/" in mocObject:
-            currOrder = ""
-            for currVal in mocObject.split(" "):
-                if "/" in currVal:
-                    if currOrder != "":
-                        mocString = mocString[:-1] + "],"
-                    currOrder = currVal.split("/")[0]
-                    mocString += '"' + currOrder + '":['
-                    currVal = currVal.split("/")[1]
+            moc_str = moc_str[:-1] + "}"
+        elif "/" in moc_obj:
+            order = ""
+            for val in moc_obj.split(" "):
+                if "/" in val:
+                    if order != "":
+                        moc_str = moc_str[:-1] + "],"
+                    order = val.split("/")[0]
+                    moc_str += '"' + order + '":['
+                    val = val.split("/")[1]
 
-                if "-" in str(currVal):
-                    start = int(currVal.split("-")[0])
-                    end = int(currVal.split("-")[1])
+                if "-" in str(val):
+                    start = int(val.split("-")[0])
+                    end = int(val.split("-")[1])
                     for i in range(start, end + 1):
-                        mocString += str(i) + ","
+                        moc_str += str(i) + ","
                 else:
-                    mocString += str(currVal) + ","
-            mocString = mocString[:-1] + "]}"
+                    moc_str += str(val) + ","
+            moc_str = moc_str[:-1] + "]}"
         else:
-            mocString = mocObject
+            moc_str = moc_obj
         content = dict(
             event="addMOC",
             content=dict(
                 options=dict(color=color, opacity=opacity, mode=mode),
-                mocData=mocString,
+                mocData=moc_str,
                 name=name,
             ),
         )
@@ -814,51 +775,49 @@ class ApiInteractionsMixin:
         content = dict(event="setHipsSliderValue", content=dict(value=value))
         self._send_ignore(content)
 
-    def add_hips_local(self, hipsURL):
+    def add_hips_local(self, hips_url):
         """Starts a tornado server which will supply the widget with
         HiPS from a local source on client machine"""
         if not hasattr(self, "tornadoServer"):
             self._start_tornado()
-        drive, tail = os.path.splitdrive(hipsURL)
+        drive, tail = os.path.splitdrive(hips_url)
         if drive:
             # Windows
             url = tail.replace("\\", "/")
         else:
-            url = hipsURL
-        patternUrl = url + "(.*)"
-        self.tornadoServer.add_handlers(
-            r".*", [(str(patternUrl), self.FileHandler, dict(baseUrl=hipsURL))]
+            url = hips_url
+        url_pattern = url + "(.*)"
+        self.tornadoserver.add_handlers(
+            r".*", [(str(url_pattern), self.FileHandler, dict(baseUrl=hips_url))]
         )
         return url
 
-    def select_hips(self, hipsName, hipsURL="default"):
+    def select_hips(self, name, url="default"):
         """Sets the currently active row in the skypanel to either
         hipsName already existing in ESASky or adds a new name from specified URL
         """
-        if hipsURL != "default":
-            userHiPS = self._parse_hips_url(hipsName, hipsURL)
-            content = dict(
-                event="changeHipsWithParams", content=dict(userHiPS.toDict())
-            )
+        if url != "default":
+            hips = self._parse_hips_url(name, url)
+            content = dict(event="changeHipsWithParams", content=dict(hips.to_dict()))
             self._send_ignore(content)
         else:
-            content = dict(event="changeHips", content=dict(hipsName=hipsName))
+            content = dict(event="changeHips", content=dict(hipsName=name))
             return self._send_receive(content)
 
-    def add_hips(self, hipsName, hipsURL="default"):
+    def add_hips(self, name, url="default"):
         """Adds a new row win the skypanel with either
         hipsName already existing in ESASky or adds a new name from specified URL"""
-        if hipsURL != "default":
-            userHiPS = self._parse_hips_url(hipsName, hipsURL)
-            content = dict(event="addHipsWithParams", content=dict(userHiPS.toDict()))
+        if url != "default":
+            hips = self._parse_hips_url(name, url)
+            content = dict(event="addHipsWithParams", content=dict(hips.to_dict()))
             self._send_ignore(content)
         else:
-            content = dict(event="addHips", content=dict(hipsName=hipsName))
+            content = dict(event="addHips", content=dict(hipsName=name))
             return self._send_receive(content)
 
     def browse_hips(self):
         """Queries CDS for the global HiPS list and returns it as a pandas dataframe"""
-        urlString = "http://skyint.esac.esa.int/esasky-tap/global-hipslist"
+        url = "http://skyint.esac.esa.int/esasky-tap/global-hipslist"
         columns = [
             "ID",
             "obs_title",
@@ -868,7 +827,7 @@ class ApiInteractionsMixin:
             "em_max",
             "hips_service_url",
         ]
-        with requests.get(urlString, stream=True) as response:
+        with requests.get(url, stream=True, timeout=self.message_timeout) as response:
             df = pd.io.json.read_json(response.content)
             return df[columns]
 
@@ -889,34 +848,34 @@ class ApiInteractionsMixin:
                 )
                 raise (fnf_error)
         else:
-            response = requests.get(url + "properties")
+            response = requests.get(url + "properties", timeout=self.message_timeout)
             response.raise_for_status()
             text = "[Dummy section]\n" + response.text
             config.read_string(text)
             return config
 
-    def _parse_hips_url(self, hipsName, hipsURL):
-        if not hipsURL.endswith("/"):
-            hipsURL += "/"
-        config = self._read_properties(hipsURL)
-        if not hipsURL.startswith("http"):
-            url = self.add_hips_local(hipsURL)
-            port = self.httpServerPort
-            hipsURL = "http://localhost:" + str(port) + url
+    def _parse_hips_url(self, name, url):
+        if not url.endswith("/"):
+            url += "/"
+        config = self._read_properties(url)
+        if not url.startswith("http"):
+            url = self.add_hips_local(url)
+            port = self.httpserverport
+            url = "http://localhost:" + str(port) + url
 
-        maxNorder = config.get("Dummy section", "hips_order")
-        imgFormat = config.get("Dummy section", "hips_tile_format").split()
-        cooFrame = config.get("Dummy section", "hips_frame")
-        if cooFrame == "equatorial":
-            cooFrame = "J2000"
+        max_order = config.get("Dummy section", "hips_order")
+        img_format = config.get("Dummy section", "hips_tile_format").split()
+        cooframe = config.get("Dummy section", "hips_frame")
+        if cooframe == "equatorial":
+            cooframe = "J2000"
         else:
-            cooFrame = "Galactic"
-        if hipsURL.endswith("/"):
-            hipsURL = hipsURL[:-1]
-        userHiPS = HiPS(hipsName, hipsURL, cooFrame, maxNorder, imgFormat[0])
-        print("hipsURL " + hipsURL + "/index.html")
-        print("imgFormat " + imgFormat[0])
-        return userHiPS
+            cooframe = "Galactic"
+        if url.endswith("/"):
+            url = url[:-1]
+        hips = HiPS(name, url, cooframe, max_order, img_format[0])
+        print("hipsURL " + url + "/index.html")
+        print("imgFormat " + img_format[0])
+        return hips
 
     def _start_tornado(self):
         class DummyHandler(tornado.web.RequestHandler):
@@ -939,12 +898,12 @@ class ApiInteractionsMixin:
             else:
                 break
         self.httpserver = server
-        self.tornadoServer = app
-        self.httpServerPort = port
+        self.tornadoserver = app
+        self.httpserverport = port
 
     class FileHandler(tornado.web.RequestHandler):
-        def initialize(self, baseUrl):
-            self.baseUrl = baseUrl
+        def initialize(self, base_url):
+            self.base_url = base_url
 
         def set_default_headers(self):
             self.set_header("Access-Control-Allow-Origin", "*")
@@ -955,7 +914,7 @@ class ApiInteractionsMixin:
             origin = host.split(":")[0]
             if not origin == "localhost":
                 raise tornado.web.HTTPError(status_code=403)
-            file_location = os.path.abspath(os.path.join(self.baseUrl, path))
+            file_location = os.path.abspath(os.path.join(self.base_url, path))
             if not os.path.isfile(file_location):
                 raise tornado.web.HTTPError(status_code=404)
             with open(file_location, "rb") as source_file:
@@ -976,32 +935,32 @@ class ApiInteractionsMixin:
         content = dict(event="getAllAvailableTapMissions")
         return self._send_receive(content)
 
-    def get_tap_query(self, tapServiceName):
+    def get_tap_query(self, service_name):
         """Returns the adql that will be run on this tapService"""
 
-        content = dict(event="getTapADQL", content=dict(tapService=tapServiceName))
+        content = dict(event="getTapADQL", content=dict(tapService=service_name))
         return self._send_receive(content)
 
-    def get_tap_count(self, tapServiceName=""):
+    def get_tap_count(self, service_name=""):
         """Returns the available data in the current sky for the named tapService"""
 
         content = dict(
-            event="getTapServiceCount", content=dict(tapService=tapServiceName)
+            event="getTapServiceCount", content=dict(tapService=service_name)
         )
         return self._send_receive(content)
 
-    def plot_tap(self, tapServiceName):
+    def plot_tap(self, service_name):
         """Plots data from selected mission in the an external TAP service"""
 
-        content = dict(event="plotTapService", content=dict(tapService=tapServiceName))
+        content = dict(event="plotTapService", content=dict(tapService=service_name))
         return self._send_receive(content)
 
     def plot_custom_tap(
         self,
         name,
-        tapUrl,
+        tap_url,
         ADQL,
-        dataOnlyInView=True,
+        data_in_view=True,
         color="",
         limit=-1,
     ):
@@ -1022,8 +981,8 @@ class ApiInteractionsMixin:
             event="plotTapServiceWithDetails",
             content=dict(
                 name=name,
-                tapUrl=tapUrl,
-                dataOnlyInView=dataOnlyInView,
+                tapUrl=tap_url,
+                dataOnlyInView=data_in_view,
                 adql=ADQL,
                 color=color,
                 limit=limit,
@@ -1031,37 +990,38 @@ class ApiInteractionsMixin:
         )
         self._send_ignore(content)
 
-    def save_session(self, fileName=None):
-        """Saves the current ESASky session as a JSON file object with all settings, 
+    def save_session(self, file_name=None):
+        """Saves the current ESASky session as a JSON file object with all settings,
         HiPS stack, datapanels etc. Returns the dict with settings
 
         Arguments:
-        fileName -- (String, Optional ) Filename or path to file where to save the 
+        fileName -- (String, Optional ) Filename or path to file where to save the
         settings. Won't save to file if empty
         """
         content = dict(event="saveState")
         session = self._send_receive(content)
         if "session" in session:
             session = session["session"]
-        if fileName:
-            outFile = open(fileName, "w")
-            outFile.write(json.dumps(session))
-            outFile.close()
+        if file_name:
+            out_file = open(file_name, "w")
+            out_file.write(json.dumps(session))
+            out_file.close()
         return session
 
-    def restore_session_file(self, fileName):
-        """Restores a ESASky session from a JSON file with all settings, HiPS stack, 
+    def restore_session_file(self, file_name):
+        """Restores a ESASky session from a JSON file with all settings, HiPS stack,
         datapanels etc
 
         Arguments:
         fileName -- (String ) Filename or path to file where settings are saved
         """
-        file = open(fileName, "r")
+        file = open(file_name, "r")
         state = json.loads(file.read())
         self.restore_session_obj(state)
 
     def restore_session_obj(self, session):
-        """Restores a ESASky session from a dict with all settings, HiPS stack, datapanels etc
+        """Restores a ESASky session from a dict with all settings,
+        HiPS stack, datapanels etc
 
         Arguments:
         sessiont -- (Dict) Dictionary with the settings to restore

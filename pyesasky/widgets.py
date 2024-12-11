@@ -13,7 +13,7 @@ from pyesasky.kernel_comm import KernelComm
 from pyesasky.log_utils import setup_accordion_logging, logger
 from pyesasky.exceptions import CommNotInitializedError
 from pyesasky.message_utils import create_message_output, create_message_result
-from pyesasky.legacy_api_interactions import LegacyApiInteractionsMixin
+from pyesasky.api_interactions import ApiInteractionsMixin
 import pyesasky.constants as const
 from ._version import __version__  # noqa
 
@@ -21,7 +21,7 @@ __all__ = ["ESASkyWidget"]
 
 
 @register
-class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
+class ESASkyWidget(widgets.DOMWidget, ApiInteractionsMixin):
 
     _view_name = Unicode("IFrameView").tag(sync=True)
     _model_name = Unicode("IFrameModel").tag(sync=True)
@@ -50,7 +50,6 @@ class ESASkyWidget(widgets.DOMWidget, LegacyApiInteractionsMixin):
                 f"Wrong language code used. Available languages are {allowed_lang_str}"
             )
 
-        self.message_timeout = 10
         self._check_server_version()
 
         self.modal = DownloadModal()

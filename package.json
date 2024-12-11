@@ -11,7 +11,7 @@
     "bugs": {
         "url": "https://github.com/esdc-esac-esa-int/pyesasky/issues"
     },
-    "license": "BSD-3-Clause",
+    "license": "SEE LICENSE IN LICENSE.md",
     "author": {
         "name": "European Space Agency",
         "email": "esdc_esasky@sciops.esa.int"
