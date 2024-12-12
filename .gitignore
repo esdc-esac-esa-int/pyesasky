@@ -122,7 +122,13 @@ dmypy.json
 .DS_Store
 
 # Yarn cache
-.yarn/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 
 # Venv
