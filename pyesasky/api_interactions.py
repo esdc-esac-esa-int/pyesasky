@@ -274,7 +274,7 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         """Overlays a catalogue created by pyesasky.catalogue in the sky"""
 
         event = "overlayCatalogueWithDetails" if show_data else "overlayCatalogue"
-        content = dict(event=event, content=catalogue.toDict())
+        content = dict(event=event, content=catalogue.to_dict())
         self._send_ignore(content)
 
     def clear_cat(self, name):
@@ -293,7 +293,7 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         """Overlays footprints created by pyesasky.footprint in the sky"""
 
         event = "overlayFootprintsWithDetails" if show_data else "overlayFootprints"
-        content = dict(event=event, content=dict(footprints.toDict()))
+        content = dict(event=event, content=dict(footprints.to_dict()))
         self._send_ignore(content)
 
     def clear_footprints(self, overlay_name):
@@ -556,10 +556,12 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
 
         cat = Catalogue(name, frame, color, line_width)
 
-        source_id, j = 0
+        j = 0
+        source_id = 0
         while j < len(table):
             details = []
-            ra, dec = None
+            ra = None
+            dec = None
             k = 0
             while k < len(table.colnames):
                 meta = {}

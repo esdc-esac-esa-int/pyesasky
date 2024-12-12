@@ -90,7 +90,7 @@ def create_message_output(message):
 def create_message_result(message):
     values = get_message_values(message)
     if values is not None:
-        if isinstance(values, list) and len(values) > 0:
+        if isinstance(values, list) and len(values) == 1:
             return values[0]
         else:
             return values

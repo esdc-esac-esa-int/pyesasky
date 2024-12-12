@@ -24,8 +24,7 @@ classifiers = [
 ]
 dependencies = [
         "ipyfilechooser==0.6.0",
-        "pandas>=2.2.3",
-        "jupyterlab>=4.0"
+        "pandas>=2.2.3"
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
