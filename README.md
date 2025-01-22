@@ -1,87 +1,99 @@
-# pyESASky
+# pyesasky
 
-Welcome to the ESASky Jupyter widget page. 
+[![Github Actions Status](https://github.com/esdc-esac-esa-int/pyesasky/workflows/Build/badge.svg)](https://github.com/esdc-esac-esa-int/pyesasky/actions/workflows/build.yml)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/esdc-esac-esa-int/pyesasky/main?urlpath=lab)
 
-# Requirements
 
-`Jupyter` comes together with anaconda. 
+ESASky Python wrapper
 
-# Installation
+## Requirements
 
-```bash
-$ pip install pyesasky
-```
+- JupyterLab >= 4.0.0
 
-# pyesasky in Jupyter lab
+## Install
 
-```bash
-$ jupyter labextension install pyesasky
-```
-In some cases you might also have to run these 2 commands to enable PyESASky in Jupyter
+To install the extension, execute:
 
 ```bash
-$ jupyter nbextension install --py pyesasky --sys-prefix
-$ jupyter nbextension enable --py pyeasky --sys-prefix
+pip install pyesasky
 ```
-In order to be able to run pyesasky in Jupyter lab it is necessary to install the labextension ivywidgets by the following command:
+
+## Uninstall
+
+To remove the extension, execute:
 
 ```bash
-$ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+pip uninstall pyesasky
 ```
 
-NOTE that this requires `node.js` to be installed. 
+## Contributing
 
-If you use conda, you can get it with:
+### Development install
+
+Note: You will need NodeJS to build the extension package.
+
+The `jlpm` command is JupyterLab's pinned version of
+[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
+`yarn` or `npm` in lieu of `jlpm` below.
 
 ```bash
-conda install -c conda-forge nodejs
+# Clone the repo to your local environment
+# Change directory to the pyesasky directory
+# Install package in development mode
+pip install -e "."
+# Link your development version of the extension with JupyterLab
+jupyter labextension develop . --overwrite
+# Rebuild extension Typescript source after making changes
+jlpm build
 ```
 
-If you use Homebrew on Mac OS X:
+You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
+
 ```bash
-brew install node
-```
-You can also download `Node.js` from the Node.js website https://nodejs.org/ and install it directly.
-
-
-# Running pyESASky samples:
-
-Multiple sample notebooks of the functionality in pyESASky can be found in https://github.com/esdc-esac-esa-int/pyesasky/tree/master/samples
-
-For the basic functionalities, open the pyESASky-Basic.ipynb. To check how to overlay a catalogue, run the pyESASky-Catalogue.ipynb. To overlay a set of footprints, open pyESASky-Footprints.ipynb .
-
-# Run pyesasky
-
-In general, it is possible to instantiate pyESASky by running the folowing code in your Jupyter Notebook.
-
-```python
-from pyesasky import ESASkyWidget
-esasky = ESASkyWidget()
-esasky
-```
-To be able to use catalogue features, the following additional classes must be imported:
-
-```python
-from pyesasky import Catalogue
-from pyesasky import CatalogueDescriptor
-from pyesasky import MetadataDescriptor
-from pyesasky import MetadataType
+# Watch the source directory in one terminal, automatically rebuilding when needed
+jlpm watch
+# Run JupyterLab in another terminal
+jupyter lab
 ```
 
-To be able to use footprints features, the following additional classes must be imported:
+With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
 
-```python
-from pyesasky import FootprintSet
-from pyesasky import FootprintSetDescriptor
-from pyesasky import MetadataDescriptor
-from pyesasky import MetadataType
-```
+By default, the `jlpm build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
 
-# Source code installation
-
-For a development installation (requires npm),
 ```bash
-$ git clone https://github.com/esdc-esac-esa-int/pyesasky
-$ cd pyesasky
-$ sh install.sh
+jupyter lab build --minimize=False
 ```
+
+### Development uninstall
+
+```bash
+pip uninstall pyesasky
+```
+
+In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
+command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
+folder is located. Then you can remove the symlink named `pyesasky` within that folder.
+
+### Testing the extension
+
+#### Frontend tests
+
+This extension is using [Jest](https://jestjs.io/) for JavaScript code testing.
+
+To execute them, execute:
+
+```sh
+jlpm
+jlpm test
+```
+
+#### Integration tests
+
+This extension uses [Playwright](https://playwright.dev/docs/intro) for the integration tests (aka user level tests).
+More precisely, the JupyterLab helper [Galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) is used to handle testing the extension in JupyterLab.
+
+More information are provided within the [ui-tests](./ui-tests/README.md) README.
+
+### Packaging the extension
+
+See [RELEASE](RELEASE.md)
