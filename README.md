@@ -3,7 +3,6 @@
 [![Github Actions Status](https://github.com/esdc-esac-esa-int/pyesasky/workflows/Build/badge.svg)](https://github.com/esdc-esac-esa-int/pyesasky/actions/workflows/build.yml)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/esdc-esac-esa-int/pyesasky/main?urlpath=lab)
 
-
 ESASky Python wrapper
 
 ## Requirements
