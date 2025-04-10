@@ -37,8 +37,7 @@ VERSION_WARNING_HTML: Final = """
     font-size: 16px;
     font-family: Arial, sans-serif;
     ">
-        <strong>Warning:</strong> The ESASky server has been updated since your
-        installation of pyESASky.
+        <strong>Warning:</strong> There is a newer version of pyesasky available.
         </br></br>
         Some commands might malfunction. Please upgrade your installation if
         you experience any issues

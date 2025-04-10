@@ -1,6 +1,7 @@
 import re
 import logging
 import requests
+import pkg_resources
 
 import ipywidgets as widgets
 from ipywidgets import register
@@ -29,7 +30,6 @@ class ESASkyWidget(widgets.DOMWidget, ApiInteractionsMixin):
     _model_module = Unicode("pyesasky").tag(sync=True)
     _view_module_version = Unicode(__version__).tag(sync=True)
     _model_module_version = Unicode(__version__).tag(sync=True)
-    _intended_server_version = "7.0.4"
     _view_language = Unicode("En").tag(sync=True)
     _view_module_ids = List().tag(sync=True)
     view_height = Unicode("800px").tag(sync=True)
@@ -68,15 +68,16 @@ class ESASkyWidget(widgets.DOMWidget, ApiInteractionsMixin):
 
     def _check_server_version(self):
         version_resp = requests.get(
-            "https://sky.esa.int/esasky-tap/version", timeout=self.message_timeout
+            "https://pypi.org/rss/project/pyesasky/releases.xml", timeout=self.message_timeout
         )
         if version_resp.status_code != 200:
             return
 
-        match = re.match(r'"(\d+\.\d+\.\d+)', version_resp.text)
+        match = re.search(r'<title>(\d+\.\d+\.\d+)</title>', version_resp.text)
+        installed_version = pkg_resources.get_distribution("pyesasky").version
         if match:
-            server_version = match.group(1)
-            if server_version > self._intended_server_version:
+            latest_version = match.group(1)
+            if installed_version != latest_version:
                 display(HTML(const.VERSION_WARNING_HTML))
 
     def _handle_comm_message(self, msg_type, content):
