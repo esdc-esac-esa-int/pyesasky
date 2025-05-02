@@ -10,7 +10,6 @@ export const VERSION = '${pkg.version}';
 
 try {
   fs.writeFileSync(versionFile, content);
-
 } catch (err) {
   console.error('[version] Failed to write version.ts:', err);
   process.exit(1);
