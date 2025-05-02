@@ -2,6 +2,12 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 2.0.2
+
+No merged PRs
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 2.0.1
 
 ([Full Changelog](https://github.com/esdc-esac-esa-int/pyesasky/compare/1.9.5...5ef0c5a486dfd33eae7f0d30a51565bd08a571e7))
@@ -29,5 +35,3 @@
 ([GitHub contributors page for this release](https://github.com/esdc-esac-esa-int/pyesasky/graphs/contributors?from=2023-03-31&to=2025-05-02&type=c))
 
 [@dependabot](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Adependabot+updated%3A2023-03-31..2025-05-02&type=Issues) | [@emellega](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Aemellega+updated%3A2023-03-31..2025-05-02&type=Issues) | [@esdc-esac-esa-int](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Aesdc-esac-esa-int+updated%3A2023-03-31..2025-05-02&type=Issues) | [@github-actions](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Agithub-actions+updated%3A2023-03-31..2025-05-02&type=Issues) | [@imbasimba](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Aimbasimba+updated%3A2023-03-31..2025-05-02&type=Issues) | [@pmatsson](https://github.com/search?q=repo%3Aesdc-esac-esa-int%2Fpyesasky+involves%3Apmatsson+updated%3A2023-03-31..2025-05-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
