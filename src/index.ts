@@ -4,7 +4,6 @@ import {
 } from '@jupyterlab/application';
 import { IFrameModel, IFrameView } from './esasky';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-import pkg from '../package.json';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'pyesasky:plugin',
@@ -15,7 +14,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     console.log('JupyterLab extension pyesasky is activated!');
     registry.registerWidget({
       name: 'pyesasky',
-      version: pkg.version,
+      version: '2.0.0',
       exports: { IFrameModel, IFrameView }
     });
   }

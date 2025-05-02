@@ -15,10 +15,10 @@
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
     "outDir": "lib",
-    "rootDir": ".",
+    "rootDir": "src",
     "strict": true,
     "strictNullChecks": true,
     "target": "ES2018"
   },
-  "include": ["src/*", "package.json"]
+  "include": ["src/*"]
 }
