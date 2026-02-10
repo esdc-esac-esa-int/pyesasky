@@ -1,7 +1,7 @@
 import re
 import logging
 import requests
-import pkg_resources
+from importlib.metadata import version as get_version
 
 import ipywidgets as widgets
 from ipywidgets import register
@@ -74,7 +74,7 @@ class ESASkyWidget(widgets.DOMWidget, ApiInteractionsMixin):
             return
 
         match = re.search(r'<title>(\d+\.\d+\.\d+)</title>', version_resp.text)
-        installed_version = pkg_resources.get_distribution("pyesasky").version
+        installed_version = get_version("pyesasky")
         if match:
             latest_version = match.group(1)
             if installed_version != latest_version:
@@ -112,8 +112,7 @@ class ESASkyWidget(widgets.DOMWidget, ApiInteractionsMixin):
 
     def _send_receive(self, content):
         try:
-            comm_id = self.kernel_comm.send_message(content)
-            resp = self.kernel_comm.wait_message(comm_id, self.message_timeout)
+            resp = self.kernel_comm.send_and_wait(content, timeout=self.message_timeout)
 
             output = create_message_output(resp)
             if output:

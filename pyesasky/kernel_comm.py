@@ -1,14 +1,14 @@
 import time
-import zmq
-import json
-import pyesasky.constants as const
-from pyesasky.exceptions import CommNotInitializedError
-from IPython import get_ipython
+import threading
 import uuid
+from typing import Callable, Dict, Any, Optional
+
 from ipykernel.comm import Comm
-from typing import Callable, Dict, Any
-from pyesasky.log_utils import logger
+
+import pyesasky.constants as const
 import pyesasky.message_utils as m
+from pyesasky.exceptions import CommNotInitializedError
+from pyesasky.log_utils import logger
 
 ContentType = Dict[str, Any]
 CommCallback = Callable[[str, ContentType], None]
@@ -16,104 +16,108 @@ CommCallback = Callable[[str, ContentType], None]
 
 class KernelComm:
 
-    def __init__(self, widget_comm: Comm, widget_on_msg: CommCallback = None):
-        self.kernel = get_ipython().kernel
-        self.shell_streams = self.kernel.shell_streams
+    def __init__(self, widget_comm: Comm, widget_on_msg: Optional[CommCallback] = None):
         self.widget_comm = widget_comm
         self.widget_on_msg = widget_on_msg
         self.comm_established = False
         self.default_timeout = 5
 
+        self._pending = {}  # msg_id -> {"event": Event, "response": dict}
+        self._lock = threading.Lock()
+
         if not self._valid_widget_comm(widget_comm):
             raise CommNotInitializedError("The comm is not valid")
 
-        self.widget_comm.on_msg(self._handle_unsolicited_message)
+        self.widget_comm.on_msg(self._on_message)
 
-    def send_message(self, content, buffers=None) -> str:
+    def send_message(self, content, buffers=None) -> Optional[str]:
         """
-        Sends a message to the frontend if communication is established,
-        otherwise attempts to initialize communication before sending the message.
-
-        Args:
-            content (str): The message content.
-            buffers (Optional[Iterable]): Optional buffers for sending.
-
-        Returns:
-            str: The message ID of the request
-
-        Raises:
-            CommNotInitializedError: If communication cannot be established.
+        Sends a message to the frontend. Initializes comm first if needed.
+        For request/response, use send_and_wait() instead.
         """
         if not self.comm_established and not self._initialize_comm(buffers):
             raise CommNotInitializedError("Communication could not be established.")
 
         return self._send_message(content, buffers)
 
-    def wait_message(self, msg_id: str, max_wait_time: float = 5):
+    def send_and_wait(self, content, buffers=None, timeout: float = 5):
         """
-        Waits for a message with the given ID within a timeout period.
-
-        Args:
-            msg_id (str): The message ID to wait for.
-            max_wait_time (float): Maximum time to wait (in seconds).
-
-        Returns:
-            dict: The parsed message.
-
-        Raises:
-            CommNotInitializedError: If shell streams are not initialized.
-            TimeoutError: If the message is not received within the timeout.
+        Sends a message and waits for response. Registers listener before
+        sending to avoid missing fast responses.
         """
-        if not self.shell_streams:
-            raise CommNotInitializedError("Shell streams are not initialized.")
+        if not self.comm_established and not self._initialize_comm(buffers):
+            raise CommNotInitializedError("Communication could not be established.")
 
-        stream = self.shell_streams[0]
-        start_time = time.time()
+        msg_id = str(uuid.uuid4())
+        event = threading.Event()
 
-        while time.time() - start_time <= max_wait_time:
-            try:
-                message = self._poll_for_message(stream)
-                if message:
-                    parsed_msg = self._parse_message(message)
-                    if parsed_msg and m.is_init_message(parsed_msg):
-                        logger.debug("Comms established")
-                        self.comm_established = True
-                        
-                    if parsed_msg and m.get_message_id(parsed_msg) == msg_id:
-                        logger.debug("Message recieved %s", parsed_msg)
-                        return parsed_msg
-            except zmq.Again:
-                continue  # No message received, continue polling
+        with self._lock:
+            self._pending[msg_id] = {"event": event, "response": None}
 
-            time.sleep(0.1)  # Avoid busy waiting
+        content[const.MESSAGE_CONTENT_ID] = msg_id
+        content[const.MESSAGE_ORIGIN] = "pyesasky"
 
-        # If the loop completes without finding the message
-        raise TimeoutError(f"Timed out waiting for message with ID '{msg_id}'")
+        if not self._valid_widget_comm(self.widget_comm):
+            with self._lock:
+                self._pending.pop(msg_id, None)
+            raise CommNotInitializedError("Widget comm is not valid.")
 
-    def _poll_for_message(self, stream):
-        # Poll for a message with a short timeout (milliseconds)
-        if stream.socket.poll(timeout=100):
-            return stream.socket.recv_multipart()
-        return None
+        logger.debug('Sending message %s', content)
+        self.widget_comm.send(
+            data={const.MESSAGE_METHOD: "custom", const.MESSAGE_CONTENT: content},
+            buffers=buffers,
+        )
 
-    def _parse_message(self, msg_parts):
-        # Attempt to decode and parse JSON from message parts
-        for part in msg_parts:
-            try:
-                decoded_part = part.decode("utf-8")
-                parsed_msg = json.loads(decoded_part)
+        if not event.wait(timeout=timeout):
+            with self._lock:
+                self._pending.pop(msg_id, None)
+            raise TimeoutError(f"Timed out waiting for message with ID '{msg_id}'")
 
-                if not m.is_response_message(parsed_msg):
-                    continue
+        with self._lock:
+            data = self._pending.pop(msg_id, None)
 
-                return parsed_msg
-            except (UnicodeDecodeError, json.JSONDecodeError):
-                continue  # Skip non-JSON parts or decoding errors
-        return None
+        if data and data["response"]:
+            logger.debug("Message received %s", data["response"])
+            return data["response"]
 
-    def _send_message(self, content, buffers) -> str:
-        message_id = str(uuid.uuid4())
-        content[const.MESSAGE_CONTENT_ID] = message_id
+        raise TimeoutError(f"No response received for message ID '{msg_id}'")
+
+    def _on_message(self, message):
+        """Routes incoming messages to pending waiters or the widget callback."""
+        content = m.get_nested_message_content(message)
+
+        # Check for init message
+        raw_content = message.get(const.MESSAGE_CONTENT, {})
+        data = raw_content.get(const.MESSAGE_DATA, {}) if raw_content else {}
+        inner = data.get(const.MESSAGE_CONTENT, {}) if data else {}
+
+        if inner.get(const.MESSAGE_INIT):
+            logger.debug("Comms established")
+            self.comm_established = True
+            with self._lock:
+                pending = self._pending.get(const.MESSAGE_INIT_ID_FLAG)
+                if pending:
+                    pending["response"] = raw_content
+                    pending["event"].set()
+            return
+
+        # Check for response to pending request
+        msg_id = m.get_message_id(raw_content)
+        if msg_id:
+            with self._lock:
+                pending = self._pending.get(msg_id)
+                if pending:
+                    pending["response"] = raw_content
+                    pending["event"].set()
+                    return
+
+        # Unsolicited message (e.g. download request)
+        if content and const.MESSAGE_CONTENT_TYPE in content and self.widget_on_msg:
+            self.widget_on_msg(content[const.MESSAGE_CONTENT_TYPE], content)
+
+    def _send_message(self, content, buffers) -> Optional[str]:
+        msg_id = str(uuid.uuid4())
+        content[const.MESSAGE_CONTENT_ID] = msg_id
         content[const.MESSAGE_ORIGIN] = "pyesasky"
 
         if self._valid_widget_comm(self.widget_comm):
@@ -122,30 +126,31 @@ class KernelComm:
                 data={const.MESSAGE_METHOD: "custom", const.MESSAGE_CONTENT: content},
                 buffers=buffers,
             )
-            return message_id
+            return msg_id
 
         return None
 
     def _initialize_comm(self, buffers):
-        try:
-            self._send_message({"event": "initTest"}, buffers)
-            self.wait_message(const.MESSAGE_INIT_ID_FLAG, self.default_timeout)
-            self.comm_established = True
-            time.sleep(0.5)
-            return True
-        except TimeoutError:
+        event = threading.Event()
+        with self._lock:
+            self._pending[const.MESSAGE_INIT_ID_FLAG] = {"event": event, "response": None}
+
+        self._send_message({"event": "initTest"}, buffers)
+
+        if not event.wait(timeout=self.default_timeout):
+            with self._lock:
+                self._pending.pop(const.MESSAGE_INIT_ID_FLAG, None)
             self.comm_established = False
             return False
+
+        with self._lock:
+            self._pending.pop(const.MESSAGE_INIT_ID_FLAG, None)
+
+        self.comm_established = True
+        time.sleep(0.5)
+        return True
 
     def _valid_widget_comm(self, comm: Comm):
         return comm is not None and (
             comm.kernel is not None if hasattr(comm, "kernel") else True
         )
-
-    def _handle_unsolicited_message(self, message):
-        if not self.widget_on_msg:
-            return
-        content = m.get_nested_message_content(message)
-        if content and const.MESSAGE_CONTENT_TYPE in content:
-            msg_type = content[const.MESSAGE_CONTENT_TYPE]
-            self.widget_on_msg(msg_type, content)
