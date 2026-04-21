@@ -23,25 +23,48 @@ class ImgFormat:
 
 
 class MetadataType:
+    """Column types accepted by the ESASky overlay API.
+
+    These correspond directly to the Java ColumnType enum names used server-side.
+    Passing an unrecognised value will raise an exception in the frontend.
+    """
 
     STRING = "STRING"
+    CHAR = "CHAR"
+    VARCHAR = "VARCHAR"
     DOUBLE = "DOUBLE"
+    FLOAT = "FLOAT"
+    INTEGER = "INTEGER"
+    INT = "INT"
+    LONG = "LONG"
     RA_DEG = "RA"
     DEC_DEG = "DEC"
+    DATETIME = "DATETIME"
+    TIMESTAMP = "TIMESTAMP"
+    DATALINK = "DATALINK"
+    LINK = "LINK"
 
     @classmethod
     def all(cls):
-        return {cls.STRING, cls.DOUBLE, cls.RA_DEG, cls.DEC_DEG}
+        return {
+            cls.STRING, cls.CHAR, cls.VARCHAR,
+            cls.DOUBLE, cls.FLOAT,
+            cls.INTEGER, cls.INT, cls.LONG,
+            cls.RA_DEG, cls.DEC_DEG,
+            cls.DATETIME, cls.TIMESTAMP,
+            cls.DATALINK, cls.LINK,
+        }
 
 
 class Catalogue(LCatalogue):
 
-    def __init__(self, catalogue_name, cooframe, color, line_width):
+    def __init__(self, catalogue_name, cooframe, color, line_width, description=None):
 
         self._catalogue_name = ""
         self._cooframe = CooFrame.FRAME_J2000
         self._color = color if color else "#aa2345"
         self._line_width = line_width if line_width else 10
+        self._description = description
         self._sources = []
 
         self._catalogue_name = catalogue_name
@@ -75,27 +98,28 @@ class Catalogue(LCatalogue):
         self._sources.append(source)
 
     def to_dict(self):
-
-        content = dict(
-            overlaySet=dict(
-                type="SourceListOverlay",
-                overlayName=self._catalogue_name,
-                cooframe=self._cooframe,
-                color=self._color,
-                lineWidth=self._line_width,
-                skyObjectList=self._sources,
-            )
+        overlay = dict(
+            type="SourceListOverlay",
+            overlayName=self._catalogue_name,
+            cooframe=self._cooframe,
+            color=self._color,
+            lineWidth=self._line_width,
+            skyObjectList=self._sources,
         )
-        return content
+        if self._description is not None:
+            overlay["description"] = self._description
+
+        return dict(overlaySet=overlay)
 
 
 class FootprintSet(LFootprintSet):
 
-    def __init__(self, name, cooframe, color, line_width):
+    def __init__(self, name, cooframe, color, line_width, description=None):
         self._name = ""
         self._cooframe = "J2000"
         self._color = color if color else "#aa2345"
         self._line_width = line_width if line_width else 10
+        self._description = description
         self._footprints = []
 
         self._name = name
@@ -148,18 +172,18 @@ class FootprintSet(LFootprintSet):
         self._footprints.append(footprint)
 
     def to_dict(self):
-
-        content = dict(
-            overlaySet=dict(
-                type="FootprintListOverlay",
-                overlayName=self._name,
-                cooframe=self._cooframe,
-                color=self._color,
-                lineWidth=self._line_width,
-                skyObjectList=self._footprints,
-            )
+        overlay = dict(
+            type="FootprintListOverlay",
+            overlayName=self._name,
+            cooframe=self._cooframe,
+            color=self._color,
+            lineWidth=self._line_width,
+            skyObjectList=self._footprints,
         )
-        return content
+        if self._description is not None:
+            overlay["description"] = self._description
+
+        return dict(overlaySet=overlay)
 
 
 class HiPS(LHiPS):

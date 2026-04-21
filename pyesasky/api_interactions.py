@@ -120,12 +120,6 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         content = dict(event="getCataloguesCount")
         return self._send_receive(content)
 
-    def get_pub_count(self):
-        """Returns the number of publications in the current view of the sky"""
-
-        content = dict(event="getPublicationsCount")
-        return self._send_receive(content)
-
     def get_spec_count(self):
         """Returns the number of spectra per mission in the current view of the sky"""
 
@@ -963,31 +957,57 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
         data_in_view=True,
         color="",
         limit=-1,
+        description="",
+        ra_column=None,
+        dec_column=None,
+        stcs_column=None,
+        intersect_column=None,
+        bulk_download_url=None,
+        bulk_download_id_column=None,
     ):
         """Searches and plots data from specified TAP service
 
         Arguments:
         name -- (String) Name that will be shown on the screen
-        tapUrl -- (String) URL to the tap service
-        ADQL -- (String) The ADQL that will be used for retrieving the data
-        dataOnlyInView -- (Boolean, default:True) Adds a WHERE statement to only
+        tap_url -- (String) URL to the tap service
+        adql -- (String) The ADQL that will be used for retrieving the data
+        data_in_view -- (Boolean, default:True) Adds a WHERE statement to only
         retrieve data in the current view
         color -- (String, default: preset list) Color for display in RGB
         format (e.g. #FF0000 for red)
-        limit -- (Int, default: 3000) Limit for amount of results to display
+        limit -- (Int, default: -1) Limit for amount of results to display
+        description -- (String, default: "") Description shown in the result panel
+        ra_column -- (String, optional) Column name to use as RA
+        dec_column -- (String, optional) Column name to use as Dec
+        stcs_column -- (String, optional) Column name to use for footprint display (STC-S)
+        intersect_column -- (String, optional) Column for view intersection when data_in_view=True
+        bulk_download_url -- (String, optional) Custom bulk download service URL
+        bulk_download_id_column -- (String, optional) ID column for bulk download service
         """
 
-        content = dict(
-            event="plotTapServiceWithDetails",
-            content=dict(
-                name=name,
-                tapUrl=tap_url,
-                dataOnlyInView=data_in_view,
-                adql=adql,
-                color=color,
-                limit=limit,
-            ),
+        payload = dict(
+            name=name,
+            tapUrl=tap_url,
+            dataOnlyInView=data_in_view,
+            adql=adql,
+            color=color,
+            limit=limit,
+            description=description,
         )
+        if ra_column is not None:
+            payload["raColumn"] = ra_column
+        if dec_column is not None:
+            payload["decColumn"] = dec_column
+        if stcs_column is not None:
+            payload["STCSColumn"] = stcs_column
+        if intersect_column is not None:
+            payload["intersectColumn"] = intersect_column
+        if bulk_download_url is not None:
+            payload["bulkDownloadUrl"] = bulk_download_url
+        if bulk_download_id_column is not None:
+            payload["bulkDownloadIdColumn"] = bulk_download_id_column
+
+        content = dict(event="plotTapServiceWithDetails", content=payload)
         self._send_ignore(content)
 
     def save_session(self, file_name=None):
@@ -1107,4 +1127,422 @@ class ApiInteractionsMixin(LApiInteractionsMixin):
 
         content = dict(event="clearSearchArea")
 
+        self._send_ignore(content)
+
+    # VIEW
+
+    def get_fov(self):
+        """Returns the current Field of View in degrees"""
+        content = dict(event="getFov")
+        return self._send_receive(content)
+
+    def get_fov_shape(self):
+        """Returns the current FoV shape with ra/dec extents"""
+        content = dict(event="getFovShape")
+        return self._send_receive(content)
+
+    def set_coo_frame(self, cooframe):
+        """Sets the coordinate frame. Valid values: 'J2000' or 'GALACTIC'"""
+        content = dict(event="setCooFrame", content=dict(cooFrame=cooframe))
+        self._send_ignore(content)
+
+    def click_explore_button(self):
+        """Programmatically clicks the Explore button"""
+        content = dict(event="clickExploreButton")
+        self._send_ignore(content)
+
+    # HiPS
+
+    def add_fits(self, name, url):
+        """Adds a FITS image overlay by URL
+
+        Arguments:
+        name -- (String) Name label for the image
+        url -- (String) URL to the FITS file
+        """
+        content = dict(event="addFits", content=dict(name=name, url=url))
+        self._send_ignore(content)
+
+    def change_sky_settings(self, sky_id, settings):
+        """Changes settings for a sky row in the sky panel
+
+        Arguments:
+        sky_id -- (String) ID of the sky row to modify
+        settings -- (Dict) Settings to apply
+        """
+        content = dict(event="changeSkySettings", content=dict(id=sky_id, settings=settings))
+        self._send_ignore(content)
+
+    def get_sky_rows(self):
+        """Returns all current sky rows in the sky panel"""
+        content = dict(event="getSkyRows")
+        return self._send_receive(content)
+
+    # OVERLAYS
+
+    def remove_all_overlays(self):
+        """Removes all active overlays"""
+        content = dict(event="removeAllOverlays")
+        self._send_ignore(content)
+
+    def set_overlay_color(self, overlay_name, color):
+        """Sets the color of an overlay
+
+        Arguments:
+        overlay_name -- (String) Name of the overlay
+        color -- (String) Color in RGB format (e.g. '#FF0000')
+        """
+        content = dict(event="setOverlayColor", content=dict(overlayName=overlay_name, color=color))
+        self._send_ignore(content)
+
+    def set_overlay_size(self, overlay_name, size):
+        """Sets the marker size of a catalogue overlay
+
+        Arguments:
+        overlay_name -- (String) Name of the overlay
+        size -- (Float) Size value
+        """
+        content = dict(event="setOverlaySize", content=dict(overlayName=overlay_name, size=size))
+        self._send_ignore(content)
+
+    def set_overlay_shape(self, overlay_name, shape):
+        """Sets the marker shape of a catalogue overlay
+
+        Arguments:
+        overlay_name -- (String) Name of the overlay
+        shape -- (String) Shape type
+        """
+        content = dict(event="setOverlayShape", content=dict(overlayName=overlay_name, shape=shape))
+        self._send_ignore(content)
+
+    def get_active_overlays(self):
+        """Returns all currently active overlays"""
+        content = dict(event="getActiveOverlays")
+        return self._send_receive(content)
+
+    def select_shape(self, overlay_name, shape_name):
+        """Selects a shape in an overlay
+
+        Arguments:
+        overlay_name -- (String) Name of the overlay
+        shape_name -- (String) Name of the shape to select
+        """
+        content = dict(event="selectShape", content=dict(overlayName=overlay_name, shapeName=shape_name))
+        self._send_ignore(content)
+
+    def deselect_shape(self, overlay_name, shape_name):
+        """Deselects a shape in an overlay
+
+        Arguments:
+        overlay_name -- (String) Name of the overlay
+        shape_name -- (String) Name of the shape to deselect
+        """
+        content = dict(event="deselectShape", content=dict(overlayName=overlay_name, shapeName=shape_name))
+        self._send_ignore(content)
+
+    def deselect_all_shapes(self, overlay_name=None):
+        """Deselects all shapes in an overlay, or all shapes across all overlays.
+
+        Arguments:
+        overlay_name -- (String, optional) Name of the overlay. If omitted,
+        deselects all shapes in every active overlay.
+        """
+        c = dict(overlayName=overlay_name) if overlay_name else {}
+        content = dict(event="deselectAllShapes", content=c)
+        self._send_ignore(content)
+
+    # MISSIONS
+
+    def get_available_obs_missions(self):
+        """Returns all available observation missions"""
+        content = dict(event="getAvailableObservationMissions")
+        return self._send_receive(content)
+
+    def get_available_spec_missions(self):
+        """Returns all available spectra missions"""
+        content = dict(event="getAvailableSpectraMissions")
+        return self._send_receive(content)
+
+    def get_available_cat_missions(self):
+        """Returns all available catalogue missions"""
+        content = dict(event="getAvailableCatalogueMissions")
+        return self._send_receive(content)
+
+    # PLOT
+
+    def plot_pub(self, ra=None, dec=None, radius=None):
+        """Overlays available publications on the sky.
+        Optionally restrict to a cone search area.
+
+        Arguments:
+        ra -- (Float, optional) RA in decimal degrees
+        dec -- (Float, optional) Dec in decimal degrees
+        radius -- (Float, optional) Radius in decimal degrees
+        """
+        if ra is not None and dec is not None and radius is not None:
+            content = dict(event="plotPublications", content=dict(ra=ra, dec=dec, radius=radius))
+        else:
+            content = dict(event="plotPublications")
+        return self._send_receive(content)
+
+    # RESULT PANEL
+
+    def hide_result_panel(self):
+        """Hides the result panel"""
+        content = dict(event="hideResultPanel")
+        self._send_ignore(content)
+
+    def show_result_panel(self):
+        """Shows the result panel"""
+        content = dict(event="showResultPanel")
+        self._send_ignore(content)
+
+    def close_result_tab_by_id(self, panel_id):
+        """Closes a result panel tab by its ID
+
+        Arguments:
+        panel_id -- (String) ID of the panel tab to close
+        """
+        content = dict(event="closeResultPanelTabById", content=dict(id=panel_id))
+        return self._send_receive(content)
+
+    # EXTERNAL TAP PANEL
+
+    def open_ext_tap_panel(self, tab=""):
+        """Opens the External TAP panel
+
+        Arguments:
+        tab -- (String, optional) Tab name to open
+        """
+        content = dict(event="openExtTapPanel", content=dict(tab=tab))
+        self._send_ignore(content)
+
+    def close_ext_tap_panel(self):
+        """Closes the External TAP panel"""
+        content = dict(event="closeExtTapPanel")
+        self._send_ignore(content)
+
+    # MOC
+
+    def overlay_q3c_moc(self, moc_data, options=None):
+        """Overlay a Q3C Multi-Order Coverage map
+
+        Arguments:
+        moc_data -- (String) Q3C MOC data string
+        options -- (Dict, optional) Display options
+        """
+        if options is None:
+            options = {}
+        content = dict(event="addQ3CMOC", content=dict(options=options, mocData=moc_data))
+        self._send_ignore(content)
+
+    # MODULES / TREEMAP / BUTTONS
+
+    def add_tree_map_mission(self, tree_map):
+        """Adds a mission to an existing custom TreeMap
+
+        Arguments:
+        tree_map -- (Dict) TreeMap mission descriptor
+        """
+        content = dict(event="addTreeMapMission", content=dict(treeMap=tree_map))
+        return self._send_receive(content)
+
+    def remove_tree_map_mission(self, tree_map):
+        """Removes a mission from an existing custom TreeMap
+
+        Arguments:
+        tree_map -- (Dict) TreeMap mission descriptor
+        """
+        content = dict(event="removeTreeMapMission", content=dict(treeMap=tree_map))
+        return self._send_receive(content)
+
+    def add_custom_button(self, button):
+        """Adds a custom button to the UI
+
+        Arguments:
+        button -- (Dict) Button descriptor with keys: name, iconText, description
+        """
+        content = dict(event="addCustomButton", content=dict(button=button))
+        return self._send_receive(content)
+
+    def update_custom_button(self, button):
+        """Updates an existing custom button
+
+        Arguments:
+        button -- (Dict) Button descriptor with updated values
+        """
+        content = dict(event="updateCustomButton", content=dict(button=button))
+        return self._send_receive(content)
+
+    def remove_custom_button(self, button):
+        """Removes a custom button from the UI
+
+        Arguments:
+        button -- (Dict) Button descriptor identifying the button to remove
+        """
+        content = dict(event="removeCustomButton", content=dict(button=button))
+        return self._send_receive(content)
+
+    def set_module_visibility(self, modules):
+        """Sets visibility of UI modules
+
+        Arguments:
+        modules -- (Dict) Module visibility settings
+        """
+        content = dict(event="setModuleVisibility", content=dict(modules=modules))
+        return self._send_receive(content)
+
+    def get_available_modules(self):
+        """Returns all available UI modules and their current visibility"""
+        content = dict(event="getAvailableModules")
+        return self._send_receive(content)
+
+    def show_reticle(self, show=True):
+        """Shows or hides the reticle (crosshair) in the center of the view
+
+        Arguments:
+        show -- (Boolean, default: True) True to show, False to hide
+        """
+        content = dict(event="showReticle", content=dict(show=show))
+        self._send_ignore(content)
+
+    # OUTREACH IMAGES
+
+    def open_outreach_panel(self, telescope="HST", image_id=None):
+        """Opens the outreach image panel for the specified telescope
+
+        Arguments:
+        telescope -- (String, default: 'HST') Telescope name (e.g. 'HST', 'JWST')
+        image_id -- (String, optional) ID of specific image to open
+        """
+        c = dict(telescope=telescope)
+        if image_id is not None:
+            c["id"] = image_id
+        content = dict(event="openOutreachPanel", content=c)
+        self._send_ignore(content)
+
+    def close_outreach_panel(self, telescope="HST"):
+        """Closes the outreach image panel
+
+        Arguments:
+        telescope -- (String, default: 'HST') Telescope name
+        """
+        content = dict(event="closeOutreachPanel", content=dict(telescope=telescope))
+        self._send_ignore(content)
+
+    def get_outreach_image_ids(self, telescope="HST"):
+        """Returns all available outreach image IDs for the telescope
+
+        Arguments:
+        telescope -- (String, default: 'HST') Telescope name
+        """
+        content = dict(event="getOutreachImageIds", content=dict(telescope=telescope))
+        return self._send_receive(content)
+
+    def open_outreach_image(self, image_id=None, name=None, telescope="HST"):
+        """Opens an outreach image by ID or name
+
+        Arguments:
+        image_id -- (String, optional) Image ID
+        name -- (String, optional) Image name
+        telescope -- (String, default: 'HST') Telescope name
+        """
+        c = dict(telescope=telescope)
+        if image_id is not None:
+            c["id"] = image_id
+        if name is not None:
+            c["name"] = name
+        content = dict(event="openOutreachImage", content=c)
+        self._send_ignore(content)
+
+    def get_outreach_image_names(self, telescope="HST"):
+        """Returns all available outreach image names for the telescope
+
+        Arguments:
+        telescope -- (String, default: 'HST') Telescope name
+        """
+        content = dict(event="getOutreachImageNames", content=dict(telescope=telescope))
+        return self._send_receive(content)
+
+    def close_outreach_image(self, telescope="HST"):
+        """Closes the currently displayed outreach image
+
+        Arguments:
+        telescope -- (String, default: 'HST') Telescope name
+        """
+        content = dict(event="closeOutreachImage", content=dict(telescope=telescope))
+        self._send_ignore(content)
+
+    # ALERTS
+
+    def minimise_alert_panel(self):
+        """Minimises the gravitational wave / alert panel"""
+        content = dict(event="minimiseAlertPanel")
+        self._send_ignore(content)
+
+    def get_gw_event_data(self, event_id):
+        """Returns the data for a specific gravitational wave event
+
+        Arguments:
+        event_id -- (String) Grace ID of the gravitational wave event
+        """
+        content = dict(event="getGWEventData", content=dict(id=event_id))
+        return self._send_receive(content)
+
+    # TARGET LISTS
+
+    def get_target_lists(self):
+        """Returns all available target lists in ESASky"""
+        content = dict(event="getTargetLists")
+        return self._send_receive(content)
+
+    def open_target_list(self, target_list=None):
+        """Opens a target list panel
+
+        Arguments:
+        target_list -- (String, optional) Name of target list to open
+        """
+        if target_list:
+            content = dict(event="openTargetList", content=dict(targetList=target_list))
+        else:
+            content = dict(event="openTargetList")
+        self._send_ignore(content)
+
+    def close_target_list(self):
+        """Closes the target list panel"""
+        content = dict(event="closeTargetList")
+        self._send_ignore(content)
+
+    # PLAYER
+
+    def player_play(self):
+        """Starts playback in the ESASky player"""
+        content = dict(event="playerPlay")
+        self._send_ignore(content)
+
+    def player_pause(self):
+        """Pauses playback in the ESASky player"""
+        content = dict(event="playerPause")
+        self._send_ignore(content)
+
+    def player_next(self):
+        """Moves to the next item in the ESASky player"""
+        content = dict(event="playerNext")
+        self._send_ignore(content)
+
+    def player_previous(self):
+        """Moves to the previous item in the ESASky player"""
+        content = dict(event="playerPrevious")
+        self._send_ignore(content)
+
+    # SESSION / AUTH
+
+    def login(self):
+        """Opens the CAS login dialog"""
+        content = dict(event="login")
+        self._send_ignore(content)
+
+    def logout(self):
+        """Logs out from CAS"""
+        content = dict(event="logout")
         self._send_ignore(content)
