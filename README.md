@@ -7,7 +7,8 @@ ESASky Python wrapper
 
 ## Requirements
 
-- JupyterLab >= 4.0.0
+- JupyterLab >= 4.0.0 to use the extension
+- JupyterLab >= 4.6.0 (or the `jupyter-builder` package) and NodeJS >= 20.19 to build it from source
 
 ## Install
 
@@ -29,19 +30,31 @@ pip uninstall pyesasky
 
 ### Development install
 
-Note: You will need NodeJS to build the extension package.
+Note: You will need NodeJS >= 20.19 to build the extension package.
 
 The `jlpm` command is JupyterLab's pinned version of
-[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
-`yarn` or `npm` in lieu of `jlpm` below.
+[yarn](https://yarnpkg.com/). It is provided by the `jupyter-builder` package,
+which is installed with JupyterLab >= 4.6. You may use `yarn` or `npm` in lieu
+of `jlpm` below.
 
 ```bash
 # Clone the repo to your local environment
 # Change directory to the pyesasky directory
+# Make sure the build tooling is available
+pip install "jupyterlab>=4.6,<5"
 # Install package in development mode
 pip install -e "."
+# Link your development version of the extension with JupyterLab
+jupyter labextension develop . --overwrite
 # Rebuild extension Typescript source after making changes
 jlpm build
+```
+
+If `jlpm` is missing after upgrading JupyterLab from a version older than 4.6,
+reinstall the package that provides it:
+
+```bash
+pip install --force-reinstall --no-deps "jupyter-builder>=1.2.0,<2"
 ```
 
 You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
